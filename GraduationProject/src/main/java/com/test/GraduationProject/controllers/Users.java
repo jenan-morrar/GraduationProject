@@ -70,11 +70,4 @@ public class Users {
         return "homePage.jsp";
     }
     
-//    @RequestMapping(value = {"/", "/home"})
-//    public String home(Principal principal, Model model) {
-//        // 1
-//        String username = principal.getName();
-//        model.addAttribute("currentUser", userService.findByUsername(username));
-//        return "homePage.jsp";
-//    }
 }

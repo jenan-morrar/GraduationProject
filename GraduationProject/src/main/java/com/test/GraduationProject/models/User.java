@@ -25,12 +25,12 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-    @Size(min=3, message="Username must be greater than 3 characters")
+    @Size(min=3, message="يجب أن يكون الاسم أكثر من 3 حروف")
     private String username;
-    @Email(message="Email must be valid")
+    @Email(message="يجب أن يكون الايميل صحيح")
     private String email;
     private String mobileNumber;
-    @Size(min=5, message="Password must be greater than 5 characters")
+    @Size(min=5, message="يجب أن تكون كلمة المرور أكثر من 5 حروف")
     private String password;
     @Transient
     private String passwordConfirmation;
