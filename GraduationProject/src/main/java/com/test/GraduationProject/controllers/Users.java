@@ -67,6 +67,12 @@ public class Users {
         model.addAttribute("currentUser", userService.findByUsername(username));
         return "adminPage.jsp";
     }
+    @RequestMapping("/superAdmin")
+    public String superAdminPage(Principal principal, Model model) {
+        String username = principal.getName();
+        model.addAttribute("currentUser", userService.findByUsername(username));
+        return "superAdminPage.jsp";
+    }
     
     @RequestMapping(value = {"/", "/home"})
     public String home(Principal principal, Model model) {
