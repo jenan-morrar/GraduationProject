@@ -41,7 +41,12 @@ public class Users {
             return "registrationPage.jsp";
         }
         //userService.saveWithUserRole(user);
-    	userService.saveUserWithAdminRole(user);
+    	boolean registration = userService.saveUserWithAdminRole(user);
+    	if (registration == false) {
+    		
+            model.addAttribute("alreadyExist", "هذا المستخدم موجود! استخدم ايميل آخر");
+    		return "registrationPage.jsp";
+    	}
         return "redirect:/login";
     }
     

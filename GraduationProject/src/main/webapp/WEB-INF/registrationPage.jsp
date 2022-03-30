@@ -60,6 +60,13 @@
 						<span class="login100-form-title p-t-20 p-b-45"> إنشاء حساب
 						</span>
 
+
+						<div class="errorStyle">
+							<p class="error2">
+								<c:out value="${alreadyExist}" />
+							</p>
+						</div>
+
 						<div class="wrap-input100 validate-input m-b-10"
 							data-validate=" أدخل اسم المستخدم">
 							<form:input path="username" class="input100" type="text"
@@ -68,10 +75,10 @@
 								class="symbol-input100"> <i class="fa fa-user"></i>
 							</span>
 						</div>
-						<p class="errorStyle" style="">
-							<form:errors path="username" class="error"/>
+						<p class="errorStyle">
+							<form:errors path="username" class="error" />
 						</p>
-
+						
 						<div class="wrap-input100 validate-input m-b-10"
 							data-validate=" أدخل ايميل المستخدم">
 							<form:input path="email" class="input100" type="text"
