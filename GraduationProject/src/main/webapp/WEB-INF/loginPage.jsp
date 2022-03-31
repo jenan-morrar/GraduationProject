@@ -64,9 +64,9 @@
 						</span>
 
 						<div class="wrap-input100 validate-input m-b-10"
-							data-validate=" أدخل اسم المستخدم">
-							<input id="username" class="input100" type="text" name="username"
-								placeholder="اسم المستخدم"> <span class="focus-input100"></span>
+							data-validate=" أدخل ايميل المستخدم">
+							<input id="email" class="input100" type="text" name="email"
+								placeholder="ايميل المستخدم"> <span class="focus-input100"></span>
 							<span class="symbol-input100"> <i class="fa fa-user"></i>
 							</span>
 						</div>
