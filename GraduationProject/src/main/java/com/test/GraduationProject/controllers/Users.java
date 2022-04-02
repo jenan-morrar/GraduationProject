@@ -2,6 +2,7 @@ package com.test.GraduationProject.controllers;
 
 import java.security.Principal;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -35,13 +36,13 @@ public class Users {
     }
     
     @PostMapping("/registration")
-    public String registration(@Valid @ModelAttribute("user") User user, BindingResult result, Model model, HttpSession session) {
+    public String registration(@Valid @ModelAttribute("user") User user, BindingResult result, Model model, HttpSession session) throws MessagingException {
     	userValidator.validate(user, result);
     	if (result.hasErrors()) {
             return "registrationPage.jsp";
         }
-        //userService.saveWithUserRole(user);
-    	boolean registration = userService.saveUserWithAdminRole(user);
+       boolean registration = userService.saveWithUserRole(user);
+    	//boolean registration = userService.saveUserWithAdminRole(user);
     	if (registration == false) {
     		
             model.addAttribute("alreadyExist", "هذا المستخدم موجود! استخدم ايميل آخر");
