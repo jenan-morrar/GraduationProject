@@ -21,10 +21,9 @@ import com.test.GraduationProject.validator.UserValidator;
 @Controller
 public class Users {
     private UserService userService;
-    
     private UserValidator userValidator;
     
-    public Users(UserService userService, UserValidator userValidator) {
+    public Users(UserService userService,UserValidator userValidator) {
         this.userService = userService;
         this.userValidator = userValidator;
     }
@@ -68,6 +67,40 @@ public class Users {
         model.addAttribute("currentUser", userService.findByEmail(username));
         return "adminPage.jsp";
     }
+    
+//    @RequestMapping(value="/admin/adminForm/", method=RequestMethod.POST)
+//    public String create(@Valid @ModelAttribute("venue") Venue venue, BindingResult result) {
+//        if (result.hasErrors()) {
+//            return "adminForm.jsp";
+//        } else {
+//            userService.createVenue(venue);
+//            return "redirect:/adminForm";
+//        }
+//    }
+//    
+//    @RequestMapping("/admin/adminForm/{id}/edit")
+//    public String edit(@PathVariable("id") Long id, Model model) {
+//        Venue venue = userService.findVenue(id);
+//        model.addAttribute("venue", venue);
+//        return "adminForm.jsp";
+//    }
+//    
+//    @RequestMapping(value="/admin/adminForm/{id}", method=RequestMethod.POST)
+//    public String update(@Valid @ModelAttribute("venue") Venue venue, BindingResult result) {
+//        if (result.hasErrors()) {
+//            return "adminForm.jsp";
+//        } else {
+//        	userService.updateVenue(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(), venue.getPrice(), venue.getServiceOfVenue());
+//            return "redirect:/admin/adminForm/";
+//        }
+//    }
+//    
+//    @RequestMapping(value="/admin/adminForm/{id}", method=RequestMethod.DELETE)
+//    public String destroy(@PathVariable("id") Long id) {
+//        userService.deleteVenue(id);
+//        return "redirect:/admin/adminForm";
+//    }
+//    
     @RequestMapping("/superAdmin")
     public String superAdminPage(Principal principal, Model model) {
         String username = principal.getName();
