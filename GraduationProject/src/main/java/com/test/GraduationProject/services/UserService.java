@@ -51,7 +51,7 @@ public class UserService {
 			MimeMessage message = emailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-			helper.setSubject("Here's your pic");
+			helper.setSubject("Welcome to PalVenues");
 			helper.setFrom(from);
 			helper.setTo(to);
 
