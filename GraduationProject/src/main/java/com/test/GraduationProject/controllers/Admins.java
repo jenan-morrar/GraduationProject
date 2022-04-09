@@ -119,6 +119,7 @@ public class Admins {
 //		model.addAttribute("services", services);
 //		return "redirect:/admin/venues/{id}/services";
 //	}
+	//Edit this
 	@RequestMapping(value = "/admin/venues/{id}/services/add", method = RequestMethod.POST)
 	public String addService(@PathVariable("id") long id, @RequestParam("serviceName") String name,
 			@RequestParam("servicePrice") float price, Model model) {
