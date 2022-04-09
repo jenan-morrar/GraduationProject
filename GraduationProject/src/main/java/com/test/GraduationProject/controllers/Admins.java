@@ -1,6 +1,5 @@
 package com.test.GraduationProject.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -59,6 +58,8 @@ public class Admins {
 	public String show(@PathVariable("id") Long id, Model model) {
 		Venue venue = venueService.findVenue(id);
 		model.addAttribute("venue", venue);
+		model.addAttribute("serviceExist", "no");
+
 		return "/venues/show.jsp";
 	}
 
@@ -74,6 +75,7 @@ public class Admins {
 	public String edit(@PathVariable("id") Long id, Model model) {
 		Venue venue = venueService.findVenue(id);
 		model.addAttribute("venue", venue);
+		model.addAttribute("serviceExist", "no");
 		return "/venues/edit.jsp";
 	}
 
@@ -108,6 +110,8 @@ public class Admins {
 		for (int i = 0; i < venue.getServices().size(); i++) {
 			if (venue.getServices().get(i).getId() == id2) {
 				venue.getServices().remove(venue.getServices().get(i));
+				venueService.updateVenue(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
+						venue.getPrice(), venue.getServices());
 			}
 		}
 		return "/venues/edit.jsp";
@@ -119,15 +123,34 @@ public class Admins {
 //		model.addAttribute("services", services);
 //		return "redirect:/admin/venues/{id}/services";
 //	}
-	//Edit this
+	// Edit this
 	@RequestMapping(value = "/admin/venues/{id}/services/add", method = RequestMethod.POST)
 	public String addService(@PathVariable("id") long id, @RequestParam("serviceName") String name,
 			@RequestParam("servicePrice") float price, Model model) {
+		boolean flag = true;
 		Venue venue = venueService.findVenue(id);
 		model.addAttribute("venue", venue);
-		ServiceOfVenue service = new ServiceOfVenue(null, name, price, null);
-		servicesOfVenueService.createService(service);
-		venue.getServices().add(service);
+		model.addAttribute("serviceExist", "no");
+
+		if (venue.getServices() != null) {
+
+			for (int i = 0; i < venue.getServices().size(); i++) {
+				if (venue.getServices().get(i).getName().equalsIgnoreCase(name)) {
+					model.addAttribute("serviceExist", "yes");
+					flag = false;
+				}
+			}
+		}
+		if (flag) {
+			
+			model.addAttribute("serviceExist", "no");
+			ServiceOfVenue service = new ServiceOfVenue(null, name, price, null);
+			servicesOfVenueService.createService(service);
+			venue.getServices().add(service);
+			venueService.updateVenue(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
+					venue.getPrice(), venue.getServices());
+		}
+
 		return "/venues/edit.jsp";
 	}
 
