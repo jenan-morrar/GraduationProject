@@ -12,6 +12,13 @@
 <p>Description: <c:out value="${venue.description}"/></p>
 <p>Location: <c:out value="${venue.location}"/></p>
 <p>Price: <c:out value="${venue.price}"/></p>
+<c:forEach items="${venue.services}" var="service">
+    <tr>
+        <td>Service Name: <c:out value="${service.name}"/></td>
+        <td>Service Price: <c:out value="${service.price}"/></td>  
+    </tr>
+    <br>
+</c:forEach>
 
 <a href="/admin/venues/${venue.id}/edit">Edit Venue</a>
 </body>

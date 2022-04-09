@@ -3,6 +3,7 @@ package com.test.GraduationProject.models;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,7 +32,7 @@ public class Venue {
     private Date createdAt;
     private Date updatedAt;
     
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(
         name = "venues_services", 
         joinColumns = @JoinColumn(name = "venue_id"), 

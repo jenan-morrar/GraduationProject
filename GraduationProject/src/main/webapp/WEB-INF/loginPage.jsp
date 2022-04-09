@@ -114,10 +114,10 @@
 					</div>
 					<div class="col-xs-9 text-right menu-1">
 						<ul style="margin-top: 2%;">
-							<li><a href="/cartPage">&#128722</a></li>
+							<!--<li><a href="/cartPage">&#128722</a></li>-->
 							<li><a href="/index">الصفحة الرئيسية</a></li>
 							<li><a href="/aboutPage">من نحن</a></li>
-							<li class="active"><a href="/login">تسجيل دخول</a></li>
+							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
 								<ul class="dropdown">
 									<li><a href="/venues">القاعات</a></li>
@@ -128,7 +128,8 @@
 									<li><a href="#">العربية</a></li>
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
-							<li><a href="/contactPage">تواصل معنا</a></li>
+							<li class="active"><a href="/login">تسجيل دخول</a></li>
+
 						</ul>
 					</div>
 				</div>
@@ -212,7 +213,8 @@
 							<small class="block">&copy; 2022 PalVenues Website.</small>
 						</p>
 						<p>
-						<ul class="fh5co-social-icons">
+
+							<ul class="fh5co-social-icons">
 							<li><a href="#"><i class="icon-twitter"></i></a></li>
 							<li><a href="#"><i class="icon-facebook"></i></a></li>
 							<li><a href="#"><i class="icon-linkedin"></i></a></li>
@@ -231,8 +233,8 @@
 	</div>
 
 	<!--===============================================================================================-->
-	<script src="/resources/vendor/jquery/jquery-3.2.1.min.js"></script>
-	<!--===============================================================================================-->
+<script src="/resources/vendor/jquery/jquery-3.2.1.min.js"></script>
+							<!--===============================================================================================-->
 	<script src="/resources/vendor/bootstrap/js/popper.js"></script>
 	<script src="/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<!--===============================================================================================-->
@@ -260,9 +262,10 @@
 	<script src="/resources/js/magnific-popup-options.js"></script>
 	<!-- Google Map -->
 	<script
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>
+								src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>
 
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>
-</body>
+
+						</body>
 </html>

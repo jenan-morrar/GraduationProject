@@ -114,10 +114,10 @@
 					</div>
 					<div class="col-xs-9 text-right menu-1">
 						<ul style="margin-top: 2%;">
-							<li><a href="/cartPage">&#128722</a></li>
+							<!--<li><a href="/cartPage">&#128722</a></li>-->
 							<li><a href="/index">الصفحة الرئيسية</a></li>
 							<li><a href="/aboutPage">من نحن</a></li>
-							<li class="active"><a href="/login">تسجيل دخول</a></li>
+							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
 								<ul class="dropdown">
 									<li><a href="/venues">القاعات</a></li>
@@ -128,7 +128,7 @@
 									<li><a href="#">العربية</a></li>
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
-							<li><a href="/contactPage">تواصل معنا</a></li>
+							<li class="active"><a href="/login">تسجيل دخول</a></li>
 						</ul>
 					</div>
 				</div>

@@ -81,35 +81,40 @@
 					</div>
 					<div class="col-xs-9 text-right menu-1">
 						<ul style="margin-top: 2%;">
-							<li><a href="/cartPage">&#128722</a></li>
 							<li><a href="/index">الصفحة الرئيسية</a></li>
 							<c:set var="userRole" scope="session" value="${userRole}" />
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li class="active"><a href="adminVenuePage">قاعتي</a></li>
 							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
-							<c:set var="userName" scope="session" value="${currentUser}" />
-							<c:if test="${userName == \"noUser\"}">
-								<li><a href="/login">تسجيل دخول</a></li>
-							</c:if>
-							<c:if test="${userName ==\"user\"}">
-								<form id="logoutForm" method="POST" action="/logout" style="margin: 0px; display:inline;">
-									<input type="hidden" name="${_csrf.parameterName}"
-										value="${_csrf.token}" />
-								</form>
-								<li><a onclick="document.forms['logoutForm'].submit()">تسجيل الخروج</a></li>
-							</c:if>
+							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
 								<ul class="dropdown">
 									<li><a href="/venues">القاعات</a></li>
 									<li><a href="/songsPage">الأغاني</a></li>
 								</ul></li>
+							<c:set var="userName" scope="session" value="${currentUser}" />
+							<c:if test="${userName ==\"user\"}">
+								<li><a href="/cartPage">&#128722</a></li>
+							</c:if>
 							<li class="has-dropdown"><a href="#">اللغة</a>
 								<ul class="dropdown">
 									<li><a href="#">العربية</a></li>
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
-							<li><a href="/contactPage">تواصل معنا</a></li>
+
+							<c:if test="${userName == \"noUser\"}">
+								<li><a href="/login">تسجيل دخول</a></li>
+							</c:if>
+							<c:if test="${userName ==\"user\"}">
+								<form id="logoutForm" method="POST" action="/logout"
+									style="margin: 0px; display: inline;">
+									<input type="hidden" name="${_csrf.parameterName}"
+										value="${_csrf.token}" />
+								</form>
+								<li><a onclick="document.forms['logoutForm'].submit()">تسجيل
+										الخروج</a></li>
+							</c:if>
 						</ul>
 					</div>
 				</div>
