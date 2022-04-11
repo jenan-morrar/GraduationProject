@@ -134,6 +134,27 @@ public class Admins {
 		}
 		return "/venues/edit.jsp";
 	}
+	
+	// Delete Image
+	@RequestMapping(value = "/admin/venues/{id1}/images/delete/{id2}", method = RequestMethod.GET)
+	public String deleteImage(@PathVariable("id1") long id1, @PathVariable("id2") long id2, Model model) {
+		Venue venue = venueService.findVenue(id1);
+		model.addAttribute("venue", venue);
+		if (venue.getImages() != null) {
+			List<Images> imagesList;
+			imagesList = venue.getImages().stream().collect(Collectors.toList());
+			for (int i = 0; i < imagesList.size(); i++) {
+				if (imagesList.get(i).getId() == id2) {
+					venue.getImages().remove(imagesList.get(i));
+					imagesService.deleteImage(id2);
+					venueService.updateVenue(venue.getId(), venue.getName(), venue.getDescription(),
+							venue.getLocation(), venue.getPrice(), venue.getServices(), venue.getImages());
+				}
+			}
+		}
+		return "/venues/edit.jsp";
+	}
+
 
 //	@RequestMapping("/admin/venues/{id}/services/add")
 //	public String index(Model model,@PathVariable("id") Long id) {

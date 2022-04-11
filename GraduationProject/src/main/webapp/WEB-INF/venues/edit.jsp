@@ -58,9 +58,25 @@
 	<form:form action="/admin/venues/${venue.id}/images/add" method="post"
 		modelAttribute="venue" enctype="multipart/form-data">
 		<legend>Add a Venue's images</legend>
+
+		<c:forEach varStatus="us" var="image" items="${venue.images}">
+			<table id="myTable">
+				<tr>
+					<td><img
+						src="<c:out value="/user-photos/${venue.id}/${image.image}"/>"
+						width="50px" height="50px"></td>
+						<form:input type="hidden" path="images[${us.index}].id" />
+					<td><a
+						href="/admin/venues/${venue.id}/images/delete/${image.id}">Delete</a></td>
+				</tr>
+
+			</table>
+			<br>
+		</c:forEach>
+
 		<p>
-			<label for="image">Product Images: </label>
-			<input type="file" name="image" accept="image/png, image/jpeg" />
+			<label for="image">Product Images: </label> <input type="file"
+				name="image" accept="image/png, image/jpeg" />
 		</p>
 		<p>
 			<input id="submit" type="submit" tabindex="5" value="Add images">
