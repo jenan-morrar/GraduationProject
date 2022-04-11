@@ -2,6 +2,7 @@ package com.test.GraduationProject.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -119,7 +120,7 @@ public class UserService {
 	}
 	
     // edit a venue 
-    public Venue updateVenue(Long id, String name, String description, String location, float price, List<ServiceOfVenue> services) {
+    public Venue updateVenue(Long id, String name, String description, String location, float price, Set<ServiceOfVenue> services) {
     	Venue venue = findVenue(id);
     	venue.setId(id);
     	venue.setName(name);

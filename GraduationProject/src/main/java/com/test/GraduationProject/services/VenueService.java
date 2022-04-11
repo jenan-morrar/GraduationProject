@@ -3,7 +3,9 @@ package com.test.GraduationProject.services;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import com.test.GraduationProject.models.Images;
 import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.repositories.VenueRepository;
@@ -39,7 +41,7 @@ public class VenueService {
 
 	// edit a venue
 	public Venue updateVenue(Long id, String name, String description, String location, float price,
-			List<ServiceOfVenue> services) {
+			Set<ServiceOfVenue> services,Set<Images> images) {
 		Venue venue = findVenue(id);
 		venue.setId(id);
 		venue.setName(name);
@@ -47,6 +49,7 @@ public class VenueService {
 		venue.setLocation(location);
 		venue.setPrice(price);
 		venue.setServices(services);
+		venue.setImages(images);
 		return venueRepository.save(venue);
 	}
 

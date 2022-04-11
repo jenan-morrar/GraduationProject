@@ -11,5 +11,5 @@ import com.test.GraduationProject.models.ServiceOfVenue;
 public interface ServiceRepository extends CrudRepository<ServiceOfVenue, Long> {
 
 	List<ServiceOfVenue>findAll();
-	void delete(ServiceOfVenue venue);
+	void delete(ServiceOfVenue serviceOfVenue);
 }

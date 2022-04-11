@@ -2,6 +2,7 @@ package com.test.GraduationProject.models;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "venues")
@@ -37,13 +40,20 @@ public class Venue {
         name = "venues_services", 
         joinColumns = @JoinColumn(name = "venue_id"), 
         inverseJoinColumns = @JoinColumn(name = "service_id"))
-    private List<ServiceOfVenue> services;
+    private Set<ServiceOfVenue> services;
+    
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinTable(
+        name = "venues_images", 
+        joinColumns = @JoinColumn(name = "venue_id"), 
+        inverseJoinColumns = @JoinColumn(name = "image_id"))
+    private Set<Images> images;
     
     public Venue() {
     	
     }
     
-    public Venue(Long id, String name, String description, String location, float price, List<ServiceOfVenue> services) {
+    public Venue(Long id, String name, String description, String location, float price, Set<ServiceOfVenue> services,Set<Images> images) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -51,6 +61,7 @@ public class Venue {
 		this.location = location;
 		this.price = price;
 		this.services = services;
+		this.images = images;
 	}
     
     
@@ -110,12 +121,20 @@ public class Venue {
 		this.updatedAt = updatedAt;
 	}
 
-	public List<ServiceOfVenue> getServices() {
+	public Set<ServiceOfVenue> getServices() {
 		return services;
 	}
 
-	public void setServices(List<ServiceOfVenue> services) {
+	public void setServices(Set<ServiceOfVenue> services) {
 		this.services = services;
+	}
+
+	public Set<Images> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<Images> images) {
+		this.images = images;
 	}
 
 	@PrePersist
