@@ -61,6 +61,7 @@ public class Users {
 		}
 		return "loginPage.jsp";
 	}
+
 	@RequestMapping("/admin")
 	public String adminPage(Principal principal, Model model) {
 		String username = principal.getName();
@@ -113,8 +114,7 @@ public class Users {
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user")
-			.addAttribute("userRole", userRole);
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
@@ -126,8 +126,7 @@ public class Users {
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user")
-			.addAttribute("userRole", userRole);
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
@@ -139,8 +138,7 @@ public class Users {
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user")
-			.addAttribute("userRole", userRole);
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
@@ -152,8 +150,7 @@ public class Users {
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user")
-			.addAttribute("userRole", userRole);
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
@@ -165,8 +162,7 @@ public class Users {
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user")
-			.addAttribute("userRole", userRole);
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
@@ -178,8 +174,7 @@ public class Users {
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user")
-			.addAttribute("userRole", userRole);
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
@@ -191,20 +186,19 @@ public class Users {
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user")
-			.addAttribute("userRole", userRole);
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "venues.jsp";
 	}
+
 	@RequestMapping("/adminVenuePage")
 	public String adminVenuePage(Principal principal, Model model) {
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user")
-			.addAttribute("userRole", userRole);
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}

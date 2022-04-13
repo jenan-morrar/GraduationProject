@@ -134,7 +134,7 @@ public class Admins {
 		}
 		return "/venues/edit.jsp";
 	}
-	
+
 	// Delete Image
 	@RequestMapping(value = "/admin/venues/{id1}/images/delete/{id2}", method = RequestMethod.GET)
 	public String deleteImage(@PathVariable("id1") long id1, @PathVariable("id2") long id2, Model model) {
@@ -154,7 +154,6 @@ public class Admins {
 		}
 		return "/venues/edit.jsp";
 	}
-
 
 //	@RequestMapping("/admin/venues/{id}/services/add")
 //	public String index(Model model,@PathVariable("id") Long id) {
@@ -195,8 +194,8 @@ public class Admins {
 	}
 
 	@RequestMapping(value = "/admin/venues/{id}/images/add", method = RequestMethod.POST)
-	public String addImages(@PathVariable("id") long id,
-			@RequestParam("image") MultipartFile multipartFile,Model model) throws IOException {
+	public String addImages(@PathVariable("id") long id, @RequestParam("image") MultipartFile multipartFile,
+			Model model) throws IOException {
 		Venue venue = venueService.findVenue(id);
 		model.addAttribute("venue", venue);
 		model.addAttribute("serviceExist", "no");

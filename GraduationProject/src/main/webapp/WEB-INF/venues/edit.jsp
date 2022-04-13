@@ -35,84 +35,30 @@
 			<form:input type="number" path="price" />
 		</p>
 
-		<!--<tr>
+		<tr>
 			<form:label path="services">Service name</form:label>
 		</tr>
 		<br>
 		<c:forEach varStatus="us" var="service" items="${venue.services}">
-			<table id="myTable">
-				<tr>
-					<td><form:input path="services[${us.index}].name" /></td>
-					<td><form:input path="services[${us.index}].price" /></td>
-					<form:input type="hidden" path="services[${us.index}].id" />
-				</tr>
-				<td><a
-					href="/admin/venues/${venue.id}/services/delete/${service.id}">Delete</a></td>
-			</table>
-			<br>
-		</c:forEach> -->
-		<input type="submit" value="edit" />
-	</form:form>
-	<br>
-	<hr>
-	<form:form action="/admin/venues/${venue.id}/images/add" method="post"
-		modelAttribute="venue" enctype="multipart/form-data">
-		<legend>Add a Venue's images</legend>
-
-		<c:forEach varStatus="us" var="image" items="${venue.images}">
-			<table id="myTable">
-				<tr>
-					<td><img
-						src="<c:out value="/user-photos/${venue.id}/${image.image}"/>"
-						width="50px" height="50px"></td>
-						<form:input type="hidden" path="images[${us.index}].id" />
-					<td><a
-						href="/admin/venues/${venue.id}/images/delete/${image.id}">Delete</a></td>
-				</tr>
-
-			</table>
+			<tr>
+				<td><form:input path="services[${us.index}].name" /></td>
+				<td><form:input path="services[${us.index}].price" /></td>
+				<form:input type="hidden" path="services[${us.index}].id" />
+			</tr>
+			<td><a
+				href="/admin/venues/${venue.id}/services/delete/${service.id}">Delete</a></td>
 			<br>
 		</c:forEach>
-
-		<p>
-			<label for="image">Product Images: </label> <input type="file"
-				name="image" accept="image/png, image/jpeg" />
-		</p>
-		<p>
-			<input id="submit" type="submit" tabindex="5" value="Add images">
-		</p>
-	</form:form>
-	<br>
-	<hr>
-	<form:form action="/admin/venues/${venue.id}/services/add"
-		method="post" modelAttribute="venue">
-
-		<tr>
-			<form:label path="services">Venue's Service</form:label>
-		</tr>
 		<br>
-		<c:forEach varStatus="us" var="service" items="${venue.services}">
-			<table id="myTable">
-				<tr>
-					<td><form:input path="services[${us.index}].name" /></td>
-					<td><form:input path="services[${us.index}].price" /></td>
-					<form:input type="hidden" path="services[${us.index}].id" />
-					<td><a
-						href="/admin/venues/${venue.id}/services/delete/${service.id}">Delete</a></td>
-				</tr>
-
-			</table>
-			<br>
-		</c:forEach>
-		<input type="text" placeholder="name" id="serviceName"
-			name="serviceName" required />
-		<input type="number" placeholder="price" id="servicePrice"
-			name="servicePrice" required />
-		<input type="submit" value="add" />
-		<c:set var="serviceExist" scope="session" value="${serviceExist}" />
-		<c:if test="${serviceExist ==\"yes\"}">
-			<p>The Service already exist!</p>
-		</c:if>
+		<input type="submit" value="Submit" />
 	</form:form>
+
+	<form:form action="/admin/venues/${venue.id}/services/add"
+		method="post">
+		<input type="text" placeholder="name" name="serviceName" />
+		<input type="number" placeholder="price" name="servicePrice" />
+		<input type="submit" value="add" />
+	</form:form>
+
 </body>
 </html>
