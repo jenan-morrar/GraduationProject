@@ -12,6 +12,13 @@
 <p>Description: <c:out value="${venue.description}"/></p>
 <p>Location: <c:out value="${venue.location}"/></p>
 <p>Price: <c:out value="${venue.price}"/></p>
+
+<c:forEach items="${venue.images}" var="images">
+    <tr>
+        <td><img src = "<c:out value="/user-photos/${venue.id}/${images.image}"/>" width="50px" height="50px"></td>
+    </tr>
+    <br>
+</c:forEach>
 <c:forEach items="${venue.services}" var="service">
     <tr>
         <td>Service Name: <c:out value="${service.name}"/></td>

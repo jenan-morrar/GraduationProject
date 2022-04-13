@@ -52,13 +52,13 @@
 		<br>
 		<input type="submit" value="Submit" />
 	</form:form>
-	
+
 	<form:form action="/admin/venues/${venue.id}/services/add"
 		method="post">
 		<input type="text" placeholder="name" name="serviceName" />
 		<input type="number" placeholder="price" name="servicePrice" />
 		<input type="submit" value="add" />
 	</form:form>
-	
+
 </body>
 </html>
