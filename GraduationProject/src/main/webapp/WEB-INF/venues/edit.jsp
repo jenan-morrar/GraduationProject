@@ -11,7 +11,7 @@
 </head>
 <body>
 	<h1>Edit Venue</h1>
-	<form:form action="/admin/venues/${venue.id}" method="post"
+	<form:form action="/adminVenuePage/${venue.id}" method="post"
 		modelAttribute="venue">
 		<input type="hidden" name="_method" value="put">
 		<p>
@@ -34,9 +34,14 @@
 			<form:errors path="price" />
 			<form:input type="number" path="price" />
 		</p>
+		<input type="submit" value="Submit" />
+	</form:form>
+
+	<form:form action="/adminVenuePage/${venue.id}/services/add"
+		method="post" modelAttribute="venue">
 
 		<tr>
-			<form:label path="services">Service name</form:label>
+			<form:label path="services">Venue Services</form:label>
 		</tr>
 		<br>
 		<c:forEach varStatus="us" var="service" items="${venue.services}">
@@ -46,17 +51,37 @@
 				<form:input type="hidden" path="services[${us.index}].id" />
 			</tr>
 			<td><a
-				href="/admin/venues/${venue.id}/services/delete/${service.id}">Delete</a></td>
+				href="/adminVenuePage/${venue.id}/services/delete/${service.id}">Delete</a></td>
 			<br>
 		</c:forEach>
 		<br>
-		<input type="submit" value="Submit" />
-	</form:form>
 
-	<form:form action="/admin/venues/${venue.id}/services/add"
-		method="post">
 		<input type="text" placeholder="name" name="serviceName" />
 		<input type="number" placeholder="price" name="servicePrice" />
+		<input type="submit" value="add" />
+	</form:form>
+
+	<form:form action="/adminVenuePage/${venue.id}/images/add"
+		method="post" enctype="multipart/form-data" modelAttribute="venue">
+
+		<tr>
+			<form:label path="services">Venue images</form:label>
+		</tr>
+		<br>
+		<c:forEach varStatus="us" var="images" items="${venue.images}">
+			<tr>
+				<td><img
+					src="<c:out value="/user-photos/${venue.id}/${images.image}"/>"
+					width="50px" height="50px"></td>
+				<form:input type="hidden" path="images[${us.index}].id" />
+			</tr>
+			<td><a
+				href="/adminVenuePage/${venue.id}/images/delete/${images.id}">Delete</a></td>
+			<br>
+		</c:forEach>
+		<br>
+
+		<input type="file" name="image" accept="image/png, image/jpeg" />
 		<input type="submit" value="add" />
 	</form:form>
 

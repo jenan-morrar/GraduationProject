@@ -27,6 +27,6 @@
     <br>
 </c:forEach>
 
-<a href="/admin/venues/${venue.id}/edit">Edit Venue</a>
+<a href="/adminVenuePage/${venue.id}/edit">Edit Venue</a>
 </body>
 </html>

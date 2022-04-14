@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.test.GraduationProject.models.Images;
 import com.test.GraduationProject.models.ServiceOfVenue;
+import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.repositories.VenueRepository;
 
@@ -40,7 +41,20 @@ public class VenueService {
 	}
 
 	// edit a venue
-	public Venue updateVenue(Long id, String name, String description, String location, float price,
+	public Venue updateVenue1(Long id, String name, String description, String location, float price,String mapOne, String mapTwo, int numOfGuests) {
+		Venue venue = findVenue(id);
+		venue.setId(id);
+		venue.setName(name);
+		venue.setDescription(description);
+		venue.setLocation(location);
+		venue.setPrice(price);
+		venue.setMapOne(mapOne);
+		venue.setMapTwo(mapTwo);
+		venue.setNumOfGuests(numOfGuests);
+		return venueRepository.save(venue);
+	}
+	
+	public Venue updateVenue2(Long id, String name, String description, String location, float price,String mapOne, String mapTwo, int numOfGuests,
 			Set<ServiceOfVenue> services,Set<Images> images) {
 		Venue venue = findVenue(id);
 		venue.setId(id);
@@ -48,6 +62,9 @@ public class VenueService {
 		venue.setDescription(description);
 		venue.setLocation(location);
 		venue.setPrice(price);
+		venue.setMapOne(mapOne);
+		venue.setMapTwo(mapTwo);
+		venue.setNumOfGuests(numOfGuests);
 		venue.setServices(services);
 		venue.setImages(images);
 		return venueRepository.save(venue);

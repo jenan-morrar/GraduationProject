@@ -1,9 +1,5 @@
 package com.test.GraduationProject.services;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -14,28 +10,22 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.User;
-import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.repositories.RoleRepository;
 import com.test.GraduationProject.repositories.UserRepository;
-import com.test.GraduationProject.repositories.VenueRepository;
-
 
 @Service
 public class UserService {
 	private UserRepository userRepository;
 	private RoleRepository roleRepository;
-	private final VenueRepository venueRepository;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	private JavaMailSender emailSender;
 
-	public UserService(UserRepository userRepository, RoleRepository roleRepository,VenueRepository venueRepository,
+	public UserService(UserRepository userRepository, RoleRepository roleRepository,
 			BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
-		this.venueRepository= venueRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
@@ -98,41 +88,40 @@ public class UserService {
 		return userRepository.findByEmail(email);
 	}
 
-
-	// returns all the venues
-	public List<Venue> allVenues() {
-		return venueRepository.findAll();
-	}
-
-	// creates a venue
-	public Venue createVenue(Venue venue) {
-		return venueRepository.save(venue);
-	}
-
-	// retrieves a venue
-	public Venue findVenue(Long id) {
-		Optional<Venue> optionalVenue = venueRepository.findById(id);
-		if (optionalVenue.isPresent()) {
-			return optionalVenue.get();
-		} else {
-			return null;
-		}
-	}
-	
-    // edit a venue 
-    public Venue updateVenue(Long id, String name, String description, String location, float price, Set<ServiceOfVenue> services) {
-    	Venue venue = findVenue(id);
-    	venue.setId(id);
-    	venue.setName(name);
-    	venue.setDescription(description);
-    	venue.setLocation(location);
-		venue.setPrice(price);
-		venue.setServices(services);
-    	return venueRepository.save(venue);
-    }
-    
-    // delete a venue 
-    public void deleteVenue(Long id) {
-    	venueRepository.deleteById(id);
-    }
+//	// returns all the venues
+//	public List<Venue> allVenues() {
+//		return venueRepository.findAll();
+//	}
+//
+//	// creates a venue
+//	public Venue createVenue(Venue venue) {
+//		return venueRepository.save(venue);
+//	}
+//
+//	// retrieves a venue
+//	public Venue findVenue(Long id) {
+//		Optional<Venue> optionalVenue = venueRepository.findById(id);
+//		if (optionalVenue.isPresent()) {
+//			return optionalVenue.get();
+//		} else {
+//			return null;
+//		}
+//	}
+//	
+//    // edit a venue 
+//    public Venue updateVenue(Long id, String name, String description, String location, float price, Set<ServiceOfVenue> services) {
+//    	Venue venue = findVenue(id);
+//    	venue.setId(id);
+//    	venue.setName(name);
+//    	venue.setDescription(description);
+//    	venue.setLocation(location);
+//		venue.setPrice(price);
+//		venue.setServices(services);
+//    	return venueRepository.save(venue);
+//    }
+//    
+//    // delete a venue 
+//    public void deleteVenue(Long id) {
+//    	venueRepository.deleteById(id);
+//    }
 }

@@ -84,7 +84,7 @@
 							<li><a href="/index">الصفحة الرئيسية</a></li>
 							<c:set var="userRole" scope="session" value="${userRole}" />
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
-								<li class="active"><a href="adminVenuePage">قاعتي</a></li>
+								<li class="active"><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
@@ -139,6 +139,41 @@
 			</div>
 		</header>
 
+		<div>
+			<h1>
+				<c:out value="${venue.name}" />
+			</h1>
+			<p>
+				Description:
+				<c:out value="${venue.description}" />
+			</p>
+			<p>
+				Location:
+				<c:out value="${venue.location}" />
+			</p>
+			<p>
+				Price:
+				<c:out value="${venue.price}" />
+			</p>
+
+			<c:forEach items="${venue.images}" var="images">
+				<tr>
+					<td><img
+						src="<c:out value="/user-photos/${venue.id}/${images.image}"/>"
+						width="50px" height="50px"></td>
+				</tr>
+				<br>
+			</c:forEach>
+			<c:forEach items="${venue.services}" var="service">
+				<tr>
+					<td>Service Name: <c:out value="${service.name}" /></td>
+					<td>Service Price: <c:out value="${service.price}" /></td>
+				</tr>
+				<br>
+			</c:forEach>
+
+			<a href="/adminVenuePage/${venue.id}/edit">Edit Venue</a>
+		</div>
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">
 			<div class="container">

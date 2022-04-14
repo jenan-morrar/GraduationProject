@@ -104,7 +104,7 @@
 							<li><a href="/index">الصفحة الرئيسية</a></li>
 							<c:set var="userRole" scope="session" value="${userRole}" />
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
-								<li><a href="adminVenuePage">قاعتي</a></li>
+								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
 							<li class="active"><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>

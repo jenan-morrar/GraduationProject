@@ -1,9 +1,7 @@
 package com.test.GraduationProject.controllers;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -40,49 +38,16 @@ public class Admins {
 		this.imagesService = imagesService;
 	}
 
-//	@RequestMapping("/admin/venues/{id}/services")
-//	public String index(Model model,@PathVariable("id") Long id) {
-//		List<ServiceOfVenue> services = servicesOfVenueService.allVenuesServices();
-//		model.addAttribute("services", services);
-//		return "redirect:/admin/venues/{id}/services";
-//	}
+//	@RequestMapping("/admin/venues/{id}")
+//	public String show(@PathVariable("id") Long id, Model model) {
+//		Venue venue = venueService.findVenue(id);
+//		model.addAttribute("venue", venue);
+//		model.addAttribute("serviceExist", "no");
 //
-//	@RequestMapping(value = "/admin/venues/{id}/services", method = RequestMethod.POST)
-//	public String create(@Valid @ModelAttribute("service") ServiceOfVenue service, BindingResult result) {
-//		if (result.hasErrors()) {
-//			return "redirect:/admin/venues/{id}/services";
-//		} else {
-//			
-////			List<ServiceOfVenue> services = servicesOfVenueService.allVenuesServices();
-////			for(int i=0;i<services.size();i++) {
-////			if(!services.contains(service)) {
-////				servicesOfVenueService.createService(service);
-////			}
-////		}
-//			servicesOfVenueService.createService(service);
-//			return "redirect:/admin/venues/{id}/services";
-//		}
+//		return "/venues/show.jsp";
 //	}
 
-//************************************************
-	@RequestMapping("/admin/venues/{id}")
-	public String show(@PathVariable("id") Long id, Model model) {
-		Venue venue = venueService.findVenue(id);
-		model.addAttribute("venue", venue);
-		model.addAttribute("serviceExist", "no");
-
-		return "/venues/show.jsp";
-	}
-
-//	@RequestMapping("/save")
-//	public String save() {
-//		long id = 9l;
-//		ServiceOfVenue service = new ServiceOfVenue(id,"drinkkks",10,null);
-//		servicesOfVenueService.createService(service);
-//		return "index.jsp";
-//	}
-
-	@RequestMapping("/admin/venues/{id}/edit")
+	@RequestMapping("/adminVenuePage/{id}/edit")
 	public String edit(@PathVariable("id") Long id, Model model) {
 		Venue venue = venueService.findVenue(id);
 		model.addAttribute("venue", venue);
@@ -90,7 +55,7 @@ public class Admins {
 		return "/venues/edit.jsp";
 	}
 
-	@RequestMapping(value = "/admin/venues/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/adminVenuePage/{id}", method = RequestMethod.PUT)
 	public String update(@Valid @ModelAttribute("venue") Venue venue, BindingResult result) {
 		if (result.hasErrors()) {
 			return "/venues/edit.jsp";
@@ -98,25 +63,25 @@ public class Admins {
 
 			List<ServiceOfVenue> services = servicesOfVenueService.allVenuesServices();
 
-			if (venue.getServices() != null) {
-				List<ServiceOfVenue> serviceList;
-				serviceList = venue.getServices().stream().collect(Collectors.toList());
-				for (int i = 0; i < serviceList.size(); i++) {
-					servicesOfVenueService.updateService(serviceList.get(i).getId(), serviceList.get(i).getName(),
-							serviceList.get(i).getPrice());
-					if (!services.contains(serviceList.get(i))) {
-						servicesOfVenueService.createService(serviceList.get(i));
-					}
-				}
-			}
-			venueService.updateVenue(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
-					venue.getPrice(), venue.getServices(), venue.getImages());
-			return "redirect:/admin/venues/{id}";
+//			if (venue.getServices() != null) {
+//				List<ServiceOfVenue> serviceList;
+//				serviceList = venue.getServices().stream().collect(Collectors.toList());
+//				for (int i = 0; i < serviceList.size(); i++) {
+//					servicesOfVenueService.updateService(serviceList.get(i).getId(), serviceList.get(i).getName(),
+//							serviceList.get(i).getPrice());
+//					if (!services.contains(serviceList.get(i))) {
+//						servicesOfVenueService.createService(serviceList.get(i));
+//					}
+//				}
+//			}
+			venueService.updateVenue1(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
+					venue.getPrice(), venue.getMapOne(), venue.getMapTwo(), venue.getNumOfGuests());
+			return "redirect:/adminVenuePage/{id}";
 		}
 	}
 
 	// Delete Service
-	@RequestMapping(value = "/admin/venues/{id1}/services/delete/{id2}", method = RequestMethod.GET)
+	@RequestMapping(value = "/adminVenuePage/{id1}/services/delete/{id2}", method = RequestMethod.GET)
 	public String deleteService(@PathVariable("id1") long id1, @PathVariable("id2") long id2, Model model) {
 		Venue venue = venueService.findVenue(id1);
 		model.addAttribute("venue", venue);
@@ -127,8 +92,9 @@ public class Admins {
 				if (serviceList.get(i).getId() == id2) {
 					venue.getServices().remove(serviceList.get(i));
 					servicesOfVenueService.deleteService(id2);
-					venueService.updateVenue(venue.getId(), venue.getName(), venue.getDescription(),
-							venue.getLocation(), venue.getPrice(), venue.getServices(), venue.getImages());
+					venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(),
+							venue.getLocation(), venue.getPrice(), venue.getMapOne(), venue.getMapTwo(),
+							venue.getNumOfGuests(), venue.getServices(), venue.getImages());
 				}
 			}
 		}
@@ -136,7 +102,7 @@ public class Admins {
 	}
 
 	// Delete Image
-	@RequestMapping(value = "/admin/venues/{id1}/images/delete/{id2}", method = RequestMethod.GET)
+	@RequestMapping(value = "/adminVenuePage/{id1}/images/delete/{id2}", method = RequestMethod.GET)
 	public String deleteImage(@PathVariable("id1") long id1, @PathVariable("id2") long id2, Model model) {
 		Venue venue = venueService.findVenue(id1);
 		model.addAttribute("venue", venue);
@@ -147,22 +113,17 @@ public class Admins {
 				if (imagesList.get(i).getId() == id2) {
 					venue.getImages().remove(imagesList.get(i));
 					imagesService.deleteImage(id2);
-					venueService.updateVenue(venue.getId(), venue.getName(), venue.getDescription(),
-							venue.getLocation(), venue.getPrice(), venue.getServices(), venue.getImages());
+					venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(),
+							venue.getLocation(), venue.getPrice(), venue.getMapOne(), venue.getMapTwo(),
+							venue.getNumOfGuests(), venue.getServices(), venue.getImages());
 				}
 			}
 		}
 		return "/venues/edit.jsp";
 	}
 
-//	@RequestMapping("/admin/venues/{id}/services/add")
-//	public String index(Model model,@PathVariable("id") Long id) {
-//		List<ServiceOfVenue> services = servicesOfVenueService.allVenuesServices();
-//		model.addAttribute("services", services);
-//		return "redirect:/admin/venues/{id}/services";
-//	}
-	// Edit this
-	@RequestMapping(value = "/admin/venues/{id}/services/add", method = RequestMethod.POST)
+	// Add Service
+	@RequestMapping(value = "/adminVenuePage/{id}/services/add", method = RequestMethod.POST)
 	public String addService(@PathVariable("id") long id, @RequestParam("serviceName") String name,
 			@RequestParam("servicePrice") float price, Model model) {
 		boolean flag = true;
@@ -186,14 +147,16 @@ public class Admins {
 			ServiceOfVenue service = new ServiceOfVenue(null, name, price, null);
 			servicesOfVenueService.createService(service);
 			venue.getServices().add(service);
-			venueService.updateVenue(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
-					venue.getPrice(), venue.getServices(), venue.getImages());
+			venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
+					venue.getPrice(), venue.getMapOne(), venue.getMapTwo(), venue.getNumOfGuests(), venue.getServices(),
+					venue.getImages());
 		}
 
 		return "/venues/edit.jsp";
 	}
 
-	@RequestMapping(value = "/admin/venues/{id}/images/add", method = RequestMethod.POST)
+	// Add Image
+	@RequestMapping(value = "/adminVenuePage/{id}/images/add", method = RequestMethod.POST)
 	public String addImages(@PathVariable("id") long id, @RequestParam("image") MultipartFile multipartFile,
 			Model model) throws IOException {
 		Venue venue = venueService.findVenue(id);
@@ -206,8 +169,9 @@ public class Admins {
 		// venue.setImages(imagesList);
 		venue.getImages().add(image);
 		imagesService.createImage(image);
-		venueService.updateVenue(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
-				venue.getPrice(), venue.getServices(), venue.getImages());
+		venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
+				venue.getPrice(), venue.getMapOne(), venue.getMapTwo(), venue.getNumOfGuests(), venue.getServices(),
+				venue.getImages());
 		String uploadDir = "user-photos/" + id;
 		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 

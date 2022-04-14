@@ -1,7 +1,6 @@
 package com.test.GraduationProject.models;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -27,44 +27,49 @@ public class Venue {
 	@GeneratedValue
 	private Long id;
 
-    private String name;
-    private String description;
-    private String location;
-    private float price;
-    @Column(updatable=false)
-    private Date createdAt;
-    private Date updatedAt;
-    
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinTable(
-        name = "venues_services", 
-        joinColumns = @JoinColumn(name = "venue_id"), 
-        inverseJoinColumns = @JoinColumn(name = "service_id"))
-    private Set<ServiceOfVenue> services;
-    
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinTable(
-        name = "venues_images", 
-        joinColumns = @JoinColumn(name = "venue_id"), 
-        inverseJoinColumns = @JoinColumn(name = "image_id"))
-    private Set<Images> images;
-    
-    public Venue() {
-    	
-    }
-    
-    public Venue(Long id, String name, String description, String location, float price, Set<ServiceOfVenue> services,Set<Images> images) {
+	private String name;
+	private String description;
+	private String location;
+	private float price;
+	private String mapOne;
+	private String mapTwo;
+	private int numOfGuests;
+	@Column(updatable = false)
+	private Date createdAt;
+	private Date updatedAt;
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@JoinTable(name = "venues_services", joinColumns = @JoinColumn(name = "venue_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
+	private Set<ServiceOfVenue> services;
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@JoinTable(name = "venues_images", joinColumns = @JoinColumn(name = "venue_id"), inverseJoinColumns = @JoinColumn(name = "image_id"))
+	private Set<Images> images;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	public Venue() {
+
+	}
+
+	public Venue(Long id, String name, String description, String location, float price, String mapOne, String mapTwo,
+			int numOfGuests, Set<ServiceOfVenue> services, Set<Images> images, User user) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.location = location;
 		this.price = price;
+		this.mapOne = mapOne;
+		this.mapTwo = mapTwo;
+		this.numOfGuests = numOfGuests;
 		this.services = services;
 		this.images = images;
+		this.user = user;
 	}
-    
-    
+
 	public Long getId() {
 		return id;
 	}
@@ -105,6 +110,30 @@ public class Venue {
 		this.price = price;
 	}
 
+	public String getMapOne() {
+		return mapOne;
+	}
+
+	public void setMapOne(String mapOne) {
+		this.mapOne = mapOne;
+	}
+
+	public String getMapTwo() {
+		return mapTwo;
+	}
+
+	public void setMapTwo(String mapTwo) {
+		this.mapTwo = mapTwo;
+	}
+
+	public int getNumOfGuests() {
+		return numOfGuests;
+	}
+
+	public void setNumOfGuests(int numOfGuests) {
+		this.numOfGuests = numOfGuests;
+	}
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -137,12 +166,21 @@ public class Venue {
 		this.images = images;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@PrePersist
-    protected void onCreate(){
-        this.createdAt = new Date();
-    }
-    @PreUpdate
-    protected void onUpdate(){
-        this.updatedAt = new Date();
-    }
+	protected void onCreate() {
+		this.createdAt = new Date();
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		this.updatedAt = new Date();
+	}
 }
