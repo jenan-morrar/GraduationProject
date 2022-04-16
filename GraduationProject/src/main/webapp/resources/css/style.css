@@ -434,6 +434,42 @@ input {
 	-o-transform: scale(1.2);
 	transform: scale(1.2);
 }
+.venuePageHeader{
+  height: 130px;
+  background-color:#fcf0ea;
+}
+
+#venueRate{
+  font-family: 'Aref Ruqaa', serif;
+  float: right;
+  margin-top: 3%;
+}
+.venueParg{
+  font-family: 'Aref Ruqaa', serif;
+  clear: both;
+}
+#venueNavTabs{
+  font-family: 'Aref Ruqaa', serif;
+  margin-top: 5%;
+  margin-bottom: 3%;
+  float: right;
+  clear:both
+}
+#venueTabContent{
+  font-family: 'Aref Ruqaa', serif;
+  text-align:right;
+  clear:both;
+}
+#venueInfo{
+  font-family: 'Aref Ruqaa', serif;
+  text-align: right;
+}
+.venueDetaile{
+  margin-top: 2%;
+}
+.venueDetaileTitle{
+  color: #cd7e53;
+}
 
 .fh5co-cover {
 	height: 900px;

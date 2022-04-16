@@ -884,7 +884,8 @@ pre code {
 }
 @media (min-width: 992px) {
   .container {
-    width: 970px;
+    width: 98%; 
+    /* Updated to fix the calendar width issue */
   }
 }
 @media (min-width: 1200px) {

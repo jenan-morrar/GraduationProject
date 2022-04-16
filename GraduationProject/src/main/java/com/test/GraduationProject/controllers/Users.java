@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,16 +18,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.services.UserService;
+import com.test.GraduationProject.services.VenueService;
 import com.test.GraduationProject.validator.UserValidator;
 
 @Controller
 public class Users {
 	private UserService userService;
 	private UserValidator userValidator;
+	private VenueService venueService;
 
-	public Users(UserService userService, UserValidator userValidator) {
+
+	public Users(UserService userService, UserValidator userValidator,VenueService venueService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
+		this.venueService = venueService;
 	}
 
 	@RequestMapping("/registration")
@@ -167,9 +172,11 @@ public class Users {
 		return "songsPage.jsp";
 	}
 
-	@RequestMapping("/venuePage")
-	public String venuePage(Principal principal, Model model) {
+	@RequestMapping("/venuePage/{id}")
+	public String venuePage(@PathVariable("id") long id,Principal principal, Model model) {
 		if (principal != null) {
+			Venue venuePage = venueService.findVenue(id);
+			model.addAttribute("venuePage", venuePage);
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
 			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
