@@ -168,16 +168,6 @@ h1, h3, h4, h5, h6, figure {
 	/* box-shadow: 0.25rem 0.25rem 0rem #6b2b50; */
 }
 
-input {
-	margin: 0 0.5rem 0 0.5rem;
-	width: 100%;
-	border: none;
-	outline: none;
-	background: #ff9e69;
-	color: white;
-	/* float:right; */
-}
-
 ::placeholder {
 	color: white;
 }

@@ -31,9 +31,13 @@ public class Venue {
 	private String description;
 	private String location;
 	private float price;
+	@Column(length = 2048)
 	private String mapOne;
+	@Column(length = 2048)
 	private String mapTwo;
 	private int numOfGuests;
+	private String venuePark;
+	private String venueContact;
 	@Column(updatable = false)
 	private Date createdAt;
 	private Date updatedAt;
@@ -55,7 +59,8 @@ public class Venue {
 	}
 
 	public Venue(Long id, String name, String description, String location, float price, String mapOne, String mapTwo,
-			int numOfGuests, Set<ServiceOfVenue> services, Set<Images> images, User user) {
+			int numOfGuests, String venuePark, String venueContact, Set<ServiceOfVenue> services, Set<Images> images,
+			User user) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -65,6 +70,8 @@ public class Venue {
 		this.mapOne = mapOne;
 		this.mapTwo = mapTwo;
 		this.numOfGuests = numOfGuests;
+		this.venuePark = venuePark;
+		this.venueContact = venueContact;
 		this.services = services;
 		this.images = images;
 		this.user = user;
@@ -132,6 +139,22 @@ public class Venue {
 
 	public void setNumOfGuests(int numOfGuests) {
 		this.numOfGuests = numOfGuests;
+	}
+
+	public String getVenuePark() {
+		return venuePark;
+	}
+
+	public void setVenuePark(String venuePark) {
+		this.venuePark = venuePark;
+	}
+
+	public String getVenueContact() {
+		return venueContact;
+	}
+
+	public void setVenueContact(String venueContact) {
+		this.venueContact = venueContact;
 	}
 
 	public Date getCreatedAt() {
