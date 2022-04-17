@@ -189,7 +189,8 @@
 							</div>
 
 							<input type="hidden" name="${_csrf.parameterName}"
-								value="${_csrf.token}" /> <input type="submit"
+								value="${_csrf.token}" />
+							 <input type="submit"
 								value="تسجيل الدخول" class="login100-form-btn" />
 							<div class="text-center w-full">
 								<p class="txt1">

@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page isErrorPage="true"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,10 +36,10 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Dancing+Script:wght@700&display=swap"
 	rel="stylesheet">
-
-
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel='stylesheet'
+	href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'>
 <!-- Animate.css -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/animate.css" />">
@@ -61,7 +63,11 @@
 	href="<c:url value="/resources/css/owl.theme.default.min.css" />">
 
 <!-- Theme style  -->
+<link rel="stylesheet"
+	href="<c:url value="/resources/css/venueCard.css" />">
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
+<link href="<c:url value="/resources/css/venuePage.css" />"
+	rel="stylesheet">
 
 <!-- Modernizr JS -->
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
@@ -115,6 +121,7 @@
 										الخروج</a></li>
 							</c:if>
 
+
 						</ul>
 					</div>
 				</div>
@@ -122,23 +129,106 @@
 			</div>
 		</nav>
 
-		<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm"
-			role="banner"
-			style="background-image: url(/resources/images/img_bg_1.jpg);">
+		<header id="fh5co-header" role="banner" class="venuePageHeader">
 			<div class="overlay"></div>
-			<div class="fh5co-container">
-				<div class="row">
-					<div class="col-md-8 col-md-offset-2 text-center">
-						<div class="display-t">
-							<div class="display-tc animate-box" data-animate-effect="fadeIn">
-								<h1>PalVenues</h1>
-								<h2>ابحث عن القاعة التي تناسبك</h2>
+		</header>
+
+		<div class="row">
+			<div class="col-md-8">
+				<c:forEach items="${venues}" var="venueCard">
+					<div class="col-md-4" id="venueCardStyle">
+						<div class="product-grid">
+							<div class="product-image">
+								<c:if test="${venueCard.images.size()==0}">
+									<a href="/venuePage/${venueCard.id}" class="image"> <img
+										class="pic-1" style="width: 100%; height: 200px;"
+										src="/resources/images/noImage.jpg">
+									</a>
+								</c:if>
+								<c:forEach var="images" items="${venueCard.images}"
+									varStatus="loop">
+									<c:if test="${loop.first}">
+										<a href="/venuePage/${venueCard.id}" class="image"> <img
+											class="pic-1" style="width: 100%; height: 200px;"
+											src="<c:out value="/user-photos/${venueCard.id}/${images.image}"/>">
+										</a>
+									</c:if>
+								</c:forEach>
+							</div>
+							<div class="product-content">
+								<ul class="rating">
+									<li class="fas fa-star"></li>
+									<li class="fas fa-star"></li>
+									<li class="fas fa-star"></li>
+									<li class="far fa-star"></li>
+									<li class="far fa-star"></li>
+								</ul>
+								<h3 class="title">
+									<a href="/venuePage/${venueCard.id}"><c:out
+											value="${venueCard.name}" /></a>
+								</h3>
+								<a class="add-to-cart" href="/venuePage/${venueCard.id}">اذهب
+									إلى القاعة</a>
 							</div>
 						</div>
 					</div>
-				</div>
+				</c:forEach>
 			</div>
-		</header>
+			<div class="col-md-4">
+				<form action="" method="post">
+					<input type="hidden" name="_method" value="put">
+					<div id="filter-search">
+						<div class="filter-search-items">
+							<label>موقع القاعة</label> <br> <select id="locations"
+								name="location">
+								<option value="location1">الماصيون</option>
+								<option value="location2">الأرسال</option>
+								<option value="location3">أم الشرايط</option>
+								<option value="location4">بيرزيت</option>
+								<option value="location5">البيرة</option>
+								<option value="location6">كفر عقب</option>
+							</select>
+
+						</div>
+						<div class="filter-search-items">
+							<label>سعر القاعة</label> <br> <select id="price"
+								name="price">
+								<option value="price1">2000 - 4000</option>
+								<option value="price2">4000 - 7000</option>
+								<option value="price3">7000 - 10000</option>
+								<option value="price4">10000 - 15000</option>
+								<option value="price5">15000 - 20000</option>
+								<option value="price5">20000 - 25000</option>
+								<option value="price5">25000 - 30000</option>
+								<option value="price5">>30000</option>
+							</select>
+						</div>
+						<div class="filter-search-items">
+							<label>عدد الضيوف</label> <br> <select id="numOfGuests"
+								name="numOfGuests">
+								<option value="numOfGuests1">50 - 100</option>
+								<option value="numOfGuests2">100 - 200</option>
+								<option value="numOfGuests3">200 - 300</option>
+								<option value="numOfGuests4">300 - 400</option>
+								<option value="numOfGuests5">400 - 500</option>
+								<option value="numOfGuests6">500 - 600</option>
+								<option value="numOfGuests6">600 - 700</option>
+								<option value="numOfGuests6">700 - 800</option>
+								<option value="numOfGuests6">800 - 900</option>
+								<option value="numOfGuests6">900 - 1000</option>
+							</select>
+						</div>
+
+
+						<div class="venue-a">
+							<input type="submit" class="round-black-btn"
+								value="ابحث عن القاعة" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
 
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">

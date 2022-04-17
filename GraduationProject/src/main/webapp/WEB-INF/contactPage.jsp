@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page isErrorPage="true"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -144,27 +146,27 @@
 				<div class="row">
 					<div class="col-md-6 col-md-push-5 animate-box">
 						<h3 class="contactHeader">تواصلوا معنا</h3>
-						<form action="#" class="contactForm">
+						<form:form method="POST" action="/contactPage" class="contactForm" modelAttribute="contact">
 							<div class="row form-group">
 								<div class="col-md-12">
-									<label for="email">الايميل</label> <input type="text"
-										id="email" class="form-control" placeholder="ايميل المستخدم">
+									<label for="email">الايميل</label> <form:input type="email"
+										id="email" class="form-control" placeholder="ايميل المستخدم" required="required" path="emailSender"/>
 								</div>
 							</div>
 
 							<div class="row form-group">
 								<div class="col-md-12">
-									<label for="subject">الموضع</label> <input type="text"
+									<label for="subject">الموضع</label> <form:input type="text"
 										id="subject" class="form-control"
-										placeholder="موضوع هذه الرسالة">
+										placeholder="موضوع هذه الرسالة" required="required" path="subject" />
 								</div>
 							</div>
 
 							<div class="row form-group">
 								<div class="col-md-12">
 									<label for="message">الرسالة</label>
-									<textarea name="message" id="message" cols="30" rows="10"
-										class="form-control" placeholder="اكتب شيئاً لنا.."></textarea>
+									<form:textarea name="message" id="message" cols="30" rows="10"
+										class="form-control" placeholder="اكتب شيئاً لنا.." required="required" path="message"/>
 								</div>
 							</div>
 							<div class="form-group">
@@ -172,7 +174,7 @@
 									class="btn btn-primary">
 							</div>
 
-						</form>
+						</form:form>
 					</div>
 					<div class="col-md-4 col-md-pull-7 animate-box">
 

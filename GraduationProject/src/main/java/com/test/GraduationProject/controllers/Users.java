@@ -1,11 +1,17 @@
 package com.test.GraduationProject.controllers;
 
 import java.security.Principal;
+import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,8 +19,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.test.GraduationProject.models.Contact;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.services.UserService;
@@ -26,9 +34,10 @@ public class Users {
 	private UserService userService;
 	private UserValidator userValidator;
 	private VenueService venueService;
+	@Autowired
+	private JavaMailSender emailSender;
 
-
-	public Users(UserService userService, UserValidator userValidator,VenueService venueService) {
+	public Users(UserService userService, UserValidator userValidator, VenueService venueService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
@@ -137,7 +146,8 @@ public class Users {
 	}
 
 	@RequestMapping("/contactPage")
-	public String contactPage(Principal principal, Model model) {
+	public String contactForm(Principal principal, Model model) {
+		model.addAttribute("contact", new Contact());
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -152,6 +162,27 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "contactPage.jsp";
+	}
+
+	// Still there is some issues !!!!!!
+	@RequestMapping(value = "/contactPage", method = RequestMethod.POST)
+	public String contactPage(Model model, @Valid @ModelAttribute("contact") Contact contact, BindingResult result)
+			throws MessagingException {
+
+		if (result.hasErrors()) {
+			return "contactPage.jsp";
+		} else {
+
+			contact.setEmailReciver("palvenues@gmail.com");
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setFrom(contact.getEmailSender());
+			message.setTo(contact.getEmailReciver());
+			message.setSubject(contact.getSubject());
+			message.setText(contact.getMessage());
+			emailSender.send(message);
+
+			return "redirect:/contactPage";
+		}
 	}
 
 	@RequestMapping("/songsPage")
@@ -173,10 +204,10 @@ public class Users {
 	}
 
 	@RequestMapping("/venuePage/{id}")
-	public String venuePage(@PathVariable("id") long id,Principal principal, Model model) {
+	public String venuePage(@PathVariable("id") long id, Principal principal, Model model) {
+		Venue venuePage = venueService.findVenue(id);
+		model.addAttribute("venuePage", venuePage);
 		if (principal != null) {
-			Venue venuePage = venueService.findVenue(id);
-			model.addAttribute("venuePage", venuePage);
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
 			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
@@ -194,6 +225,8 @@ public class Users {
 
 	@RequestMapping("/venues")
 	public String venues(Principal principal, Model model) {
+		List<Venue> venues = venueService.allVenues();
+		model.addAttribute("venues", venues);
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();

@@ -289,7 +289,8 @@
 									</div>
 									<div class="venue-a">
 										<input type="submit" class="round-black-btn"
-											value="حفظ جميع التعديلات" />
+											value="حفظ التعديلات" />
+										<a class="round-black-btn" href="/adminVenuePage/${venue.id}">العودة إلى صفحة القاعة</a>
 									</div>
 								</form:form>
 

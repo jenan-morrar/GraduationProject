@@ -175,7 +175,7 @@
 							<!-- Slides -->
 							<c:forEach items="${venuePage.images}" var="images">
 								<div
-									style="background-image: url(<c:out value="/user-photos/${venue.id}/${images.image}"/>)"></div>
+									style="background-image: url(<c:out value="/user-photos/${venuePage.id}/${images.image}"/>)"></div>
 							</c:forEach>
 
 							<i class="left" class="arrows"
@@ -284,24 +284,48 @@
 
 				<div class="tab-content" id="venueTabContent">
 					<div id="VenueReservatio" class="tab-pane fade in active">
-						<h3>حجز القاعة</h3>
-						<div style="margin-top: 3%;">
-							<h4>اختر من خدمات القاعة</h4>
-							<form:form action="" method="post" modelAttribute="venue">
-								<c:forEach varStatus="us" var="service"
-									items="${venuePage.services}">
-									<div>
-										<label for="venueService"><c:out
-												value="${service.price}" /> <c:out value="${service.name}" /></label>
-										<input type="checkbox" id="venueService" name="interest"
-											value="coding">
-									</div>
-								</c:forEach>
-								<br>
-							</form:form>
-						</div>
-						<h4>أختر التاريح الذي يناسبك</h4>
-						<div class="--noshadow" id="demoEvoCalendar"></div>
+						<c:if test="${userName == \"noUser\"}">
+							<h3>للحجز يجب تسجيل الدخول</h3>
+							<a class="round-black-btn" href="/login">تسجيل الدخول</a>
+							<div style="margin-top: 3%;">
+								<h3>خدمات القاعة</h3>
+								<form:form action="" method="post" modelAttribute="venue">
+									<c:forEach varStatus="us" var="service"
+										items="${venuePage.services}">
+										<div>
+											<label for="venueService"><c:out
+													value="${service.price}" /> <c:out value="${service.name}" /></label>
+										</div>
+									</c:forEach>
+									<br>
+								</form:form>
+							</div>
+							<div class="--noshadow" id="demoEvoCalendar"></div>
+						</c:if>
+
+						<c:if test="${userName == \"user\"}">
+							<h3>حجز القاعة</h3>
+							<div style="margin-top: 3%;">
+								<h4>اختر من خدمات القاعة</h4>
+								<form:form action="" method="post" modelAttribute="venue">
+									<c:forEach varStatus="us" var="service"
+										items="${venuePage.services}">
+										<div>
+											<label for="venueService"><c:out
+													value="${service.price}" /> <c:out value="${service.name}" /></label>
+											<input type="checkbox" id="venueService" name="interest"
+												value="coding">
+										</div>
+									</c:forEach>
+									<br>
+									<h4>أختر التاريح الذي يناسبك</h4>
+									<div class="--noshadow" id="demoEvoCalendar"></div>
+									<input type="submit" class="round-black-btn" value="إحجز الآن" />
+								</form:form>
+							</div>
+						</c:if>
+
+
 					</div>
 
 					<div id="venueLocation" class="tab-pane fade">
