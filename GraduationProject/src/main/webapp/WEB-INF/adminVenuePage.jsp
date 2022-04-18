@@ -129,7 +129,7 @@
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
 								<ul class="dropdown">
-									<li class="active"><a href="/venues">القاعات</a></li>
+									<li><a href="/venues">القاعات</a></li>
 									<li><a href="/songsPage">الأغاني</a></li>
 								</ul></li>
 							<c:set var="userName" scope="session" value="${currentUser}" />

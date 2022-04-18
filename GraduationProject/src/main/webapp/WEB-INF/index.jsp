@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -165,8 +166,7 @@
 						<h3 style="margin-top: 40px;">الآن أصبح بأمكانك البحث عن قاعة
 							مميزة لفرحك و حجزها من خلال هذه الموقع</h3>
 						<h3 style="margin-bottom: 30px;">للمزيد من المعلومات</h3>
-						<button type="submit" class="btn btn-default btn-block">اضغط
-							هنا</button>
+						<a class="btn btn-default btn-block" href="/aboutPage">اضغط هنا</a>
 					</div>
 				</div>
 			</div>
@@ -283,65 +283,6 @@
 			</div>
 		</div>
 
-		<!-- <div id="fh5co-testimonial">
-		<div class="container">
-			<div class="row">
-				<div class="row animate-box">
-					<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-						<!-- <span></span> -->
-		<!-- <h3>افضل لحظات حياتكم بأفضل مكان</h3> -->
-		<!-- </div>
-				</div>
-				<div class="row">
-					<div class="col-md-12 animate-box">
-						<div class="wrap-testimony">
-							<div class="owl-carousel-fullwidth">
-								<div class="item">
-									<div class="testimony-slide active text-center">
-										<figure>  -->
-		<!-- <img src="images/couple-1.jpg" alt="user"> -->
-		<!-- </figure> -->
-		<!-- <h2>قاعة جلوريا</h2> -->
-		<!-- <blockquote>
-											<p><img src="images/couple-1.jpg" alt="user"></p>
-										</blockquote>
-									</div>
-								</div>
-								<div class="item">
-									<div class="testimony-slide active text-center">
-										<figure>
-											<!-- <img src="images/firstclassimg.jpg" alt="user"> -->
-		<!-- </figure> -->
-		<!-- <span>قاعة ابو شلبك</span> -->
-		<!-- <blockquote>
-											
-										<span><img src="images/couple-2.jpg" alt="user"></span>
-											<!-- <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, at the coast of the Semantics, a large language ocean."</p> -->
-		<!-- </blockquote>
-									</div>
-								</div>
-								<div class="item">
-									<div class="testimony-slide active text-center">
-										<figure>
-											<!-- <img src="images/firstclassimg.jpg" alt="user"> -->
-		<!-- </figure>  -->
-		<!-- <span>قاعة ابو شلبك</span>
-										<blockquote>
-											
-										<span><img src="images/couple-2.jpg" alt="user"></span>
-											<!-- <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, at the coast of the Semantics, a large language ocean."</p> -->
-		<!-- </blockquote>
-									</div>
-								</div>
-									
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div> -->
-		<!-- </div>  -->
-
 		<div id="fh5co-services" class="fh5co-section-gray">
 			<div class="container">
 
@@ -420,24 +361,28 @@
 				</div>
 				<div class="row animate-box">
 					<div class="col-md-10 col-md-offset-1">
-						<form class="form-inline">
+						<form:form class="form-inline" method="POST" action="/index"
+							modelAttribute="userWebsiteRate">
 							<div class="col-md-4 col-sm-4">
 								<div class="form-group">
 									<label for="text" class="sr-only"><textarea name=""
-											cols="150" rows="150"></textarea></label> <input type="text"
-										class="form-control" placeholder="التعليق">
+											cols="150" rows="150"></textarea></label>
+									<form:input type="text" class="form-control"
+										placeholder="التعليق" required="required" path="message" />
 								</div>
 							</div>
 							<div class="col-md-4 col-sm-4">
 								<div class="form-group">
-									<label for="name" class="sr-only">Name</label> <input
-										type="name" class="form-control" id="name" placeholder="الاسم">
+									<label for="name" class="sr-only">Name</label>
+									<form:input type="text" class="form-control" id="name"
+										placeholder="الاسم" required="required" path="senderName" />
 								</div>
 							</div>
 							<div class="col-md-4 col-sm-4">
-								<button type="submit" class="btn btn-default btn-block">إرسال</button>
+								<input type="submit" value="إرسال"
+									class="btn btn-default btn-block" />
 							</div>
-						</form>
+						</form:form>
 					</div>
 				</div>
 			</div>

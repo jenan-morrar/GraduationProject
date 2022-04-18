@@ -157,8 +157,7 @@
 		</header>
 
 		<div class="limiter">
-			<div class="container-login100"
-				style="background-image: url('/resources/images/image.png');">
+			<div class="container-login100">
 				<div class="wrap-login100 p-b-30" id="responsiveLoginForm">
 					<div class="loginForm">
 						<form:form method="POST" action="/registration"
@@ -169,13 +168,10 @@
 
 							<span class="login100-form-title p-t-20 p-b-45"> إنشاء
 								حساب </span>
-
-
-							<div class="errorStyle">
-								<p class="error2">
+						
+								<p class="errorStyle">
 									<c:out value="${alreadyExist}" />
 								</p>
-							</div>
 
 							<div class="wrap-input100 validate-input m-b-10"
 								data-validate=" أدخل اسم المستخدم">
@@ -188,7 +184,6 @@
 							<p class="errorStyle">
 								<form:errors path="username" class="error" />
 							</p>
-
 							<div class="wrap-input100 validate-input m-b-10"
 								data-validate=" أدخل ايميل المستخدم">
 								<form:input path="email" class="input100" type="text"

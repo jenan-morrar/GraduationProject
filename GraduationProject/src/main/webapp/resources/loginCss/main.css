@@ -1,24 +1,3 @@
-/*//////////////////////////////////////////////////////////////////
-[ FONT ]*/
-
-@font-face {
-  font-family: Montserrat-Regular;
-  src: url('../fonts/montserrat/Montserrat-Regular.ttf'); 
-}
-
-@font-face {
-  font-family: Montserrat-ExtraBold;
-  src: url('../fonts/montserrat/Montserrat-ExtraBold.ttf'); 
-}
-
-@font-face {
-  font-family: Montserrat-Bold;
-  src: url('../fonts/montserrat/Montserrat-Bold.ttf'); 
-}
-
-
-/*//////////////////////////////////////////////////////////////////
-[ RESTYLE TAG ]*/
 
 * {
 	margin: 0px; 
@@ -148,7 +127,6 @@ iframe {
 
 .container-login100 {
   width: 100%;  
-  min-height: 100vh;
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -531,9 +509,10 @@ input:hover[type="submit"] {
 
 @media (max-width: 576px) {
   .wrap-login100 {
-    padding-top: 80px;
+    padding-top: 50px;
     padding-left: 15px;
     padding-right: 15px;
+    margin-bottom: 5%;
   }
   #responsiveLoginForm{
     margin: 1%;
@@ -542,4 +521,17 @@ input:hover[type="submit"] {
     margin-top: 10%;
     margin-left: 5%;
   }
+  .container-login100{
+  margin-top: 2%;
+  }
+  .errorStyle{
+	font-size:18px;
+	margin-left: 50px;
+}
+}
+.errorStyle{
+	color:#c80000;
+	font-family: 'Aref Ruqaa', serif;
+	font-size:20px;
+	margin-left: 90px;
 }

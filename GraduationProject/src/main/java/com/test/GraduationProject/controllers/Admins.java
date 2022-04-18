@@ -92,7 +92,7 @@ public class Admins {
 //			}
 			venueService.updateVenue1(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
 					venue.getPrice(), venue.getNumOfGuests(),venue.getVenuePark(),venue.getVenueContact());
-			return "redirect:/adminVenuePage/{id}";
+			return "redirect:/adminVenuePage/{id}/edit";
 		}
 	}
 

@@ -158,8 +158,7 @@
 		</header>
 
 		<div class="limiter">
-			<div class="container-login100"
-				style="background-image: url('/resources/images/image.png');">
+			<div class="container-login100">
 				<div class="wrap-login100 p-b-30" id="responsiveLoginForm">
 					<div class="loginForm">
 						<form method="POST" action="/login"
@@ -190,8 +189,11 @@
 
 							<input type="hidden" name="${_csrf.parameterName}"
 								value="${_csrf.token}" />
-							 <input type="submit"
-								value="تسجيل الدخول" class="login100-form-btn" />
+							<p class="errorStyle">
+								<c:out value="${errorMessage}" />
+							</p>
+							<input type="submit" value="تسجيل الدخول"
+								class="login100-form-btn" />
 							<div class="text-center w-full">
 								<p class="txt1">
 									هل تمتلك حساب ؟<a class="txt1" href="/registration">&nbsp;
@@ -214,8 +216,7 @@
 							<small class="block">&copy; 2022 PalVenues Website.</small>
 						</p>
 						<p>
-
-							<ul class="fh5co-social-icons">
+						<ul class="fh5co-social-icons">
 							<li><a href="#"><i class="icon-twitter"></i></a></li>
 							<li><a href="#"><i class="icon-facebook"></i></a></li>
 							<li><a href="#"><i class="icon-linkedin"></i></a></li>
@@ -234,8 +235,8 @@
 	</div>
 
 	<!--===============================================================================================-->
-<script src="/resources/vendor/jquery/jquery-3.2.1.min.js"></script>
-							<!--===============================================================================================-->
+	<script src="/resources/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<!--===============================================================================================-->
 	<script src="/resources/vendor/bootstrap/js/popper.js"></script>
 	<script src="/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<!--===============================================================================================-->
@@ -263,10 +264,10 @@
 	<script src="/resources/js/magnific-popup-options.js"></script>
 	<!-- Google Map -->
 	<script
-								src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>
 
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>
 
-						</body>
+</body>
 </html>

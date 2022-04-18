@@ -131,7 +131,7 @@
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
 								<ul class="dropdown">
-									<li class="active"><a href="/venues">القاعات</a></li>
+									<li><a href="/venues">القاعات</a></li>
 									<li><a href="/songsPage">الأغاني</a></li>
 								</ul></li>
 							<c:set var="userName" scope="session" value="${currentUser}" />
@@ -276,7 +276,15 @@
 												style='font-size: 24px'></i>
 										</div>
 										<form:errors path="location" />
-										<form:input class="form-control" path="location" />
+										<form:select class="location-select" id="locations"
+											name="location" path="location">
+											<form:option value="الماصيون" />
+											<form:option value="الأرسال" />
+											<form:option value="أم الشرايط" />
+											<form:option value="بيرزيت" />
+											<form:option value="البيرة" />
+											<form:option value="كفر عقب" />
+										</form:select>
 									</div>
 
 									<div class="venueDetaile">
@@ -288,9 +296,9 @@
 										<form:input class="form-control" path="venueContact" />
 									</div>
 									<div class="venue-a">
-										<input type="submit" class="round-black-btn"
+										<a class="round-black-btn" href="/adminVenuePage/${venue.id}">العودة
+											إلى صفحة القاعة</a> <input type="submit" class="round-black-btn"
 											value="حفظ التعديلات" />
-										<a class="round-black-btn" href="/adminVenuePage/${venue.id}">العودة إلى صفحة القاعة</a>
 									</div>
 								</form:form>
 
@@ -302,15 +310,15 @@
 				<ul class="nav nav-tabs" id="venueNavTabs">
 					<li><a data-toggle="tab" href="#Reviews">تقييم القاعة</a></li>
 					<li><a data-toggle="tab" href="#VenueLocation">موقع القاعة</a></li>
-					<li><a data-toggle="tab"
-						href="#VenueReservatio">حجوزات القاعة</a></li>
+					<li><a data-toggle="tab" href="#VenueReservatio">حجوزات
+							القاعة</a></li>
 					<li class="active"><a data-toggle="tab" href="#VenueServices">خدمات
 							القاعة</a></li>
 				</ul>
 
 				<div class="tab-content" id="venueTabContent">
-				
-									<div id="VenueServices" class="tab-pane fade in active">
+
+					<div id="VenueServices" class="tab-pane fade in active">
 						<h3>خدمات القاعة</h3>
 						<form:form action="/adminVenuePage/${venue.id}/services/add"
 							method="post" modelAttribute="venue">
@@ -330,7 +338,7 @@
 							<input type="text" class="form-control"
 								placeholder="الرجاء إدخال الخدمة" name="serviceName"
 								required="required" />
-								<br>
+							<br>
 							<input type="number" class="form-control"
 								placeholder="سعر الخدمة" name="servicePrice" required="required" />
 							<div class="venue-a">
@@ -339,7 +347,7 @@
 							</div>
 						</form:form>
 					</div>
-					
+
 					<div id="VenueReservatio" class="tab-pane fade in">
 						<h3>حجز القاعة</h3>
 						<div class="--noshadow" id="demoEvoCalendar"></div>

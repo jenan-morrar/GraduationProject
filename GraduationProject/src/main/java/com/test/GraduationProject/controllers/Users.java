@@ -25,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.test.GraduationProject.models.Contact;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
+import com.test.GraduationProject.models.WebsiteRate;
 import com.test.GraduationProject.services.UserService;
 import com.test.GraduationProject.services.VenueService;
+import com.test.GraduationProject.services.WebsiteRateService;
 import com.test.GraduationProject.validator.UserValidator;
 
 @Controller
@@ -34,13 +36,15 @@ public class Users {
 	private UserService userService;
 	private UserValidator userValidator;
 	private VenueService venueService;
+	private WebsiteRateService  websiteRateService;
 	@Autowired
 	private JavaMailSender emailSender;
 
-	public Users(UserService userService, UserValidator userValidator, VenueService venueService) {
+	public Users(UserService userService, UserValidator userValidator, VenueService venueService,WebsiteRateService  websiteRateService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
+		this.websiteRateService = websiteRateService;
 	}
 
 	@RequestMapping("/registration")
@@ -69,7 +73,7 @@ public class Users {
 	public String login(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout, Model model) {
 		if (error != null) {
-			model.addAttribute("errorMessage", "Invalid Credentials, Please try again.");
+			model.addAttribute("errorMessage", "كلمة المرور أو الايميل خطأ ! الرجاء إعادة المحاولة");
 		}
 		if (logout != null) {
 			model.addAttribute("logoutMessage", "Logout Successful!");
@@ -93,6 +97,7 @@ public class Users {
 
 	@RequestMapping(value = { "/", "/index" })
 	public String home(Principal principal, Model model) {
+		model.addAttribute("userWebsiteRate", new WebsiteRate());
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -107,6 +112,16 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "index.jsp";
+	}
+	
+	@PostMapping("/index")
+	public String creatUserRate(@Valid @ModelAttribute("userWebsiteRate") WebsiteRate userWebsiteRate, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return "index.jsp";
+		} else {
+			websiteRateService.createWebsiteRate(userWebsiteRate);
+			return "redirect:/index";
+		}
 	}
 
 	@RequestMapping("/aboutPage")
