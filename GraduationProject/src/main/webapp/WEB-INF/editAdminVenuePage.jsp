@@ -125,13 +125,13 @@
 							<li><a href="/index">الصفحة الرئيسية</a></li>
 							<c:set var="userRole" scope="session" value="${userRole}" />
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
-								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
+								<li class="active"><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
-							<li class="has-dropdown active"><a href="#">الخدمات</a>
+							<li class="has-dropdown"><a href="#">الخدمات</a>
 								<ul class="dropdown">
-									<li class="active"><a href="/venues">القاعات</a></li>
+									<li><a href="/venues">القاعات</a></li>
 									<li><a href="/songsPage">الأغاني</a></li>
 								</ul></li>
 							<c:set var="userName" scope="session" value="${currentUser}" />
@@ -173,9 +173,9 @@
 					<div class="col-md-7">
 						<div class="slider" id="slider1">
 							<!-- Slides -->
-							<c:forEach items="${venuePage.images}" var="images">
+							<c:forEach items="${venue.images}" var="images">
 								<div
-									style="background-image: url(<c:out value="/user-photos/${venuePage.id}/${images.image}"/>)"></div>
+									style="background-image: url(<c:out value="/user-photos/${venue.id}/${images.image}"/>)"></div>
 							</c:forEach>
 
 							<i class="left" class="arrows"
@@ -193,148 +193,173 @@
 							<span class="titleBar"> <span>
 									<h1>صور قاعة</h1>
 									<h1>
-										<c:out value="${venuePage.name}" />
+										<c:out value="${venue.name}" />
 									</h1>
 							</span>
 							</span>
 						</div>
+						<form:form action="/adminVenuePage/${venue.id}/images/add"
+							method="post" enctype="multipart/form-data"
+							modelAttribute="venue">
+							<c:forEach varStatus="us" var="images" items="${venue.images}">
+								<tr>
+									<td><img class="imageVenue"
+										src="<c:out value="/user-photos/${venue.id}/${images.image}"/>"
+										width="80px" height="85px"></td>
+									<form:input type="hidden" path="images[${us.index}].id" />
+									<td><a
+										href="/adminVenuePage/${venue.id}/images/delete/${images.id}">Delete</a></td>
+								</tr>
+								&nbsp; &nbsp;
+							</c:forEach>
+							<br>
+							<input type="file" class="form-control" name="image"
+								accept="image/png, image/jpeg" required="required" />
+							<div class="venue-a">
+								<input type="submit" class="round-black-btn"
+									value="إضافة الصورة" />
+							</div>
+						</form:form>
 					</div>
 					<div class="col-md-5" id="venueInfo">
 						<div class="product-dtl">
 							<div class="product-info">
-								<div class="product-name">
-									<c:out value="${venuePage.name}" />
-								</div>
-								<div class="reviews-counter">
-									<div class="rate" id="venueRate">
-										<input type="radio" id="star5" name="rate" value="5" checked />
-										<label for="star5" title="text">5 stars</label> <input
-											type="radio" id="star4" name="rate" value="4" checked /> <label
-											for="star4" title="text">4 stars</label> <input type="radio"
-											id="star3" name="rate" value="3" checked /> <label
-											for="star3" title="text">3 stars</label> <input type="radio"
-											id="star2" name="rate" value="2" /> <label for="star2"
-											title="text">2 stars</label> <input type="radio" id="star1"
-											name="rate" value="1" /> <label for="star1" title="text">1
-											star</label>
+								<form:form action="/adminVenuePage/${venue.id}" method="post"
+									modelAttribute="venue">
+									<input type="hidden" name="_method" value="put">
+
+									<div class="product-name">
+										<form:label path="name">اسم القاعة</form:label>
+										<form:errors path="name" />
+										<form:input class="form-control" path="name" />
 									</div>
-								</div>
-							</div>
-							<p class="venueParg">
-							<div>
-								<hr>
-							</div>
-							<div class="venueDetaile">
-								<div class="venueDetaileTitle">
-									وصف القاعة &nbsp;&nbsp; <i class='far fa-building'
-										style='font-size: 25px'></i>
-								</div>
-								<span><c:out value="${venuePage.description}" /></span>
-							</div>
-							<div class="venueDetaile">
-								<div class="venueDetaileTitle">
-									سعر القاعة &nbsp;&nbsp; <i class='fas fa-shekel-sign'
-										style='font-size: 22px'></i>
-								</div>
-								<span><c:out value="${venuePage.price}" /></span>
-							</div>
+									<hr>
+									<div class="venueDetaile">
+										<div class="venueDetaileTitle">
+											وصف القاعة &nbsp;&nbsp; <i class='far fa-building'
+												style='font-size: 25px'></i>
+										</div>
+										<form:errors path="description" />
+										<form:textarea class="form-control" path="description" />
+									</div>
 
-							<div class="venueDetaile">
-								<div class="venueDetaileTitle">
-									عدد الضيوف &nbsp;&nbsp; <i class='far fa-id-badge'
-										style='font-size: 25px'></i>
-								</div>
-								<span><c:out value="${venuePage.price}" /></span>
-							</div>
+									<div class="venueDetaile">
+										<div class="venueDetaileTitle">
+											سعر القاعة &nbsp;&nbsp; <i class='fas fa-shekel-sign'
+												style='font-size: 22px'></i>
+										</div>
+										<form:errors path="price" />
+										<form:input class="form-control" type="number" path="price" />
+									</div>
 
-							<div class="venueDetaile">
-								<div class="venueDetaileTitle">
-									المصفات &nbsp; &nbsp; <i class='fas fa-car'
-										style='font-size: 24px'></i>
-								</div>
-								<span><c:out value="${venuePage.venuePark}" /></span>
-							</div>
+									<div class="venueDetaile">
+										<div class="venueDetaileTitle">
+											عدد الضيوف &nbsp;&nbsp; <i class='far fa-id-badge'
+												style='font-size: 25px'></i>
+										</div>
+										<form:errors path="numOfGuests" />
+										<form:input class="form-control" type="number"
+											path="numOfGuests" />
+									</div>
+									<div class="venueDetaile">
+										<div class="venueDetaileTitle">
+											المصفات &nbsp; &nbsp; <i class='fas fa-car'
+												style='font-size: 24px'></i>
+										</div>
+										<form:errors path="VenuePark" />
+										<form:input class="form-control" path="VenuePark" />
+									</div>
 
-							<div class="venueDetaile">
-								<div class="venueDetaileTitle">
-									موقع القاعة &nbsp; &nbsp; <i class='fas fa-map-marker-alt'
-										style='font-size: 24px'></i>
-								</div>
-								<span><c:out value="${venuePage.location}" /></span>
-							</div>
+									<div class="venueDetaile">
+										<div class="venueDetaileTitle">
+											موقع القاعة &nbsp; &nbsp; <i class='fas fa-map-marker-alt'
+												style='font-size: 24px'></i>
+										</div>
+										<form:errors path="location" />
+										<form:select class="location-select" id="locations"
+											name="location" path="location">
+											<form:option value="الماصيون" />
+											<form:option value="الأرسال" />
+											<form:option value="أم الشرايط" />
+											<form:option value="بيرزيت" />
+											<form:option value="البيرة" />
+											<form:option value="كفر عقب" />
+										</form:select>
+									</div>
 
-							<div class="venueDetaile">
-								<div class="venueDetaileTitle">
-									للتواصل مع القاعة &nbsp; &nbsp; <i class="fa fa-phone"
-										style="font-size: 22px"></i>
-								</div>
-								<span><c:out value="${venuePage.venueContact}" /></span>
-							</div>
+									<div class="venueDetaile">
+										<div class="venueDetaileTitle">
+											للتواصل مع القاعة &nbsp; &nbsp; <i class="fa fa-phone"
+												style="font-size: 22px"></i>
+										</div>
+										<form:errors path="venueContact" />
+										<form:input class="form-control" path="venueContact" />
+									</div>
+									<div class="venue-a">
+										<a class="round-black-btn" href="/adminVenuePage/${venue.id}">العودة
+											إلى صفحة القاعة</a> <input type="submit" class="round-black-btn"
+											value="حفظ التعديلات" />
+									</div>
+								</form:form>
 
+							</div>
 						</div>
 					</div>
 				</div>
 
 				<ul class="nav nav-tabs" id="venueNavTabs">
 					<li><a data-toggle="tab" href="#Reviews">تقييم القاعة</a></li>
-					<li><a data-toggle="tab" href="#venueLocation">موقع القاعة</a></li>
-					<li class="active"><a data-toggle="tab"
-						href="#VenueReservatio">حجز القاعة</a></li>
+					<li><a data-toggle="tab" href="#VenueLocation">موقع القاعة</a></li>
+					<li><a data-toggle="tab" href="#VenueReservatio">حجوزات
+							القاعة</a></li>
+					<li class="active"><a data-toggle="tab" href="#VenueServices">خدمات
+							القاعة</a></li>
 				</ul>
 
 				<div class="tab-content" id="venueTabContent">
-					<div id="VenueReservatio" class="tab-pane fade in active">
-						<c:if test="${userName == \"noUser\"}">
-							<h3>للحجز يجب تسجيل الدخول</h3>
-							<a class="round-black-btn" href="/login">تسجيل الدخول</a>
-							<div style="margin-top: 3%;">
-								<h3>خدمات القاعة</h3>
-								<form:form action="" method="post" modelAttribute="venue">
-									<c:forEach varStatus="us" var="service"
-										items="${venuePage.services}">
-										<div>
-											<label for="venueService"><c:out
-													value="${service.price}" /> <c:out value="${service.name}" /></label>
-										</div>
-									</c:forEach>
-									<br>
-								</form:form>
+
+					<div id="VenueServices" class="tab-pane fade in active">
+						<h3>خدمات القاعة</h3>
+						<form:form action="/adminVenuePage/${venue.id}/services/add"
+							method="post" modelAttribute="venue">
+							<c:forEach varStatus="us" var="service" items="${venue.services}">
+								<tr>
+									<td><form:input path="services[${us.index}].name" /></td>
+									<td><form:input path="services[${us.index}].price" /></td>
+									<form:input type="hidden" path="services[${us.index}].id" />
+								</tr>
+								<td><a
+									href="/adminVenuePage/${venue.id}/services/delete/${service.id}">Delete</a></td>
+								<br>
+								<br>
+							</c:forEach>
+							<br>
+
+							<input type="text" class="form-control"
+								placeholder="الرجاء إدخال الخدمة" name="serviceName"
+								required="required" />
+							<br>
+							<input type="number" class="form-control"
+								placeholder="سعر الخدمة" name="servicePrice" required="required" />
+							<div class="venue-a">
+								<input type="submit" class="round-black-btn"
+									value="إضافة الخدمة" />
 							</div>
-							<div class="--noshadow" id="demoEvoCalendar"></div>
-						</c:if>
-
-						<c:if test="${userName == \"user\"}">
-							<h3>حجز القاعة</h3>
-							<div style="margin-top: 3%;">
-								<h4>اختر من خدمات القاعة</h4>
-								<form:form action="" method="post" modelAttribute="venue">
-									<c:forEach varStatus="us" var="service"
-										items="${venuePage.services}">
-										<div>
-											<label for="venueService"><c:out
-													value="${service.price}" /> <c:out value="${service.name}" /></label>
-											<input type="checkbox" id="venueService" name="interest"
-												value="coding">
-										</div>
-									</c:forEach>
-									<br>
-									<h4>أختر التاريح الذي يناسبك</h4>
-									<div class="--noshadow" id="demoEvoCalendar"></div>
-									<input type="submit" class="round-black-btn" value="إحجز الآن" />
-								</form:form>
-							</div>
-						</c:if>
-
-
+						</form:form>
 					</div>
 
-					<div id="venueLocation" class="tab-pane fade">
+					<div id="VenueReservatio" class="tab-pane fade in">
+						<h3>حجز القاعة</h3>
+						<div class="--noshadow" id="demoEvoCalendar"></div>
+					</div>
+
+					<div id="VenueLocation" class="tab-pane fade">
 						<div id="map">
-							<iframe src="<c:out value="${venuePage.mapOne}" />" width="500"
+							<iframe src="<c:out value="${venue.mapOne}" />" width="500"
 								height="400" style="border: 0;" allowfullscreen=""
 								loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
-							<iframe src="<c:out value="${venuePage.mapTwo}" />" width="500"
+							<iframe src="<c:out value="${venue.mapTwo}" />" width="500"
 								height="400" style="border: 0;" allowfullscreen=""
 								loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
@@ -342,50 +367,7 @@
 					</div>
 
 					<div id="Reviews" class="tab-pane fade">
-						<c:if test="${userName == \"noUser\"}">
-							<h3>للتقيم لقاعة يجب تسجيل الدخول</h3>
-							<a class="round-black-btn" href="/login">تسجيل الدخول</a>
-						</c:if>
-						<c:if test="${userName == \"user\"}">
-							<div class="review-heading">تقييم القاعة</div>
-							<form class="review-form">
-								<div class="form-group">
-									<label>تقيمك للقاعة</label>
-									<div class="reviews-counter">
-										<div class="rate">
-											<input type="radio" id="star5" name="rate" value="5" /> <label
-												for="star5" title="text">5 stars</label> <input type="radio"
-												id="star4" name="rate" value="4" /> <label for="star4"
-												title="text">4 stars</label> <input type="radio" id="star3"
-												name="rate" value="3" /> <label for="star3" title="text">3
-												stars</label> <input type="radio" id="star2" name="rate" value="2" />
-											<label for="star2" title="text">2 stars</label> <input
-												type="radio" id="star1" name="rate" value="1" /> <label
-												for="star1" title="text">1 star</label>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label>اكتب تقيمك</label>
-									<textarea class="form-control" rows="10"></textarea>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<input type="text" name="" class="form-control"
-												placeholder="اسم المستخدم" required="required">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<input type="text" name="" class="form-control"
-												placeholder="ايميل المستخدم" required="required">
-										</div>
-									</div>
-								</div>
-								<button class="round-black-btn">Submit Review</button>
-							</form>
-						</c:if>
+						<div class="review-heading">تقييم القاعة</div>
 					</div>
 				</div>
 
@@ -419,62 +401,6 @@
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
 	</div>
 
-	<script>
-		var responsiveSlider = function() {
-
-			var slider = document.getElementById("slider");
-			var sliderWidth = slider.offsetWidth;
-			var slideList = document.getElementById("slideWrap");
-			var count = 1;
-			var items = slideList.querySelectorAll("li").length;
-			var prev = document.getElementById("prev");
-			var next = document.getElementById("next");
-
-			window.addEventListener('resize', function() {
-				sliderWidth = slider.offsetWidth;
-			});
-
-			var prevSlide = function() {
-				if (count > 1) {
-					count = count - 2;
-					slideList.style.left = "-" + count * sliderWidth + "px";
-					count++;
-				} else if (count = 1) {
-					count = items - 1;
-					slideList.style.left = "-" + count * sliderWidth + "px";
-					count++;
-				}
-			};
-
-			var nextSlide = function() {
-				if (count < items) {
-					slideList.style.left = "-" + count * sliderWidth + "px";
-					count++;
-				} else if (count = items) {
-					slideList.style.left = "0px";
-					count = 1;
-				}
-			};
-
-			next.addEventListener("click", function() {
-				nextSlide();
-			});
-
-			prev.addEventListener("click", function() {
-				prevSlide();
-			});
-
-			setInterval(function() {
-				nextSlide()
-			}, 5000);
-
-		};
-
-		window.onload = function() {
-			responsiveSlider();
-		}
-	</script>
-
 
 	<!-- jQuery -->
 	<script src="/resources/js/jquery.min.js"></script>
@@ -503,7 +429,6 @@
 	<script src="/resources/js/imageSlider.js"></script>
 	<script src="/resources/js/evo-calendar.min.js"></script>
 	<script src="/resources/js/demo.js"></script>
-
 
 </body>
 </html>

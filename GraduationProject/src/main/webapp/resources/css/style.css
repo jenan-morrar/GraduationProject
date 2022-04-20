@@ -168,16 +168,6 @@ h1, h3, h4, h5, h6, figure {
 	/* box-shadow: 0.25rem 0.25rem 0rem #6b2b50; */
 }
 
-input {
-	margin: 0 0.5rem 0 0.5rem;
-	width: 100%;
-	border: none;
-	outline: none;
-	background: #ff9e69;
-	color: white;
-	/* float:right; */
-}
-
 ::placeholder {
 	color: white;
 }
@@ -433,6 +423,42 @@ input {
 	-ms-transform: scale(1.2);
 	-o-transform: scale(1.2);
 	transform: scale(1.2);
+}
+.venuePageHeader{
+  height: 130px;
+  background-color:#fcf0ea;
+}
+
+#venueRate{
+  font-family: 'Aref Ruqaa', serif;
+  float: right;
+  margin-top: 3%;
+}
+.venueParg{
+  font-family: 'Aref Ruqaa', serif;
+  clear: both;
+}
+#venueNavTabs{
+  font-family: 'Aref Ruqaa', serif;
+  margin-top: 5%;
+  margin-bottom: 3%;
+  float: right;
+  clear:both
+}
+#venueTabContent{
+  font-family: 'Aref Ruqaa', serif;
+  text-align:right;
+  clear:both;
+}
+#venueInfo{
+  font-family: 'Aref Ruqaa', serif;
+  text-align: right;
+}
+.venueDetaile{
+  margin-top: 2%;
+}
+.venueDetaileTitle{
+  color: #cd7e53;
 }
 
 .fh5co-cover {

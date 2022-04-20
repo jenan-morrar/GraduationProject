@@ -1,32 +1,50 @@
 package com.test.GraduationProject.controllers;
 
 import java.security.Principal;
+import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.test.GraduationProject.models.Contact;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
+import com.test.GraduationProject.models.WebsiteRate;
 import com.test.GraduationProject.services.UserService;
+import com.test.GraduationProject.services.VenueService;
+import com.test.GraduationProject.services.WebsiteRateService;
 import com.test.GraduationProject.validator.UserValidator;
 
 @Controller
 public class Users {
 	private UserService userService;
 	private UserValidator userValidator;
+	private VenueService venueService;
+	private WebsiteRateService  websiteRateService;
+	@Autowired
+	private JavaMailSender emailSender;
 
-	public Users(UserService userService, UserValidator userValidator) {
+	public Users(UserService userService, UserValidator userValidator, VenueService venueService,WebsiteRateService  websiteRateService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
+		this.venueService = venueService;
+		this.websiteRateService = websiteRateService;
 	}
 
 	@RequestMapping("/registration")
@@ -55,7 +73,7 @@ public class Users {
 	public String login(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout, Model model) {
 		if (error != null) {
-			model.addAttribute("errorMessage", "Invalid Credentials, Please try again.");
+			model.addAttribute("errorMessage", "كلمة المرور أو الايميل خطأ ! الرجاء إعادة المحاولة");
 		}
 		if (logout != null) {
 			model.addAttribute("logoutMessage", "Logout Successful!");
@@ -79,6 +97,7 @@ public class Users {
 
 	@RequestMapping(value = { "/", "/index" })
 	public String home(Principal principal, Model model) {
+		model.addAttribute("userWebsiteRate", new WebsiteRate());
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -93,6 +112,16 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "index.jsp";
+	}
+	
+	@PostMapping("/index")
+	public String creatUserRate(@Valid @ModelAttribute("userWebsiteRate") WebsiteRate userWebsiteRate, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return "index.jsp";
+		} else {
+			websiteRateService.createWebsiteRate(userWebsiteRate);
+			return "redirect:/index";
+		}
 	}
 
 	@RequestMapping("/aboutPage")
@@ -132,7 +161,8 @@ public class Users {
 	}
 
 	@RequestMapping("/contactPage")
-	public String contactPage(Principal principal, Model model) {
+	public String contactForm(Principal principal, Model model) {
+		model.addAttribute("contact", new Contact());
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -147,6 +177,27 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "contactPage.jsp";
+	}
+
+	// Still there is some issues !!!!!!
+	@RequestMapping(value = "/contactPage", method = RequestMethod.POST)
+	public String contactPage(Model model, @Valid @ModelAttribute("contact") Contact contact, BindingResult result)
+			throws MessagingException {
+
+		if (result.hasErrors()) {
+			return "contactPage.jsp";
+		} else {
+
+			contact.setEmailReciver("palvenues@gmail.com");
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setFrom(contact.getEmailSender());
+			message.setTo(contact.getEmailReciver());
+			message.setSubject(contact.getSubject());
+			message.setText(contact.getMessage());
+			emailSender.send(message);
+
+			return "redirect:/contactPage";
+		}
 	}
 
 	@RequestMapping("/songsPage")
@@ -167,8 +218,10 @@ public class Users {
 		return "songsPage.jsp";
 	}
 
-	@RequestMapping("/venuePage")
-	public String venuePage(Principal principal, Model model) {
+	@RequestMapping("/venuePage/{id}")
+	public String venuePage(@PathVariable("id") long id, Principal principal, Model model) {
+		Venue venuePage = venueService.findVenue(id);
+		model.addAttribute("venuePage", venuePage);
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -187,6 +240,13 @@ public class Users {
 
 	@RequestMapping("/venues")
 	public String venues(Principal principal, Model model) {
+		List<Venue> venues = venueService.allVenues();
+		List<Venue> venues2 = venueService.filterSearch();
+		for(int i=0;i<venues2.size();i++) {
+			System.out.println(venues2.get(i).getId());
+		}
+		
+		model.addAttribute("venues", venues);
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
