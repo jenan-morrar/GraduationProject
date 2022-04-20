@@ -166,8 +166,8 @@
 							<div class="login100-form-avatar">
 								<img src="/resources/images/profilePic.png" alt="AVATAR">
 							</div>
-							<span class="login100-form-title p-t-20 p-b-45"> إنشاء
-								حساب </span>
+							<span class="login100-form-title p-t-20 p-b-45"> تسجيل
+								الدخول </span>
 
 							<div class="wrap-input100 validate-input m-b-10"
 								data-validate=" أدخل ايميل المستخدم">
