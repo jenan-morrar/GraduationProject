@@ -54,6 +54,15 @@ public class Admins {
 
 	@RequestMapping("/adminVenuePage/{id}/edit")
 	public String edit(@PathVariable("id") Long id, Model model,Principal principal) {
+		Venue venue = venueService.findVenue(id);
+		if(venue.getUser()!=null) {
+		if(venue.getUser().getId()==id) {
+			model.addAttribute("venue", venue);
+			model.addAttribute("serviceExist", "no");
+		}
+		}else {
+			//return error page
+		}
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -65,9 +74,6 @@ public class Admins {
 			model.addAttribute("currentUser", "noUser");
 		}
 		
-		Venue venue = venueService.findVenue(id);
-		model.addAttribute("venue", venue);
-		model.addAttribute("serviceExist", "no");
 		return "editAdminVenuePage.jsp";
 	}
 

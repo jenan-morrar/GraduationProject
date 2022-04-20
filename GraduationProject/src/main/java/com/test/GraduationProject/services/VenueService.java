@@ -74,4 +74,11 @@ public class VenueService {
 	public void deleteVenue(Long id) {
 		venueRepository.deleteById(id);
 	}
+	
+	//Filter Search
+	public List<Venue> filterSearch() {
+		//List <Venue> venues = venueRepository.filterSearch(30000);
+		List <Venue> venues = venueRepository.filterSearch(30000,"الأرسال",300);
+		return venues;
+	}
 }

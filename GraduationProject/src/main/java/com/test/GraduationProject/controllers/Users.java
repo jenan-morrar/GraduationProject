@@ -241,6 +241,11 @@ public class Users {
 	@RequestMapping("/venues")
 	public String venues(Principal principal, Model model) {
 		List<Venue> venues = venueService.allVenues();
+		List<Venue> venues2 = venueService.filterSearch();
+		for(int i=0;i<venues2.size();i++) {
+			System.out.println(venues2.get(i).getId());
+		}
+		
 		model.addAttribute("venues", venues);
 		if (principal != null) {
 			String username = principal.getName();

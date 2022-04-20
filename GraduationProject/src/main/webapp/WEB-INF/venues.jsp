@@ -71,6 +71,17 @@
 
 <!-- Modernizr JS -->
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#venueCardStyle div").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
 </head>
 <body>
 	<div class="fh5co-loader"></div>
@@ -134,11 +145,16 @@
 		</header>
 
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-8" id="venues-card-item">
+				<input id="myInput" type="text" placeholder="...ابحث"
+					class="form-control"
+					style="width: 80%; float: right; margin-bottom: 4%;"><br>
+				<br>
+				<div id="venueCardStyle">
 				<c:forEach items="${venues}" var="venueCard">
 					<div class="col-md-4" id="venueCardStyle">
 						<div class="product-grid">
-							<div class="product-image">
+							<span class="product-image">
 								<c:if test="${venueCard.images.size()==0}">
 									<a href="/venuePage/${venueCard.id}" class="image"> <img
 										class="pic-1" style="width: 100%; height: 200px;"
@@ -154,18 +170,14 @@
 										</a>
 									</c:if>
 								</c:forEach>
-							</div>
+							</span>
 							<div class="product-content">
-								<ul class="rating">
-									<li class="fas fa-star"></li>
-									<li class="fas fa-star"></li>
-									<li class="fas fa-star"></li>
-									<li class="far fa-star"></li>
-									<li class="far fa-star"></li>
-								</ul>
+	
 								<h3 class="title">
 									<a href="/venuePage/${venueCard.id}"><c:out
 											value="${venueCard.name}" /></a>
+									<h4>${venueCard.location }</h4>
+
 								</h3>
 								<a class="add-to-cart" href="/venuePage/${venueCard.id}">اذهب
 									إلى القاعة</a>
@@ -173,8 +185,9 @@
 						</div>
 					</div>
 				</c:forEach>
+				</div>
 			</div>
-			<div class="col-md-4">
+			<!-- <div class="col-md-4">
 				<form action="" method="post">
 					<input type="hidden" name="_method" value="put">
 					<div id="filter-search">
@@ -226,9 +239,79 @@
 						</div>
 					</div>
 				</form>
+			</div>-->
+
+			<div class="col-md-3">
+				<div class="wrapper-slider">
+					<div class="filter-search-items">
+						<label>موقع القاعة</label> <br> <select id="locations"
+							name="location">
+							<option value="location1">الماصيون</option>
+							<option value="location2">الأرسال</option>
+							<option value="location3">أم الشرايط</option>
+							<option value="location4">بيرزيت</option>
+							<option value="location5">البيرة</option>
+							<option value="location6">كفر عقب</option>
+						</select>
+					</div>
+					<div id="price-slider">
+						<div class="filter-search-items">
+							<label>سعر القاعة</label> <br>
+							<div class="price-input">
+								<div class="field">
+									<span>الحد الأدنى</span> <input type="number" class="input-min"
+										value="2500">
+								</div>
+								<div class="separator">-</div>
+								<div class="field">
+									<span>الحد الأقصى</span> <input type="number" class="input-max"
+										value="7500">
+								</div>
+							</div>
+							<div class="slider">
+								<div class="progress"></div>
+							</div>
+							<div class="range-input">
+								<input type="range" class="range-min" min="0" max="10000"
+									value="2500" step="100"> <input type="range"
+									class="range-max" min="0" max="10000" value="7500" step="100">
+							</div>
+						</div>
+					</div>
+
+					<div id="numOfguests-slider">
+						<div class="filter-search-items">
+							<label>عدد الضيوف</label> <br>
+							<div class="numOfGuests-input">
+								<div class="field">
+									<span>الحد الأدنى</span> <input type="number"
+										class="input2-min" value="2500">
+								</div>
+								<div class="separator">-</div>
+								<div class="field">
+									<span>الحد الأقصى</span> <input type="number"
+										class="input2-max" value="7500">
+								</div>
+							</div>
+							<div class="slider2">
+								<div class="progress"></div>
+							</div>
+							<div class="range2-input">
+								<input type="range" class="range2-min" min="0" max="10000"
+									value="2500" step="100"> <input type="range"
+									class="range2-max" min="0" max="10000" value="7500" step="100">
+							</div>
+						</div>
+					</div>
+
+					<div class="venue-a" style="margin-top: 5%;">
+						<input type="submit" class="round-black-btn"
+							value="ابحث عن القاعة" /> <a href="#" class="round-black-btn">عرض
+							جميع القاعات</a>
+					</div>
+				</div>
 			</div>
 		</div>
-
 
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">
@@ -281,6 +364,7 @@
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>
 
 	<!-- Main -->
+	<script src="/resources/js/venuesSlider.js"></script>
 	<script src="/resources/js/main.js"></script>
 </body>
 </html>
