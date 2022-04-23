@@ -1,28 +1,7 @@
 var today = new Date();
+if($("#reservations").val() != undefined)
+	var events = JSON.parse($("#reservations").val());
 
-var events = [
-  // {
-  //   id: "imwyx6S",
-  //   name: "Event #3",
-  //   description: "Lorem ipsum dolor sit amet.",
-  //   date: new Date(2022,4,5),
-  //   type: "event"
-  // }, 
-  // {
-  //   id: "9jU6g6f",
-  //   name: "Holiday #1",
-  //   description: "Lorem ipsum dolor sit amet.",
-  //   date: new Date(2022,3,4),
-  //   type: "holiday"
-  // },
-  // {
-  //   id: "0g5G6ja",
-  //   name: "Event #1",
-  //   description: "Lorem ipsum dolor sit amet.",
-  //   date: today,
-  //   type: "event",
-  // },
-];
 var active_events = [];
 var week_date = [];
 var curAdd, curRmv;
@@ -44,9 +23,18 @@ function getWeeksInMonth(a, b) {
 }
 
 week_date = getWeeksInMonth(today.getMonth(), today.getFullYear())[2];
+function loadCalendar(events, srvices){
+	    $("#demoEvoCalendar").evoCalendar({
+        format: "MM dd, yyyy",
+        theme:"Orange Coral",
+        titleFormat: "MM",
+        calendarEvents: events,
+    });
+};
 
 $(document).ready(function() {
-    $("#demoEvoCalendar").evoCalendar({
+
+   $("#demoEvoCalendar").evoCalendar({
         format: "MM dd, yyyy",
         theme:"Orange Coral",
         titleFormat: "MM",

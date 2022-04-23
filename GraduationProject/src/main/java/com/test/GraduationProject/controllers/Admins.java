@@ -61,7 +61,7 @@ public class Admins {
 			model.addAttribute("serviceExist", "no");
 		}
 		}else {
-			//return error page
+			return"errorPage.jsp";
 		}
 		if (principal != null) {
 			String username = principal.getName();

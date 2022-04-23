@@ -6,9 +6,12 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -33,6 +36,14 @@ public class ServiceOfVenue {
 
 	@ManyToMany(mappedBy = "services")
 	private List<Venue> venues;
+	
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "reservation_services", 
+        joinColumns = @JoinColumn(name = "service_id"), 
+        inverseJoinColumns = @JoinColumn(name = "reservation_id")
+    )
+    private List<Reservation> reservations;
 
 	public ServiceOfVenue() {
 
@@ -109,6 +120,14 @@ public class ServiceOfVenue {
 
 	public void setVenues(List<Venue> venues) {
 		this.venues = venues;
+	}
+	
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 
 	@PrePersist

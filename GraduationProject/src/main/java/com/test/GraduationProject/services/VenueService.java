@@ -76,9 +76,9 @@ public class VenueService {
 	}
 	
 	//Filter Search
-	public List<Venue> filterSearch() {
+	public List<Venue> filterSearch(String location, float minPrice, float maxPrice, int minNumOfGuests, int maxNumOfGuests) {
 		//List <Venue> venues = venueRepository.filterSearch(30000);
-		List <Venue> venues = venueRepository.filterSearch(30000,"الأرسال",300);
+		List <Venue> venues = venueRepository.filterSearch(location,minPrice,maxPrice,minNumOfGuests,maxNumOfGuests);
 		return venues;
 	}
 }

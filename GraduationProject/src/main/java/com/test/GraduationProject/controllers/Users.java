@@ -1,6 +1,7 @@
 package com.test.GraduationProject.controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -8,6 +9,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,11 +23,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.test.GraduationProject.models.Contact;
+import com.test.GraduationProject.models.FilterSearch;
+import com.test.GraduationProject.models.Reservation;
+import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.models.WebsiteRate;
+import com.test.GraduationProject.services.ReservationService;
+import com.test.GraduationProject.services.ServicesOfVenueService;
 import com.test.GraduationProject.services.UserService;
 import com.test.GraduationProject.services.VenueService;
 import com.test.GraduationProject.services.WebsiteRateService;
@@ -36,15 +44,21 @@ public class Users {
 	private UserService userService;
 	private UserValidator userValidator;
 	private VenueService venueService;
-	private WebsiteRateService  websiteRateService;
+	private WebsiteRateService websiteRateService;
+	private ReservationService  reservationService;
+	private ServicesOfVenueService ServicesOfVenueService;
+	public List<Venue> filterSearchResult1 = new ArrayList<>();
 	@Autowired
 	private JavaMailSender emailSender;
 
-	public Users(UserService userService, UserValidator userValidator, VenueService venueService,WebsiteRateService  websiteRateService) {
+	public Users(UserService userService, UserValidator userValidator, VenueService venueService,
+			WebsiteRateService websiteRateService, ReservationService reservationService, ServicesOfVenueService servicesOfVenueService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
 		this.websiteRateService = websiteRateService;
+		this.reservationService = reservationService;
+		this.ServicesOfVenueService =  servicesOfVenueService;
 	}
 
 	@RequestMapping("/registration")
@@ -113,9 +127,10 @@ public class Users {
 		}
 		return "index.jsp";
 	}
-	
+
 	@PostMapping("/index")
-	public String creatUserRate(@Valid @ModelAttribute("userWebsiteRate") WebsiteRate userWebsiteRate, BindingResult result, Model model) {
+	public String creatUserRate(@Valid @ModelAttribute("userWebsiteRate") WebsiteRate userWebsiteRate,
+			BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			return "index.jsp";
 		} else {
@@ -219,9 +234,14 @@ public class Users {
 	}
 
 	@RequestMapping("/venuePage/{id}")
-	public String venuePage(@PathVariable("id") long id, Principal principal, Model model) {
+	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,RedirectAttributes redirectAttrs) {
 		Venue venuePage = venueService.findVenue(id);
+		model.addAttribute("reservation", new Reservation());
 		model.addAttribute("venuePage", venuePage);
+		redirectAttrs.addAttribute("venuePage", venuePage);
+	    List<Reservation> reservations = reservationService.allReservation();
+	    System.out.println(reservations.size());
+	    model.addAttribute("reservationResult", reservations);
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -237,15 +257,40 @@ public class Users {
 		}
 		return "venuePage.jsp";
 	}
+	
+	@RequestMapping(value = "/venuePage/{id}", method = RequestMethod.POST)
+	public String reserveVenue(Model model,@PathVariable("id") long id,Principal principal, @Valid @ModelAttribute("reservation") Reservation reservation,
+			BindingResult result) throws MessagingException {
+//		if (result.hasErrors()) {
+//			return "venuePage.jsp";
+//		} else {
+		    long sid = 2;
+		    ServiceOfVenue service = ServicesOfVenueService.findService(sid);
+		    List<ServiceOfVenue> servicesList = new ArrayList<>();
+		    servicesList.add(service);
+			String username = principal.getName();
+			User user = userService.findByEmail(username);
+			Venue venue = venueService.findVenue(id);
+			reservation.setUser(user);
+			reservation.setVenue(venue);
+			reservation.setStatus("pending");
+			reservation.setServices(servicesList);
+			reservation.setId(null);
+			System.out.println(reservation.getFromTime());
+			System.out.println(reservation.getToTime());
+			System.out.println(reservation.getReservationDate());
+			reservationService.createReservation(reservation);
+			System.out.println("id"+reservation.getId());
+			return "redirect:/venuePage/{id}";
+//		}
+	}
 
 	@RequestMapping("/venues")
 	public String venues(Principal principal, Model model) {
 		List<Venue> venues = venueService.allVenues();
-		List<Venue> venues2 = venueService.filterSearch();
-		for(int i=0;i<venues2.size();i++) {
-			System.out.println(venues2.get(i).getId());
-		}
-		
+		model.addAttribute("filterSearch", new FilterSearch());
+//		System.out.println(filterSearchResult1.size() + "heloo");
+		model.addAttribute("filterSearchResult1", filterSearchResult1);
 		model.addAttribute("venues", venues);
 		if (principal != null) {
 			String username = principal.getName();
@@ -261,6 +306,29 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "venues.jsp";
+	}
+
+	// Still it needs an updates 
+	@RequestMapping(value = "/venues", method = RequestMethod.POST)
+	public String venuesFilterSearch(Model model, @Valid @ModelAttribute("filterSearch") FilterSearch filterSearch,
+			BindingResult result) throws MessagingException {
+		if (result.hasErrors()) {
+			return "venues.jsp";
+		} else {
+
+			List<Venue> filterSarchResult = venueService.filterSearch(filterSearch.getLocation(),
+					filterSearch.getMinPrice(), filterSearch.getMaxPrice(), filterSearch.getMinNumOfGuests(),
+					filterSearch.getMaxNumOfGuests());
+			filterSearchResult1 = venueService.filterSearch(filterSearch.getLocation(), filterSearch.getMinPrice(),
+					filterSearch.getMaxPrice(), filterSearch.getMinNumOfGuests(), filterSearch.getMaxNumOfGuests());
+//			System.out.println(filterSearchResult1.size());
+			model.addAttribute("filterSearchResult1", filterSearchResult1);
+			model.addAttribute("filterSarchResult", filterSarchResult);
+//			for (int i = 0; i < filterSarchResult.size(); i++) {
+//				System.out.println(filterSarchResult.get(i).getId());
+//			}
+			return "redirect:/venues";
+		}
 	}
 
 	@RequestMapping("/adminVenuePage/{id}")

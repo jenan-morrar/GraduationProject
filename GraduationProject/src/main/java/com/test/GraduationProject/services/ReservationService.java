@@ -1,6 +1,8 @@
 package com.test.GraduationProject.services;
 
+import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -24,6 +26,12 @@ public class ReservationService {
 		return reservationRepository.save(reservation);
 	}
 
+	// returns all the Reservations
+	
+	public List<Reservation> allReservation() {
+		return reservationRepository.findAll();
+	}
+	
 	// retrieves a Reservations
 	public Reservation findReservation(Long id) {
 		Optional<Reservation> optionalVenue = reservationRepository.findById(id);
@@ -35,13 +43,14 @@ public class ReservationService {
 	}
 
 	// edit a reservatio
-	public Reservation updatereservation(Long id, Date fromDate, Date toDate, Venue venue, User user) {
+	public Reservation updatereservation(Long id, Date reservationDate, Time fromTime, Time toTime,Venue venue, User user) {
 		Reservation reservation = findReservation(id);
 		reservation.setId(id);
-		reservation.setToDate(toDate);
-		reservation.setFromDate(fromDate);
-		reservation.setUser(user);
+		reservation.setReservationDate(reservationDate);
+		reservation.setFromTime(fromTime);
+		reservation.setFromTime(toTime);
 		reservation.setVenue(venue);
+		reservation.setUser(user);
 
 		return reservationRepository.save(reservation);
 	}

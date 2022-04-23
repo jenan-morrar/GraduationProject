@@ -349,7 +349,9 @@
 					</div>
 
 					<div id="VenueReservatio" class="tab-pane fade in">
-						<h3>حجز القاعة</h3>
+						<h3>حجوزات القاعة</h3>
+						<!-- <divclass="--noshadow" id="demoEvoCalendar"></div> -->
+						<input type="date" value="" id="event-date" hidden />
 						<div class="--noshadow" id="demoEvoCalendar"></div>
 					</div>
 
@@ -427,7 +429,7 @@
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>
 	<script src="/resources/js/imageSlider.js"></script>
-	<script src="/resources/js/evo-calendar.min.js"></script>
+	<script src="/resources/js/evo-calendar.js"></script>
 	<script src="/resources/js/demo.js"></script>
 
 </body>
