@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.test.GraduationProject.models.Role;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.services.SuperAdminService;
+import com.test.GraduationProject.services.UserService;
 import com.test.GraduationProject.services.VenueService;
 
 @Controller
@@ -26,10 +28,13 @@ public class SuperAdmin {
 
 	private VenueService venueService;
 	private SuperAdminService superAdminService;
+	private UserService userService;
 
-	public SuperAdmin(VenueService venueService, SuperAdminService superAdminService) {
+	public SuperAdmin(VenueService venueService, SuperAdminService superAdminService, UserService userService) {
 		this.venueService = venueService;
 		this.superAdminService = superAdminService;
+		this.userService = userService;
+
 	}
 
 	// Show All the Venues
@@ -96,12 +101,15 @@ public class SuperAdmin {
 	// add new venue to be assigned for the user
 	@PostMapping(value = "/venues/add")
 	public String createVenue(@Valid @ModelAttribute("venue") Venue venue, BindingResult result) {
-
 		if (result.hasErrors()) {
 			return "/superAdmin/allUsersTable.jsp";
 		} else {
-
 			venueService.createVenue(venue);
+			for (Venue v : venueService.allVenues()) {
+				User user = v.getUser();
+				
+				userService.updateUser(user) ; 
+			}
 			return "redirect:/superAdmin/users";
 		}
 	}

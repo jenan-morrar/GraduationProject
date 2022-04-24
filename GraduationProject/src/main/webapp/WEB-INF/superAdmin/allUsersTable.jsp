@@ -92,7 +92,7 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-6 text-center mb-5">
-					<h2 class="heading-section">جميع المستخدمين</h2>
+					<h2 class="heading-section">المستخدمين</h2>
 				</div>
 			</div>
 			<div class="row">
@@ -130,88 +130,32 @@
 										<td><c:forEach items="${user.roles}" var="role">
 												<c:out value="${role.name}" />
 											</c:forEach></td>
+
 										<td>
 											<div class="container content">
 												<div class="row align-items-center content">
-
 													<div class="col-12 text-center">
+														<c:forEach items="${user.roles}" var="role">
+															<c:if test="${role.name=='ROLE_USER'}">
+																<button type="button" class="btn btn-outline-warning"
+																	data-toggle="modal" data-target="#exampleModalCenter"
+																	id="${user.id}" onClick="reply_click(this.id)">
 
-														<button type="button" class="btn btn-outline-warning"
-															data-toggle="modal" data-target="#exampleModalCenter">
-															تعيين قاعة</button>
+																	تعيين قاعة</button>
+															</c:if>
+															<%-- <c:if test="${role.name=='ROLE_ADMIN'}">
+																<button type="button" class="btn btn-outline-warning"
+																	data-toggle="modal" data-target="#exampleModalCenter"
+																	id="${user.id}" onClick="reply_click(this.id)">
+
+																	إعادة تعيين</button>
+															</c:if> --%>
+														</c:forEach>
 													</div>
 												</div>
-											</div> <!-- Modal -->
-											<div class="modal fade" id="exampleModalCenter" tabindex="-1"
-												role="dialog" aria-labelledby="exampleModalCenterTitle"
-												aria-hidden="true">
-												<div class="modal-dialog modal-dialog-centered"
-													role="document">
-													<div class="modal-content rounded-0">
-														<div class="modal-body bg-image overlay"
-															style="background-image: url('/resources/images/simpleBackground.png');">
 
-															<div class="line px-3 to-front">
-																<div class="row align-items-center">
-																	<div class="col logo">
-																		<a href="#"><img
-																			src="/resources/images/ring map logo.png" alt="Image"
-																			class="img-fluid"></a>
-																	</div>
-																	<div class="col-md-8 text-center">
-																		<h2
-																			style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">تعيين
-																			المستخدم للقاعة</h2>
-																	</div>
-																	<div class="col text-right">
-																		<a href="#" class="close-btn" data-dismiss="modal"
-																			aria-label="Close"> <span aria-hidden="true"><span
-																				class="icon-close2"></span></span>
-																		</a>
-																	</div>
-																</div>
-															</div>
-															<div class="p-4 to-front">
-																<div class="text-center">
-																	<h3
-																		style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">تسجيل
-																		قاعة جديدة</h3>
-																	<p class="mb-4">يتم انشاء هذه القاعة و تعيينها
-																		للمستخد المختار , وذلك بإدخال اسم القاعة وموقعها كرابط
-																		لخارطتها .</p>
-																	<form:form action="/superAdmin/venues/add"
-																		method="post" modelAttribute="venue"
-																		class="form-outline">
-																		<div class="form-outline" style="padding: 5px;">
-																			<form:errors path="name" />
-																			<form:input class="form-control mr-3" path="name"
-																				placeholder="أدخل اسم القاعة" />
-																		</div>
-																		<div class="form-outline" style="padding: 5px;">
-																			<form:errors path="location" />
-																			<form:input class="form-control mr-3" path="location"
-																				placeholder="أدخل رابط موقع القاعة" />
-																		</div>
-																		<form:errors path="user" />
-																		<form:input type="hidden" path="user"
-																			value="${user.id}" />
-																		<div class="form-outline">
-																			<input type="submit" class="btn btn-primary"
-																				value="إنشاء">
-																		</div>
-																	</form:form>
-																	<p class="mb-0 cancel">
-																		<a href="#" data-dismiss="modal">لاحقاً</a>
-																	</p>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
 											</div>
-
 										</td>
-
 										<td>
 											<button type="button" class="close" data-dismiss="alert"
 												aria-label="Close">
@@ -227,12 +171,98 @@
 			</div>
 		</div>
 	</section>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content rounded-0">
+				<div class="modal-body bg-image overlay"
+					style="background-image: url('/resources/images/simpleBackground.png');">
+
+					<div class="line px-3 to-front">
+						<div class="row align-items-center">
+							<div class="col logo">
+								<a href="#"><img src="/resources/images/ring map logo.png"
+									alt="Image" class="img-fluid"></a>
+							</div>
+							<div class="col-md-8 text-center">
+								<h2
+									style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">تعيين
+									المستخدم للقاعة</h2>
+							</div>
+							<div class="col text-right">
+								<a href="#" class="close-btn" data-dismiss="modal"
+									aria-label="Close"> <span aria-hidden="true"><span
+										class="icon-close2"></span></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="p-4 to-front">
+						<div class="text-center">
+							<h3
+								style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">تسجيل
+								قاعة جديدة</h3>
+							<p class="mb-4">يتم انشاء هذه القاعة و تعيينها للمستخد
+								المختار , وذلك بإدخال اسم القاعة وموقعها كرابط لخارطتها .</p>
+							<form:form action="/superAdmin/venues/add" method="post"
+								modelAttribute="venue" class="form-outline">
+								<div class="form-outline" style="padding: 5px;">
+									<form:errors path="name" />
+									<form:input class="form-control mr-3" path="name"
+										placeholder="أدخل اسم القاعة" />
+								</div>
+								<div class="form-outline" style="padding: 5px;">
+									<form:errors path="mapOne" />
+									<form:input class="form-control mr-3" path="mapOne"
+										placeholder="أدخل الرابط الاول لموقع القاعة" />
+								</div>
+								<div class="form-outline" style="padding: 5px;">
+									<form:errors path="mapTwo" />
+									<form:input class="form-control mr-3" path="mapTwo"
+										placeholder="أدخل الرابط الثاني لموقع القاعة" />
+								</div>
+								<div>
+									<form:errors path="user" />
+									<form:input type="hidden" path="user" name="user_id_modal" />
+								</div>
+
+								<div class="form-outline">
+									<input type="submit" class="btn btn-primary" value="إنشاء">
+								</div>
+							</form:form>
+							<p class="mb-0 cancel">
+								<a href="#" data-dismiss="modal">لاحقاً</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
 	<script src="/js/jquery-3.3.1.min.js"></script>
 	<script src="/js/popper.js"></script>
 	<script src="/js/popper.min.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
 	<script src="/js/main.js"></script>
 	<script src="/js/jquery.min.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		function reply_click(clicked_id) {
+			$("input[name='user']").val(clicked_id);
+		}
+	</script>
+
 </body>
 </html>
 

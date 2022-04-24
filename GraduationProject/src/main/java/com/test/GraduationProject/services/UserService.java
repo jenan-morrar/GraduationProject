@@ -1,5 +1,7 @@
 package com.test.GraduationProject.services;
 
+import java.util.Optional;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -86,6 +88,20 @@ public class UserService {
 	// 4
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
+	}
+
+	public User updateUser(User user) {
+		user.setRoles(roleRepository.findByName("ROLE_ADMIN"));
+		return userRepository.save(user);
+	}
+
+	public User finduserById(Long id) {
+		Optional<User> optionalUser = userRepository.findById(id);
+		if (optionalUser.isPresent()) {
+			return optionalUser.get();
+		} else {
+			return null;
+		}
 	}
 
 //	// returns all the venues
