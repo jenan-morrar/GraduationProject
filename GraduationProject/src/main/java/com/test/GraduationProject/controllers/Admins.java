@@ -36,15 +36,15 @@ public class Admins {
 	private ServicesOfVenueService servicesOfVenueService;
 	private ImagesService imagesService;
 	private UserService userService;
-	private ReservationService  reservationService;
+	private ReservationService reservationService;
 
-	public Admins(VenueService venueService, ServicesOfVenueService servicesOfVenueService,
-			ImagesService imagesService,UserService userService,ReservationService  reservationService) {
+	public Admins(VenueService venueService, ServicesOfVenueService servicesOfVenueService, ImagesService imagesService,
+			UserService userService, ReservationService reservationService) {
 		this.venueService = venueService;
 		this.servicesOfVenueService = servicesOfVenueService;
 		this.imagesService = imagesService;
 		this.userService = userService;
-		this.reservationService= reservationService;
+		this.reservationService = reservationService;
 	}
 
 //	@RequestMapping("/admin/venues/{id}")
@@ -57,29 +57,33 @@ public class Admins {
 //	}
 
 	@RequestMapping("/adminVenuePage/{id}/edit")
-	public String edit(@PathVariable("id") Long id, Model model,Principal principal) {
+	public String edit(@PathVariable("id") Long id, Model model, Principal principal) {
 		Venue venue = venueService.findVenue(id);
-	    List<Reservation> reservations = reservationService.allReservation();
-	    model.addAttribute("reservationResult", reservations);
-		if(venue.getUser()!=null) {
-		if(venue.getUser().getId()==id) {
-			model.addAttribute("venue", venue);
-			model.addAttribute("serviceExist", "no");
-		}
-		}else {
-			return"errorPage.jsp";
-		}
+		List<Reservation> reservations = reservationService.allReservation();
+		model.addAttribute("reservationResult", reservations);
+
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			long userId = userService.findByEmail(username).getId();
 			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+
 			if (userRole.equals("ROLE_ADMIN")) {
 				model.addAttribute("serviceExist", "no");
+
+				if (venue.getUser() != null) {
+					if (venue.getUser().getId() == userId) {
+						model.addAttribute("venue", venue);
+						model.addAttribute("serviceExist", "no");
+					} else {
+						return "errorPage.jsp";
+					}
+				}
 			}
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
-		
+
 		return "editAdminVenuePage.jsp";
 	}
 
@@ -103,14 +107,15 @@ public class Admins {
 //				}
 //			}
 			venueService.updateVenue1(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
-					venue.getPrice(), venue.getNumOfGuests(),venue.getVenuePark(),venue.getVenueContact());
+					venue.getPrice(), venue.getNumOfGuests(), venue.getVenuePark(), venue.getVenueContact());
 			return "redirect:/adminVenuePage/{id}/edit";
 		}
 	}
 
 	// Delete Service
 	@RequestMapping(value = "/adminVenuePage/{id1}/services/delete/{id2}", method = RequestMethod.GET)
-	public String deleteService(@PathVariable("id1") long id1, @PathVariable("id2") long id2, Model model,RedirectAttributes redirectAttrs) {
+	public String deleteService(@PathVariable("id1") long id1, @PathVariable("id2") long id2, Model model,
+			RedirectAttributes redirectAttrs) {
 		Venue venue = venueService.findVenue(id1);
 		model.addAttribute("venue", venue);
 		redirectAttrs.addAttribute("id", venue.getId());
@@ -122,8 +127,8 @@ public class Admins {
 					venue.getServices().remove(serviceList.get(i));
 					servicesOfVenueService.deleteService(id2);
 					venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(),
-							venue.getLocation(), venue.getPrice(),
-							venue.getNumOfGuests(),venue.getVenuePark(),venue.getVenueContact(), venue.getServices(), venue.getImages());
+							venue.getLocation(), venue.getPrice(), venue.getNumOfGuests(), venue.getVenuePark(),
+							venue.getVenueContact(), venue.getServices(), venue.getImages());
 				}
 			}
 		}
@@ -132,7 +137,8 @@ public class Admins {
 
 	// Delete Image
 	@RequestMapping(value = "/adminVenuePage/{id1}/images/delete/{id2}", method = RequestMethod.GET)
-	public String deleteImage(@PathVariable("id1") long id1, @PathVariable("id2") long id2, Model model,RedirectAttributes redirectAttrs) {
+	public String deleteImage(@PathVariable("id1") long id1, @PathVariable("id2") long id2, Model model,
+			RedirectAttributes redirectAttrs) {
 		Venue venue = venueService.findVenue(id1);
 		model.addAttribute("venue", venue);
 		redirectAttrs.addAttribute("id", venue.getId());
@@ -145,8 +151,8 @@ public class Admins {
 					venue.getImages().remove(imagesList.get(i));
 					imagesService.deleteImage(id2);
 					venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(),
-							venue.getLocation(), venue.getPrice(),
-							venue.getNumOfGuests(),venue.getVenuePark(),venue.getVenueContact(), venue.getServices(), venue.getImages());
+							venue.getLocation(), venue.getPrice(), venue.getNumOfGuests(), venue.getVenuePark(),
+							venue.getVenueContact(), venue.getServices(), venue.getImages());
 				}
 			}
 		}
@@ -179,8 +185,8 @@ public class Admins {
 			servicesOfVenueService.createService(service);
 			venue.getServices().add(service);
 			venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
-					venue.getPrice(), venue.getNumOfGuests(),venue.getVenuePark(),venue.getVenueContact(), venue.getServices(),
-					venue.getImages());
+					venue.getPrice(), venue.getNumOfGuests(), venue.getVenuePark(), venue.getVenueContact(),
+					venue.getServices(), venue.getImages());
 		}
 
 		return "redirect:/adminVenuePage/{id}/edit";
@@ -201,8 +207,8 @@ public class Admins {
 		venue.getImages().add(image);
 		imagesService.createImage(image);
 		venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
-				venue.getPrice(),venue.getNumOfGuests(),venue.getVenuePark(),venue.getVenueContact(), venue.getServices(),
-				venue.getImages());
+				venue.getPrice(), venue.getNumOfGuests(), venue.getVenuePark(), venue.getVenueContact(),
+				venue.getServices(), venue.getImages());
 		String uploadDir = "user-photos/" + id;
 		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 

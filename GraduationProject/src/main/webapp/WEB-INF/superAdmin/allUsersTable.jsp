@@ -257,8 +257,10 @@
 	<script src="/js/jquery.min.js"></script>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		
 	<script type="text/javascript">
 		function reply_click(clicked_id) {
+			console.log(clicked_id);
 			$("input[name='user']").val(clicked_id);
 		}
 	</script>
