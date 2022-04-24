@@ -71,16 +71,23 @@
 
 <!-- Modernizr JS -->
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#venueCardStyle div").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
+	$(document).ready(
+			function() {
+				$("#myInput").on(
+						"keyup",
+						function() {
+							var value = $(this).val().toLowerCase();
+							$("#venueCardStyle div").filter(
+									function() {
+										$(this).toggle(
+												$(this).text().toLowerCase()
+														.indexOf(value) > -1)
+									});
+						});
+			});
 </script>
 </head>
 <body>
@@ -148,44 +155,84 @@ $(document).ready(function(){
 			<div class="col-md-8" id="venues-card-item">
 				<input id="myInput" type="text" placeholder="...ابحث"
 					class="form-control"
-					style="width: 80%; float: right; margin-bottom: 4%;"><br>
+					style="width: 80%; float: right; margin-right: 4%"><br>
 				<br>
-				<div id="venueCardStyle">
-				<c:forEach items="${venues}" var="venueCard">
-					<div class="col-md-4" id="venueCardStyle">
-						<div class="product-grid">
-							<span class="product-image">
-								<c:if test="${venueCard.images.size()==0}">
-									<a href="/venuePage/${venueCard.id}" class="image"> <img
-										class="pic-1" style="width: 100%; height: 200px;"
-										src="/resources/images/noImage.jpg">
-									</a>
-								</c:if>
-								<c:forEach var="images" items="${venueCard.images}"
-									varStatus="loop">
-									<c:if test="${loop.first}">
-										<a href="/venuePage/${venueCard.id}" class="image"> <img
-											class="pic-1" style="width: 100%; height: 200px;"
-											src="<c:out value="/user-photos/${venueCard.id}/${images.image}"/>">
-										</a>
-									</c:if>
-								</c:forEach>
-							</span>
-							<div class="product-content">
-	
-								<h3 class="title">
-									<a href="/venuePage/${venueCard.id}"><c:out
-											value="${venueCard.name}" /></a>
-									<h4>${venueCard.location }</h4>
+				<c:if test="${filterSearchResult1.size()==0}">
+					<div id="venueCardStyle">
+						<c:forEach items="${venues}" var="venueCard">
+							<div class="col-md-4" id="venueCardStyle">
+								<div class="product-grid">
+									<span class="product-image"> <c:if
+											test="${venueCard.images.size()==0}">
+											<a href="/venuePage/${venueCard.id}" class="image"> <img
+												class="pic-1" style="height: 200px;"
+												src="/resources/images/noImage.jpg">
+											</a>
+										</c:if> <c:forEach var="images" items="${venueCard.images}"
+											varStatus="loop">
+											<c:if test="${loop.first}">
+												<a href="/venuePage/${venueCard.id}" class="image"> <img
+													class="pic-1"
+													src="<c:out value="/user-photos/${venueCard.id}/${images.image}"/>">
+												</a>
+											</c:if>
+										</c:forEach>
+									</span>
+									<div class="product-content">
 
-								</h3>
-								<a class="add-to-cart" href="/venuePage/${venueCard.id}">اذهب
-									إلى القاعة</a>
+										<h3 class="title">
+											<a href="/venuePage/${venueCard.id}"><c:out
+													value="${venueCard.name}" /></a>
+											<h4>${venueCard.location }</h4>
+
+										</h3>
+										<a class="add-to-cart" href="/venuePage/${venueCard.id}">اذهب
+											إلى القاعة</a>
+									</div>
+								</div>
 							</div>
-						</div>
+						</c:forEach>
 					</div>
-				</c:forEach>
-				</div>
+				</c:if>
+				<c:if test="${filterSearchResult1.size() > 0}">
+					<div id="venueCardStyle">
+						<c:forEach items="${filterSearchResult1}" var="venueCard">
+							<div class="col-md-4" id="venueCardStyle">
+								<div class="product-grid">
+									<span class="product-image"> <c:if
+											test="${venueCard.images.size()==0}">
+											<a href="/venuePage/${venueCard.id}" class="image"> <img
+												class="pic-1" style="height: 200px;"
+												src="/resources/images/noImage.jpg">
+											</a>
+										</c:if> <c:forEach var="images" items="${venueCard.images}"
+											varStatus="loop">
+											<c:if test="${loop.first}">
+												<a href="/venuePage/${venueCard.id}" class="image"> <img
+													class="pic-1"
+													src="<c:out value="/user-photos/${venueCard.id}/${images.image}"/>">
+												</a>
+											</c:if>
+										</c:forEach>
+									</span>
+									<div class="product-content">
+
+										<h3 class="title">
+											<a href="/venuePage/${venueCard.id}"><c:out
+													value="${venueCard.name}" /></a>
+											<h4>${venueCard.location }</h4>
+
+										</h3>
+										<a class="add-to-cart" href="/venuePage/${venueCard.id}">اذهب
+											إلى القاعة</a>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
+					</div>
+				</c:if>
+
+
 			</div>
 			<!-- <div class="col-md-4">
 				<form action="" method="post">
@@ -243,72 +290,86 @@ $(document).ready(function(){
 
 			<div class="col-md-3">
 				<div class="wrapper-slider">
-					<div class="filter-search-items">
-						<label>موقع القاعة</label> <br> <select id="locations"
-							name="location">
-							<option value="location1">الماصيون</option>
-							<option value="location2">الأرسال</option>
-							<option value="location3">أم الشرايط</option>
-							<option value="location4">بيرزيت</option>
-							<option value="location5">البيرة</option>
-							<option value="location6">كفر عقب</option>
-						</select>
-					</div>
-					<div id="price-slider">
+					<form:form method="POST" action="/venues"
+						modelAttribute="filterSearch">
 						<div class="filter-search-items">
-							<label>سعر القاعة</label> <br>
-							<div class="price-input">
-								<div class="field">
-									<span>الحد الأدنى</span> <input type="number" class="input-min"
-										value="2500">
+							<label>موقع القاعة</label> <br>
+							<form:select id="locations" name="location" path="location">
+								<form:option value="الماصيون" />
+								<form:option value="الأرسال" />
+								<form:option value="أم الشرايط" />
+								<form:option value="بيرزيت" />
+								<form:option value="البيرة" />
+								<form:option value="كفر عقب" />
+							</form:select>
+						</div>
+						<div id="price-slider">
+							<div class="filter-search-items">
+								<label>سعر القاعة</label> <br>
+								<div class="price-input">
+									<div class="field">
+										<form:input type="number" class="input-min"
+											path="minPrice" />
+										<span>الحد الأدنى</span>
+
+									</div>
+									<div class="separator">-</div>
+									<div class="field">
+
+										<form:input type="number" class="input-max"
+											path="maxPrice" />
+										<span>الحد الأقصى</span>
+									</div>
 								</div>
-								<div class="separator">-</div>
-								<div class="field">
-									<span>الحد الأقصى</span> <input type="number" class="input-max"
-										value="7500">
+								<div class="slider">
+									<div class="progress"></div>
 								</div>
-							</div>
-							<div class="slider">
-								<div class="progress"></div>
-							</div>
-							<div class="range-input">
-								<input type="range" class="range-min" min="0" max="10000"
-									value="2500" step="100"> <input type="range"
-									class="range-max" min="0" max="10000" value="7500" step="100">
+								<div class="range-input">
+									<form:input type="range" class="range-min" min="0" max="49999"
+										value="0" step="100" path="minPrice" />
+									<form:input type="range" class="range-max" min="0" max="50000"
+										value="50000" step="100" path="maxPrice" />
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div id="numOfguests-slider">
-						<div class="filter-search-items">
-							<label>عدد الضيوف</label> <br>
-							<div class="numOfGuests-input">
-								<div class="field">
-									<span>الحد الأدنى</span> <input type="number"
-										class="input2-min" value="2500">
+						<div id="numOfguests-slider">
+							<div class="filter-search-items">
+								<label>عدد الضيوف</label> <br>
+								<div class="numOfGuests-input">
+									<div class="field">
+										<form:input type="number" class="input2-min"
+											path="minNumOfGuests" />
+										<span>الحد الأدنى</span>
+
+									</div>
+									<div class="separator">-</div>
+									<div class="field">
+										<form:input type="number" class="input2-max"
+											path="maxNumOfGuests" />
+										<span>الحد الأقصى</span>
+
+									</div>
 								</div>
-								<div class="separator">-</div>
-								<div class="field">
-									<span>الحد الأقصى</span> <input type="number"
-										class="input2-max" value="7500">
+								<div class="slider2">
+									<div class="progress"></div>
 								</div>
-							</div>
-							<div class="slider2">
-								<div class="progress"></div>
-							</div>
-							<div class="range2-input">
-								<input type="range" class="range2-min" min="0" max="10000"
-									value="2500" step="100"> <input type="range"
-									class="range2-max" min="0" max="10000" value="7500" step="100">
+								<div class="range2-input">
+									<form:input type="range" class="range2-min" min="0" max="1999"
+										value="0" step="100" path="minNumOfGuests" />
+									<form:input type="range" class="range2-max" min="0" max="2000"
+										value="2000" step="100" path="maxNumOfGuests" />
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="venue-a" style="margin-top: 5%;">
-						<input type="submit" class="round-black-btn"
-							value="ابحث عن القاعة" /> <a href="#" class="round-black-btn">عرض
-							جميع القاعات</a>
-					</div>
+						<div class="venue-a" style="margin-top: 5%;">
+							<input type="submit" class="round-black-btn"
+								value="ابحث عن القاعة" /> <a href="#" class="round-black-btn">عرض
+								جميع القاعات</a>
+						</div>
+
+					</form:form>
 				</div>
 			</div>
 		</div>

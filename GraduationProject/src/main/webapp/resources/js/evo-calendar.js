@@ -28,10 +28,9 @@
                 sidebarToggler: true,
                 eventDisplayDefault: true,
                 eventListToggler: true,
-                calendarEvents: null
+                calendarEvents: null,
             };
             _.options = $.extend({}, _.defaults, settings);
-
             _.initials = {
                 default_class: $(element)[0].classList.value,
                 validParts: /dd?|DD?|mm?|MM?|yy(?:yy)?/g,
@@ -127,10 +126,10 @@
                 for(var i=0; i < _.options.calendarEvents.length; i++) {
                     // If event doesn't have an id, throw an error message
                     if(!_.options.calendarEvents[i].id) {
-                        console.log("%c Event named: \""+_.options.calendarEvents[i].name+"\" doesn't have a unique ID ", "color:white;font-weight:bold;background-color:#e21d1d;");
+                        console.log("%c Event named: \""+_.options.calendarEvents[i].reservationDate+"\" doesn't have a unique ID ", "color:white;font-weight:bold;background-color:#e21d1d;");
                     }
-                    if(_.isValidDate(_.options.calendarEvents[i].date)) {
-                        _.options.calendarEvents[i].date = _.formatDate(_.options.calendarEvents[i].date, _.options.format)
+                    if(_.isValidDate(_.options.calendarEvents[i].reservationDate)) {
+                        _.options.calendarEvents[i].reservationDate = _.formatDate(_.options.calendarEvents[i].reservationDate, _.options.format)
                     }
                 }
             }
@@ -355,14 +354,14 @@
 
         for (var i = 0; i < _.options.calendarEvents.length; i++) {
             if (_.options.calendarEvents[i].date instanceof Array) {
-                var arr = _.getBetweenDates(_.options.calendarEvents[i].date);
+                var arr = _.getBetweenDates(_.options.calendarEvents[i].reservationDate);
                 for (var x = 0; x < arr.length; x++) {
                     if(date === arr[x] && type === _.options.calendarEvents[i].type) {
                         eventLength++;
                     }
                 }
             } else {
-                if(date === _.options.calendarEvents[i].date && type === _.options.calendarEvents[i].type) {
+                if(date === _.options.calendarEvents[i].reservationDate && type === _.options.calendarEvents[i].type) {
                     eventLength++;
                 }
             }
@@ -556,12 +555,14 @@
             // events
             markup += '<div class="calendar-events">'+
                             '<div class="event-header"><p></p></div>'+
-                            '<div class="event-list"></div>'+
-                        '</div>';
-
+                            '<div class="event-list"></div> <div class="add-event"></div>';
             // --- Finally, build it now! --- //
             _.$elements.calendarEl.html(markup);
 
+           var addEventForm = $("#add-event-form");
+			$(".add-event").append(addEventForm);
+			$(".add-event #add-event-form").css("display","block");
+			
             if (!_.$elements.sidebarEl) _.$elements.sidebarEl = $(_.$elements.calendarEl).find('.calendar-sidebar');
             if (!_.$elements.innerEl) _.$elements.innerEl = $(_.$elements.calendarEl).find('.calendar-inner');
             if (!_.$elements.eventEl) _.$elements.eventEl = $(_.$elements.calendarEl).find('.calendar-events');
@@ -600,10 +601,10 @@
         if (eventListEl.children().length > 0) eventListEl.empty();
         if (_.options.calendarEvents) {
             for (var i = 0; i < _.options.calendarEvents.length; i++) {
-                if(_.isBetweenDates(_.$active.date, _.options.calendarEvents[i].date)) {
+                if(_.isBetweenDates(_.$active.date, _.options.calendarEvents[i].reservationDate)) {
                     eventAdder(_.options.calendarEvents[i])
                 }
-                else if (_.options.calendarEvents[i].everyYear) {
+               /* else if (_.options.calendarEvents[i].everyYear) {
                     var d = new Date(_.$active.date).getMonth() + 1 + ' ' + new Date(_.$active.date).getDate();
                     var dd = new Date(_.options.calendarEvents[i].date).getMonth() + 1 + ' ' + new Date(_.options.calendarEvents[i].date).getDate();
                     // var dates = [_.formatDate(_.options.calendarEvents[i].date[0], 'mm/dd'), _.formatDate(_.options.calendarEvents[i].date[1], 'mm/dd')];
@@ -611,7 +612,7 @@
                     if(d==dd) {
                         eventAdder(_.options.calendarEvents[i])
                     }
-                }
+                }*/
             };
         }
         function eventAdder(event) {
@@ -646,6 +647,7 @@
         if (event_data.badge) markup += '<span>'+event_data.badge+'</span>';
         markup += '</p>'
         if (event_data.description) markup += '<p class="event-desc">'+event_data.description+'</p>';
+        
         markup += '</div>';
         markup += '</div>';
         eventListEl.append(markup);
@@ -733,7 +735,6 @@
         _.$elements.innerEl.find('.calendar-day').children()
         .off('click.evocalendar')
         .on('click.evocalendar', _.selectDate)
-
         var selectedDate = _.$elements.innerEl.find("[data-date-val='" + _.$active.date + "']");
         
         if (selectedDate) {
@@ -741,6 +742,10 @@
             _.$elements.innerEl.children().removeClass('calendar-active');
             // Add active class to selected date
             selectedDate.addClass('calendar-active');
+            
+          	var newDate = new Date();
+          	$("#event-date")[0].valueAsDate  = new Date(Date.UTC(newDate.getFullYear(),newDate.getMonth(), newDate.getDate())); 
+			$("#event-date").attr("value",newDate);
         }
         if(_.options.calendarEvents != null) { // For event indicator (dots)
             _.buildEventIndicator();
@@ -750,7 +755,7 @@
     // v1.0.0 - Add event indicator/s (dots)
     EvoCalendar.prototype.addEventIndicator = function(event) {
         var _ = this, htmlToAppend, thisDate;
-        var event_date = event.date;
+        var event_date = event.reservationDate;
         var type = _.stringCheck(event.type);
         
         if (event_date instanceof Array) {
@@ -765,9 +770,9 @@
                 appendDot(active_date[i]);
             }
         } else {
-            if (event.everyYear) {
-                event_date = _.formatDate(new Date(event_date).setFullYear(_.$active.year), _.options.format);
-            }
+          //  if (event.everyYear) {
+            //    event_date = _.formatDate(new Date(event_date).setFullYear(_.$active.year), _.options.format);
+            //}
             appendDot(event_date);
         }
 
@@ -792,7 +797,7 @@
     // v1.0.0 - Remove event indicator/s (dots)
     EvoCalendar.prototype.removeEventIndicator = function(event) {
         var _ = this;
-        var event_date = event.date;
+        var event_date = event.reservationDate;
         var type = _.stringCheck(event.type);
 
         if (event_date instanceof Array) {
@@ -932,7 +937,11 @@
         activeDayEl.addClass('calendar-active');
         // Build event list if not the same date events built
         if (!isSameDate) _.buildEventList();
+        var newDate = new Date(date+" 00:00:00");   
+	    $("#event-date")[0].valueAsDate  = new Date(Date.UTC(newDate.getFullYear(),newDate.getMonth(), newDate.getDate()));
+		$("#event-date").attr("value",newDate);
 
+		_.toggleEventList(true);
         // EVENT FIRED: selectDate
         $(_.$elements.calendarEl).trigger("selectDate", [_.$active.date, oldDate])
     };
@@ -976,9 +985,9 @@
             }
         }
 
-        if (_.windowW <= _.$breakpoints.tablet) {
+       // if (_.windowW <= _.$breakpoints.tablet) {
             if (_.$UI.hasSidebar && _.$UI.hasEvent) _.toggleEventList();
-        }
+       // }
     };
 
     // v1.0.0 - Toggle Event list
@@ -998,9 +1007,9 @@
             }
         }
 
-        if (_.windowW <= _.$breakpoints.tablet) {
+        //if (_.windowW <= _.$breakpoints.tablet) {
             if (_.$UI.hasEvent && _.$UI.hasSidebar) _.toggleSidebar();
-        }
+       // }
     };
 
     // v1.0.0 - Add Calendar Event(s)

@@ -1,7 +1,7 @@
 @charset "ISO-8859-1";
 
 #venueCardStyle {
-	margin-top: 2%;
+	margin-top: 6%;
 	margin-bottom: 2%;
 }
 
@@ -37,7 +37,6 @@
 	text-align: center;
 	border-radius: 15px;
 	border: 1px solid #e7e7e7;
-	overflow: hidden;
 	transition: all 0.4s ease-out;
 }
 
@@ -56,6 +55,8 @@
 .product-grid .product-image img {
 	width: 100%;
 	height: auto;
+	border-radius: 15px;
+	border: 1px solid #e7e7e7;
 }
 
 .product-grid .product-discount-label {
@@ -314,16 +315,16 @@
   }
   .slider .progress{
     height: 100%;
-    left: 25%;
-    right: 25%;
+    left: 2%;
+    right: 2%;
     position: absolute;
     border-radius: 5px;
     background: #17A2B8;
   }
     .slider2 .progress{
     height: 100%;
-    left: 25%;
-    right: 25%;
+    left: 2%;
+    right: 2%;
     position: absolute;
     border-radius: 5px;
     background: #17A2B8;

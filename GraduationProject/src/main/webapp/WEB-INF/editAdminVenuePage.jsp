@@ -349,8 +349,29 @@
 					</div>
 
 					<div id="VenueReservatio" class="tab-pane fade in">
-						<h3>حجز القاعة</h3>
-						<div class="--noshadow" id="demoEvoCalendar"></div>
+						<h3>حجوزات القاعة</h3>
+						<!-- <divclass="--noshadow" id="demoEvoCalendar"></div> -->
+						<input type="date" value="" id="event-date" hidden />
+						<c:set var="reservations" scope="session"
+								value="${reservationResult}" />
+							<input hidden value id="reservations" />
+							<script>
+								var reservationsjs = new Array();
+								<c:forEach items="${reservations}" var="reservation">
+								res = new Object();
+								res.id = "${reservation.id}";
+								res.name = "wedding";
+								res.description = "from ${reservation.fromTime} to ${reservation.toTime}";
+								res.fromTime = "${reservation.fromTime}";
+								res.toTime = "${reservation.toTime}";
+								res.reservationDate = "${reservation.reservationDate}";
+								res.type = "event";
+								reservationsjs.push(res);
+								</c:forEach>
+								$("#reservations").val(
+										JSON.stringify(reservationsjs));
+							</script>
+							<div class="--noshadow" id="demoEvoCalendar"></div>
 					</div>
 
 					<div id="VenueLocation" class="tab-pane fade">
@@ -427,7 +448,7 @@
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>
 	<script src="/resources/js/imageSlider.js"></script>
-	<script src="/resources/js/evo-calendar.min.js"></script>
+	<script src="/resources/js/evo-calendar.js"></script>
 	<script src="/resources/js/demo.js"></script>
 
 </body>

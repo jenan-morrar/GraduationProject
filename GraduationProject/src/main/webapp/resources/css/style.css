@@ -1865,13 +1865,13 @@ transform:scale(1);
 }
 
 .fh5co-nav-toggle.fh5co-nav-white>i {
-	color: #fff;
-	background: #fff;
+	color: #cd7e53;
+	background: #cd7e53;
 }
 
 .fh5co-nav-toggle.fh5co-nav-white>i::before, .fh5co-nav-toggle.fh5co-nav-white>i::after
 	{
-	background: #fff;
+	background: #cd7e53;
 }
 
 .fh5co-nav-toggle i::before {

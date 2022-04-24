@@ -285,44 +285,86 @@
 				<div class="tab-content" id="venueTabContent">
 					<div id="VenueReservatio" class="tab-pane fade in active">
 						<c:if test="${userName == \"noUser\"}">
-							<h3>للحجز يجب تسجيل الدخول</h3>
-							<a class="round-black-btn" href="/login">تسجيل الدخول</a>
-							<div style="margin-top: 3%;">
-								<h3>خدمات القاعة</h3>
-								<form:form action="" method="post" modelAttribute="venue">
-									<c:forEach varStatus="us" var="service"
-										items="${venuePage.services}">
-										<div>
-											<label for="venueService"><c:out
-													value="${service.price}" /> <c:out value="${service.name}" /></label>
-										</div>
-									</c:forEach>
-									<br>
-								</form:form>
-							</div>
+							<h3>
+								للحجز يجب <a href="/login">تسجيل الدخول</a>
+							</h3>
+
+							<input type="date" value="" id="event-date" hidden />
+							<c:set var="reservations" scope="session"
+								value="${reservationResult}" />
+							<input hidden value id="reservations" />
+							<script>
+								var reservationsjs = new Array();
+								<c:forEach items="${reservations}" var="reservation">
+								res = new Object();
+								res.id = "${reservation.id}";
+								res.name = "wedding";
+								res.description = "from ${reservation.fromTime} to ${reservation.toTime}";
+								res.fromTime = "${reservation.fromTime}";
+								res.toTime = "${reservation.toTime}";
+								res.reservationDate = "${reservation.reservationDate}";
+								res.type = "event";
+								reservationsjs.push(res);
+								</c:forEach>
+								$("#reservations").val(
+										JSON.stringify(reservationsjs));
+							</script>
 							<div class="--noshadow" id="demoEvoCalendar"></div>
 						</c:if>
 
 						<c:if test="${userName == \"user\"}">
 							<h3>حجز القاعة</h3>
-							<div style="margin-top: 3%;">
-								<h4>اختر من خدمات القاعة</h4>
-								<form:form action="" method="post" modelAttribute="venue">
-									<c:forEach varStatus="us" var="service"
-										items="${venuePage.services}">
-										<div>
-											<label for="venueService"><c:out
-													value="${service.price}" /> <c:out value="${service.name}" /></label>
-											<input type="checkbox" id="venueService" name="interest"
-												value="coding">
-										</div>
-									</c:forEach>
+							<c:set var="reservations" scope="session"
+								value="${reservationResult}" />
+							<!--<form:form method="post" action="/venuePage/${venuePage.id}" modelAttribute="reservation">
+								<form:input type="time" path="fromTime" />
+								<form:input type="time" path="toTime" />
+								<form:input type="date" path="reservationDate" />
+								<input type="submit" value="submit"/>
+
+							</form:form>-->
+							<div class="user" id="add-event-form"
+								style="margin-top: 3%; display: none;">
+								<form:form method="post" action="/venuePage/${venuePage.id}"
+									modelAttribute="reservation">
+									<label>اختر ما يلي لحجز القاعة</label>
 									<br>
-									<h4>أختر التاريح الذي يناسبك</h4>
-									<div class="--noshadow" id="demoEvoCalendar"></div>
+									<form:input type="time" id="from" name="from" path="startTime" value="17:00" required="required"/>
+									<label for="from">من الساعة</label>
+									<br>
+									<form:input type="time" id="to" name="to" path="endTime" value="21:00" required="required" />
+									<label for="to">إلى الساعة</label>
+									<br>
+									<label>خدمات القاعة</label>
+									<br>
+									<label>اختر قائمة أغانيك</label>
+									<br>
+									<form:input type="date" value="" id="event-date"
+										style="display: none;" path="reservationDate" />
 									<input type="submit" class="round-black-btn" value="إحجز الآن" />
+
 								</form:form>
+								<!--<h4>أختر التاريح الذي يناسبك</h4>
+									<div class="--noshadow" id="demoEvoCalendar" data-services=""></div>-->
 							</div>
+							<input hidden value id="reservations" />
+							<script>
+								var reservationsjs = new Array();
+								<c:forEach items="${reservations}" var="reservation">
+								res = new Object();
+								res.id = "${reservation.id}";
+								res.name = "wedding";
+								res.description = "from ${reservation.fromTime} to ${reservation.toTime}";
+								res.fromTime = "${reservation.fromTime}";
+								res.toTime = "${reservation.toTime}";
+								res.reservationDate = "${reservation.reservationDate}";
+								res.type = "event";
+								reservationsjs.push(res);
+								</c:forEach>
+								$("#reservations").val(
+										JSON.stringify(reservationsjs));
+							</script>
+							<div class="--noshadow" id="demoEvoCalendar"></div>
 						</c:if>
 
 
@@ -419,61 +461,6 @@
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
 	</div>
 
-	<script>
-		var responsiveSlider = function() {
-
-			var slider = document.getElementById("slider");
-			var sliderWidth = slider.offsetWidth;
-			var slideList = document.getElementById("slideWrap");
-			var count = 1;
-			var items = slideList.querySelectorAll("li").length;
-			var prev = document.getElementById("prev");
-			var next = document.getElementById("next");
-
-			window.addEventListener('resize', function() {
-				sliderWidth = slider.offsetWidth;
-			});
-
-			var prevSlide = function() {
-				if (count > 1) {
-					count = count - 2;
-					slideList.style.left = "-" + count * sliderWidth + "px";
-					count++;
-				} else if (count = 1) {
-					count = items - 1;
-					slideList.style.left = "-" + count * sliderWidth + "px";
-					count++;
-				}
-			};
-
-			var nextSlide = function() {
-				if (count < items) {
-					slideList.style.left = "-" + count * sliderWidth + "px";
-					count++;
-				} else if (count = items) {
-					slideList.style.left = "0px";
-					count = 1;
-				}
-			};
-
-			next.addEventListener("click", function() {
-				nextSlide();
-			});
-
-			prev.addEventListener("click", function() {
-				prevSlide();
-			});
-
-			setInterval(function() {
-				nextSlide()
-			}, 5000);
-
-		};
-
-		window.onload = function() {
-			responsiveSlider();
-		}
-	</script>
 
 
 	<!-- jQuery -->
@@ -501,8 +488,9 @@
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>
 	<script src="/resources/js/imageSlider.js"></script>
-	<script src="/resources/js/evo-calendar.min.js"></script>
+	<script src="/resources/js/evo-calendar.js"></script>
 	<script src="/resources/js/demo.js"></script>
+
 
 
 </body>
