@@ -16,8 +16,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @ Entity
 @ Table(name ="reservations")
@@ -27,10 +33,15 @@ public class Reservation {
 	private Long id;
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private Date reservationDate;
-	@DateTimeFormat(pattern = "hh:mm:ss")
-	private Date fromTime;
-	@DateTimeFormat(pattern = "hh:mm:ss")
-	private Date toTime;
+//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="HH:mm:ss")
+//    @Temporal(TemporalType.TIME)
+//	private Date fromTime;
+	@Transient
+	private String startTime;
+	@Transient
+	private String endTime;
+	private Time fromTime;
+	private Time toTime;
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private Date expirationDate;
 	private String status;
@@ -89,8 +100,27 @@ public class Reservation {
 		this.reservationDate = reservationDate;
 	}
 
+	public String getStartTime() {
+		return startTime;
+	}
 
-	public Date getFromTime() {
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+
+	public Time getFromTime() {
 		return fromTime;
 	}
 
@@ -100,7 +130,7 @@ public class Reservation {
 	}
 
 
-	public Date getToTime() {
+	public Time getToTime() {
 		return toTime;
 	}
 
@@ -172,5 +202,8 @@ public class Reservation {
 	protected void onUpdate() {
 		this.updatedAt = new Date();
 	}
+
+	
+	
     
 }

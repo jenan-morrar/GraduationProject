@@ -2,6 +2,7 @@ package com.test.GraduationProject.controllers;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -45,20 +46,21 @@ public class Users {
 	private UserValidator userValidator;
 	private VenueService venueService;
 	private WebsiteRateService websiteRateService;
-	private ReservationService  reservationService;
+	private ReservationService reservationService;
 	private ServicesOfVenueService ServicesOfVenueService;
 	public List<Venue> filterSearchResult1 = new ArrayList<>();
 	@Autowired
 	private JavaMailSender emailSender;
 
 	public Users(UserService userService, UserValidator userValidator, VenueService venueService,
-			WebsiteRateService websiteRateService, ReservationService reservationService, ServicesOfVenueService servicesOfVenueService) {
+			WebsiteRateService websiteRateService, ReservationService reservationService,
+			ServicesOfVenueService servicesOfVenueService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
 		this.websiteRateService = websiteRateService;
 		this.reservationService = reservationService;
-		this.ServicesOfVenueService =  servicesOfVenueService;
+		this.ServicesOfVenueService = servicesOfVenueService;
 	}
 
 	@RequestMapping("/registration")
@@ -234,14 +236,22 @@ public class Users {
 	}
 
 	@RequestMapping("/venuePage/{id}")
-	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,RedirectAttributes redirectAttrs) {
+	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,
+			RedirectAttributes redirectAttrs) {
 		Venue venuePage = venueService.findVenue(id);
 		model.addAttribute("reservation", new Reservation());
 		model.addAttribute("venuePage", venuePage);
 		redirectAttrs.addAttribute("venuePage", venuePage);
-	    List<Reservation> reservations = reservationService.allReservation();
-	    System.out.println(reservations.size());
-	    model.addAttribute("reservationResult", reservations);
+		List<Reservation> reservations = reservationService.allReservation();
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+		
+		for(int i=0;i<reservations.size();i++) {
+			if(reservations.get(i).getVenue().getId()==id) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+		
+		model.addAttribute("reservationResult", reservationsForVenue);
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -257,31 +267,46 @@ public class Users {
 		}
 		return "venuePage.jsp";
 	}
-	
+
 	@RequestMapping(value = "/venuePage/{id}", method = RequestMethod.POST)
-	public String reserveVenue(Model model,@PathVariable("id") long id,Principal principal, @Valid @ModelAttribute("reservation") Reservation reservation,
-			BindingResult result) throws MessagingException {
+	public String reserveVenue(Model model, @PathVariable("id") long id, Principal principal,
+			@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result)
+			throws MessagingException {
 //		if (result.hasErrors()) {
 //			return "venuePage.jsp";
 //		} else {
-		    long sid = 2;
-		    ServiceOfVenue service = ServicesOfVenueService.findService(sid);
-		    List<ServiceOfVenue> servicesList = new ArrayList<>();
-		    servicesList.add(service);
-			String username = principal.getName();
-			User user = userService.findByEmail(username);
-			Venue venue = venueService.findVenue(id);
-			reservation.setUser(user);
-			reservation.setVenue(venue);
-			reservation.setStatus("pending");
-			reservation.setServices(servicesList);
-			reservation.setId(null);
-			System.out.println(reservation.getFromTime());
-			System.out.println(reservation.getToTime());
-			System.out.println(reservation.getReservationDate());
-			reservationService.createReservation(reservation);
-			System.out.println("id"+reservation.getId());
-			return "redirect:/venuePage/{id}";
+		long sid = 2;
+		ServiceOfVenue service = ServicesOfVenueService.findService(sid);
+		List<ServiceOfVenue> servicesList = new ArrayList<>();
+		servicesList.add(service);
+		String username = principal.getName();
+		User user = userService.findByEmail(username);
+		Venue venue = venueService.findVenue(id);
+		reservation.setUser(user);
+		reservation.setVenue(venue);
+		reservation.setStatus("pending");
+		reservation.setServices(servicesList);
+//		System.out.println(reservation.getStartTime());
+//		System.out.println(reservation.getEndTime());
+		reservation.setFromTime(java.sql.Time.valueOf(reservation.getStartTime() + ":00"));
+		reservation.setToTime(java.sql.Time.valueOf(reservation.getEndTime() + ":00"));
+		reservation.setId(null);
+//		System.out.println(reservation.getFromTime());
+//		System.out.println(reservation.getToTime());
+//		System.out.println(reservation.getReservationDate());
+		reservationService.createReservation(reservation);
+
+		// Create the Expiration Date
+		Calendar calExpirationDate = Calendar.getInstance();
+		calExpirationDate.setTime(reservation.getCreatedAt());
+		calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+		reservation.setExpirationDate(calExpirationDate.getTime());
+
+		reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+				reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+				reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+
+		return "redirect:/venuePage/{id}";
 //		}
 	}
 
@@ -308,7 +333,7 @@ public class Users {
 		return "venues.jsp";
 	}
 
-	// Still it needs an updates 
+	// Still it needs an updates
 	@RequestMapping(value = "/venues", method = RequestMethod.POST)
 	public String venuesFilterSearch(Model model, @Valid @ModelAttribute("filterSearch") FilterSearch filterSearch,
 			BindingResult result) throws MessagingException {
@@ -333,6 +358,8 @@ public class Users {
 
 	@RequestMapping("/adminVenuePage/{id}")
 	public String adminVenuePage(Principal principal, Model model) {
+		List<Reservation> reservations = reservationService.allReservation();
+		model.addAttribute("reservationResult", reservations);
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();

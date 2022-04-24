@@ -43,12 +43,14 @@ public class ReservationService {
 	}
 
 	// edit a reservatio
-	public Reservation updatereservation(Long id, Date reservationDate, Time fromTime, Time toTime,Venue venue, User user) {
+	public Reservation updatereservation(Long id, Date reservationDate, Time fromTime, Time toTime, String status, Date expirationDate, Venue venue, User user) {
 		Reservation reservation = findReservation(id);
 		reservation.setId(id);
 		reservation.setReservationDate(reservationDate);
 		reservation.setFromTime(fromTime);
-		reservation.setFromTime(toTime);
+		reservation.setToTime(toTime);
+		reservation.setStatus(status);
+		reservation.setExpirationDate(expirationDate);
 		reservation.setVenue(venue);
 		reservation.setUser(user);
 

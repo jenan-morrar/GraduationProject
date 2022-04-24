@@ -20,12 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.test.GraduationProject.models.Images;
+import com.test.GraduationProject.models.Reservation;
 import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.services.ServicesOfVenueService;
 import com.test.GraduationProject.services.UserService;
 import com.test.GraduationProject.services.VenueService;
 import com.test.GraduationProject.services.ImagesService;
+import com.test.GraduationProject.services.ReservationService;
 
 @Controller
 public class Admins {
@@ -34,13 +36,15 @@ public class Admins {
 	private ServicesOfVenueService servicesOfVenueService;
 	private ImagesService imagesService;
 	private UserService userService;
+	private ReservationService  reservationService;
 
 	public Admins(VenueService venueService, ServicesOfVenueService servicesOfVenueService,
-			ImagesService imagesService,UserService userService) {
+			ImagesService imagesService,UserService userService,ReservationService  reservationService) {
 		this.venueService = venueService;
 		this.servicesOfVenueService = servicesOfVenueService;
 		this.imagesService = imagesService;
 		this.userService = userService;
+		this.reservationService= reservationService;
 	}
 
 //	@RequestMapping("/admin/venues/{id}")
@@ -55,6 +59,8 @@ public class Admins {
 	@RequestMapping("/adminVenuePage/{id}/edit")
 	public String edit(@PathVariable("id") Long id, Model model,Principal principal) {
 		Venue venue = venueService.findVenue(id);
+	    List<Reservation> reservations = reservationService.allReservation();
+	    model.addAttribute("reservationResult", reservations);
 		if(venue.getUser()!=null) {
 		if(venue.getUser().getId()==id) {
 			model.addAttribute("venue", venue);

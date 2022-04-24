@@ -308,25 +308,27 @@
 								<label>سعر القاعة</label> <br>
 								<div class="price-input">
 									<div class="field">
-										<span>الحد الأدنى</span>
-										<form:input type="number" class="input-min" value="2500"
+										<form:input type="number" class="input-min"
 											path="minPrice" />
+										<span>الحد الأدنى</span>
+
 									</div>
 									<div class="separator">-</div>
 									<div class="field">
-										<span>الحد الأقصى</span>
-										<form:input type="number" class="input-max" value="7500"
+
+										<form:input type="number" class="input-max"
 											path="maxPrice" />
+										<span>الحد الأقصى</span>
 									</div>
 								</div>
 								<div class="slider">
 									<div class="progress"></div>
 								</div>
 								<div class="range-input">
-									<form:input type="range" class="range-min" min="0" max="10000"
-										value="2500" step="100" path="minPrice" />
-									<form:input type="range" class="range-max" min="0" max="10000"
-										value="7500" step="100" path="maxPrice" />
+									<form:input type="range" class="range-min" min="0" max="49999"
+										value="0" step="100" path="minPrice" />
+									<form:input type="range" class="range-max" min="0" max="50000"
+										value="50000" step="100" path="maxPrice" />
 								</div>
 							</div>
 						</div>
@@ -336,25 +338,27 @@
 								<label>عدد الضيوف</label> <br>
 								<div class="numOfGuests-input">
 									<div class="field">
-										<span>الحد الأدنى</span>
 										<form:input type="number" class="input2-min"
 											path="minNumOfGuests" />
+										<span>الحد الأدنى</span>
+
 									</div>
 									<div class="separator">-</div>
 									<div class="field">
-										<span>الحد الأقصى</span>
 										<form:input type="number" class="input2-max"
 											path="maxNumOfGuests" />
+										<span>الحد الأقصى</span>
+
 									</div>
 								</div>
 								<div class="slider2">
 									<div class="progress"></div>
 								</div>
 								<div class="range2-input">
-									<form:input type="range" class="range2-min" min="0" max="2000"
-										value="2500" step="100" path="minNumOfGuests" />
+									<form:input type="range" class="range2-min" min="0" max="1999"
+										value="0" step="100" path="minNumOfGuests" />
 									<form:input type="range" class="range2-max" min="0" max="2000"
-										value="7500" step="100" path="maxNumOfGuests" />
+										value="2000" step="100" path="maxNumOfGuests" />
 								</div>
 							</div>
 						</div>

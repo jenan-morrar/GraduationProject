@@ -327,16 +327,20 @@
 								style="margin-top: 3%; display: none;">
 								<form:form method="post" action="/venuePage/${venuePage.id}"
 									modelAttribute="reservation">
-									<form:input type="time" id="from" name="from" path="fromTime" />
+									<label>اختر ما يلي لحجز القاعة</label>
+									<br>
+									<form:input type="time" id="from" name="from" path="startTime" value="17:00" required="required"/>
 									<label for="from">من الساعة</label>
 									<br>
-									<form:input type="time" id="to" name="to" path="toTime" />
+									<form:input type="time" id="to" name="to" path="endTime" value="21:00" required="required" />
 									<label for="to">إلى الساعة</label>
 									<br>
-									<label>reservation date</label>
+									<label>خدمات القاعة</label>
+									<br>
+									<label>اختر قائمة أغانيك</label>
+									<br>
 									<form:input type="date" value="" id="event-date"
-										path="reservationDate" />
-									<form:input type="date" path="expirationDate" />
+										style="display: none;" path="reservationDate" />
 									<input type="submit" class="round-black-btn" value="إحجز الآن" />
 
 								</form:form>
@@ -486,6 +490,7 @@
 	<script src="/resources/js/imageSlider.js"></script>
 	<script src="/resources/js/evo-calendar.js"></script>
 	<script src="/resources/js/demo.js"></script>
+
 
 
 </body>
