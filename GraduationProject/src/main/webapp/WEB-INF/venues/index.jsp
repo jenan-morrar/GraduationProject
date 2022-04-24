@@ -29,6 +29,5 @@
         </c:forEach>
     </tbody>
 </table>
-<a href="/superAdmin/venues/new">New Venue</a>
 </body>
 </html>
