@@ -244,13 +244,13 @@ public class Users {
 		redirectAttrs.addAttribute("venuePage", venuePage);
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
-		
-		for(int i=0;i<reservations.size();i++) {
-			if(reservations.get(i).getVenue().getId()==id) {
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id) {
 				reservationsForVenue.add(reservations.get(i));
 			}
 		}
-		
+
 		model.addAttribute("reservationResult", reservationsForVenue);
 		if (principal != null) {
 			String username = principal.getName();
@@ -285,26 +285,99 @@ public class Users {
 		reservation.setUser(user);
 		reservation.setVenue(venue);
 		reservation.setStatus("pending");
-		reservation.setServices(servicesList);
-//		System.out.println(reservation.getStartTime());
-//		System.out.println(reservation.getEndTime());
+		//reservation.setServices(servicesList);
+
 		reservation.setFromTime(java.sql.Time.valueOf(reservation.getStartTime() + ":00"));
 		reservation.setToTime(java.sql.Time.valueOf(reservation.getEndTime() + ":00"));
 		reservation.setId(null);
-//		System.out.println(reservation.getFromTime());
-//		System.out.println(reservation.getToTime());
-//		System.out.println(reservation.getReservationDate());
-		reservationService.createReservation(reservation);
 
-		// Create the Expiration Date
-		Calendar calExpirationDate = Calendar.getInstance();
-		calExpirationDate.setTime(reservation.getCreatedAt());
-		calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
-		reservation.setExpirationDate(calExpirationDate.getTime());
+		// Check Conflicts
+		List<Reservation> allReseravtions = reservationService.allReservation();
+		List<Reservation> reservationForVenue = new ArrayList<>();
 
-		reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
-				reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
-				reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+		if (allReseravtions.size() != 0) {
+			for (int i = 0; i < allReseravtions.size(); i++) {
+				if (allReseravtions.get(i).getVenue().getId() == id) {
+					reservationForVenue.add(allReseravtions.get(i));
+				}
+			}
+		}
+
+		if (reservationForVenue.size() != 0) {
+			boolean hasTheSameDate = false;
+			boolean hasTheSameTime = false;
+
+			for (int i = 0; i < reservationForVenue.size(); i++) {
+				int resultOfConflictDay = reservation.getReservationDate()
+						.compareTo(reservationForVenue.get(i).getReservationDate());
+				if (resultOfConflictDay == 0) {
+					hasTheSameDate = true;
+					break;
+				} else {
+					hasTheSameDate = false;
+				}
+			}
+
+			if (hasTheSameDate) {
+				System.out.println("same Date");
+				for (int i = 0; i < reservationForVenue.size(); i++) {
+					int resultOfConflictDay = reservation.getReservationDate()
+							.compareTo(reservationForVenue.get(i).getReservationDate());
+					if (resultOfConflictDay == 0) {
+						System.out.println(reservation.getToTime());
+						System.out.println(reservationForVenue.get(i).getFromTime());
+						System.out.println(reservation.getFromTime());
+						System.out.println(reservationForVenue.get(i).getToTime());
+						if (reservation.getToTime().after(reservationForVenue.get(i).getFromTime())
+								&& reservation.getFromTime().before(reservationForVenue.get(i).getToTime())) {
+							System.out.println("same time, Try again!");
+							hasTheSameTime = true;
+							break;
+						} else {
+						}
+					}
+				}
+				if (!hasTheSameTime) {
+					hasTheSameTime = false;
+					System.out.println("you can reserve!");
+					reservationService.createReservation(reservation);
+					// Create the Expiration Date
+					Calendar calExpirationDate = Calendar.getInstance();
+					calExpirationDate.setTime(reservation.getCreatedAt());
+					calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+					reservation.setExpirationDate(calExpirationDate.getTime());
+
+					reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+							reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+							reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+				}
+
+			} else {
+				System.out.println("created correctly not same date!");
+				reservationService.createReservation(reservation);
+				// Create the Expiration Date
+				Calendar calExpirationDate = Calendar.getInstance();
+				calExpirationDate.setTime(reservation.getCreatedAt());
+				calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+				reservation.setExpirationDate(calExpirationDate.getTime());
+
+				reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+						reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+						reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+			}
+		} else {
+			System.out.println("created correctly there is no reservation!");
+			reservationService.createReservation(reservation);
+			// Create the Expiration Date
+			Calendar calExpirationDate = Calendar.getInstance();
+			calExpirationDate.setTime(reservation.getCreatedAt());
+			calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+			reservation.setExpirationDate(calExpirationDate.getTime());
+
+			reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+					reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+					reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+		}
 
 		return "redirect:/venuePage/{id}";
 //		}

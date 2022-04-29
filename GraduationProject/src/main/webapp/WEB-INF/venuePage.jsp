@@ -55,6 +55,11 @@
 <link href="https://fonts.googleapis.com/css?family=Sacramento"
 	rel="stylesheet">
 
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script
@@ -329,14 +334,56 @@
 									modelAttribute="reservation">
 									<label>اختر ما يلي لحجز القاعة</label>
 									<br>
-									<form:input type="time" id="from" name="from" path="startTime" value="17:00" required="required"/>
+									<form:input type="time" id="from" name="from" path="startTime"
+										value="17:00" required="required" />
 									<label for="from">من الساعة</label>
 									<br>
-									<form:input type="time" id="to" name="to" path="endTime" value="21:00" required="required" />
+									<form:input type="time" id="to" name="to" path="endTime"
+										value="21:00" required="required" />
 									<label for="to">إلى الساعة</label>
 									<br>
-									<label>خدمات القاعة</label>
 									<br>
+									<div class="dropdown">
+										<button class="btn btn-default dropdown-toggle" type="button"
+											id="dropdownMenu1" data-toggle="dropdown"
+											aria-haspopup="true" aria-expanded="true">
+											اختر من خدمات القاعة &nbsp;<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu checkbox-menu allow-focus"
+											aria-labelledby="dropdownMenu1">
+											<c:forEach items="${venuePage.services}" var="services"
+												varStatus="loop">
+												<li><label>
+															&nbsp; <i class='fas fa-shekel-sign'
+																style='font-size: 10px'></i>
+															<c:out value="${services.price}" />
+															&nbsp;
+															<c:out value="${services.name}" />
+															<form:checkbox value="${services.id}" id="${services.id}"
+																path="services" />
+												</label></li>
+											</c:forEach>
+										</ul>
+									</div>
+									<script>
+										$(".checkbox-menu")
+												.on(
+														"change",
+														"input[type='checkbox']",
+														function() {
+															$(this)
+																	.closest(
+																			"li")
+																	.toggleClass(
+																			"active",
+																			this.checked);
+														});
+										$(document).on('click', '.allow-focus',
+												function(e) {
+													e.stopPropagation();
+												});
+									</script>
+
 									<label>اختر قائمة أغانيك</label>
 									<br>
 									<form:input type="date" value="" id="event-date"
