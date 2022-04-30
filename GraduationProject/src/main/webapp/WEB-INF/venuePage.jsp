@@ -234,14 +234,14 @@
 									وصف القاعة &nbsp;&nbsp; <i class='far fa-building'
 										style='font-size: 25px'></i>
 								</div>
-								<span><c:out value="${venuePage.description}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venuePage.description}" /></span>
 							</div>
 							<div class="venueDetaile">
 								<div class="venueDetaileTitle">
 									سعر القاعة &nbsp;&nbsp; <i class='fas fa-shekel-sign'
 										style='font-size: 22px'></i>
 								</div>
-								<span><c:out value="${venuePage.price}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venuePage.price}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -249,7 +249,7 @@
 									عدد الضيوف &nbsp;&nbsp; <i class='far fa-id-badge'
 										style='font-size: 25px'></i>
 								</div>
-								<span><c:out value="${venuePage.price}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venuePage.price}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -257,7 +257,7 @@
 									المصفات &nbsp; &nbsp; <i class='fas fa-car'
 										style='font-size: 24px'></i>
 								</div>
-								<span><c:out value="${venuePage.venuePark}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venuePage.venuePark}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -265,7 +265,7 @@
 									موقع القاعة &nbsp; &nbsp; <i class='fas fa-map-marker-alt'
 										style='font-size: 24px'></i>
 								</div>
-								<span><c:out value="${venuePage.location}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venuePage.location}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -273,7 +273,7 @@
 									للتواصل مع القاعة &nbsp; &nbsp; <i class="fa fa-phone"
 										style="font-size: 22px"></i>
 								</div>
-								<span><c:out value="${venuePage.venueContact}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venuePage.venueContact}" /></span>
 							</div>
 
 						</div>
@@ -281,9 +281,9 @@
 				</div>
 
 				<ul class="nav nav-tabs" id="venueNavTabs">
-					<li><a data-toggle="tab" href="#Reviews">تقييم القاعة</a></li>
-					<li><a data-toggle="tab" href="#venueLocation">موقع القاعة</a></li>
-					<li class="active"><a data-toggle="tab"
+					<li><a  class="venueNavTabs-tilte" data-toggle="tab" href="#Reviews">تقييم القاعة</a></li>
+					<li><a class="venueNavTabs-tilte" data-toggle="tab" href="#venueLocation">موقع القاعة</a></li>
+					<li class="active"><a class="venueNavTabs-tilte" data-toggle="tab"
 						href="#VenueReservatio">حجز القاعة</a></li>
 				</ul>
 
@@ -331,7 +331,7 @@
 							<div class="user" id="add-event-form"
 								style="margin-top: 3%; display: none;">
 								<form:form method="post" action="/venuePage/${venuePage.id}"
-									modelAttribute="reservation">
+									modelAttribute="reservation" class="reservationForm">
 									<label>اختر ما يلي لحجز القاعة</label>
 									<br>
 									<form:input type="time" id="from" name="from" path="startTime"
@@ -342,22 +342,23 @@
 										value="21:00" required="required" />
 									<label for="to">إلى الساعة</label>
 									<br>
+									<label>اختر قائمة أغانيك</label>
 									<br>
 									<div class="dropdown">
 										<button class="btn btn-default dropdown-toggle" type="button"
 											id="dropdownMenu1" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="true">
+											aria-haspopup="true" aria-expanded="true" style="font-size:20px;color:#cd7e53;">
 											اختر من خدمات القاعة &nbsp;<span class="caret"></span>
 										</button>
-										<ul class="dropdown-menu checkbox-menu allow-focus"
+										<ul class="dropdown-menu checkbox-menu allow-focus" style="left:auto;"
 											aria-labelledby="dropdownMenu1">
 											<c:forEach items="${venuePage.services}" var="services"
 												varStatus="loop">
-												<li><label>
+												<li><label style="font-size: 16px;">
 															&nbsp; <i class='fas fa-shekel-sign'
 																style='font-size: 10px'></i>
 															<c:out value="${services.price}" />
-															&nbsp;
+															&nbsp;&nbsp;&nbsp;
 															<c:out value="${services.name}" />
 															<form:checkbox value="${services.id}" id="${services.id}"
 																path="services" />
@@ -383,9 +384,7 @@
 													e.stopPropagation();
 												});
 									</script>
-
-									<label>اختر قائمة أغانيك</label>
-									<br>
+									
 									<form:input type="date" value="" id="event-date"
 										style="display: none;" path="reservationDate" />
 									<input type="submit" class="round-black-btn" value="إحجز الآن" />

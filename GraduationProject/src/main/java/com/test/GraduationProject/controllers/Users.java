@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.test.GraduationProject.models.Contact;
 import com.test.GraduationProject.models.FilterSearch;
 import com.test.GraduationProject.models.Reservation;
+import com.test.GraduationProject.models.Search;
 import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
@@ -49,6 +50,8 @@ public class Users {
 	private ReservationService reservationService;
 	private ServicesOfVenueService ServicesOfVenueService;
 	public List<Venue> filterSearchResult1 = new ArrayList<>();
+	public List<WebsiteRate> websiteRateResult = new ArrayList<>();
+	
 	@Autowired
 	private JavaMailSender emailSender;
 
@@ -113,7 +116,24 @@ public class Users {
 
 	@RequestMapping(value = { "/", "/index" })
 	public String home(Principal principal, Model model) {
+		model.addAttribute("search", new Search());
 		model.addAttribute("userWebsiteRate", new WebsiteRate());
+		List<WebsiteRate> allwebsiteRate = websiteRateService.allWebsiteRates();
+		List<WebsiteRate> firstWebsiteRate = new ArrayList<>();
+		
+		if(allwebsiteRate.size()>=3) {
+		for(int i=0;i<3;i++) {
+			firstWebsiteRate.add(allwebsiteRate.get(i));
+		}
+		websiteRateResult = firstWebsiteRate;
+		model.addAttribute("websiteRateResult", websiteRateResult);
+
+		}else {
+			model.addAttribute("websiteRateResult", allwebsiteRate);
+		}
+		List<Venue> mostReservedVenues = venueService.mostReservedVenues();
+		model.addAttribute("mostReservedVenues", mostReservedVenues);
+		
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -128,6 +148,20 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "index.jsp";
+	}
+	
+	@PostMapping("/index/search/")
+	public String indexSearch(@Valid @ModelAttribute("search") Search search,
+			BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return "index.jsp";
+		} else {
+			filterSearchResult1 =  new ArrayList<>();
+			filterSearchResult1 = venueService.venueSearch(search.getVenueName());
+			model.addAttribute("filterSearchResult1", filterSearchResult1);
+
+			return "redirect:/venues";
+		}
 	}
 
 	@PostMapping("/index")
@@ -389,6 +423,28 @@ public class Users {
 		model.addAttribute("filterSearch", new FilterSearch());
 //		System.out.println(filterSearchResult1.size() + "heloo");
 		model.addAttribute("filterSearchResult1", filterSearchResult1);
+		model.addAttribute("venues", venues);
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+		return "venues.jsp";
+	}
+	
+	@RequestMapping("/venues/allVenues")
+	public String allVenues(Principal principal, Model model) {
+		model.addAttribute("filterSearch", new FilterSearch());
+		List<Venue> venues = venueService.allVenues();
+		model.addAttribute("filterSearchResult1", new ArrayList<>());
 		model.addAttribute("venues", venues);
 		if (principal != null) {
 			String username = principal.getName();

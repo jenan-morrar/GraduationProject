@@ -459,6 +459,7 @@ h1, h3, h4, h5, h6, figure {
 }
 .venueDetaileTitle{
   color: #cd7e53;
+  font-size: 20px;
 }
 
 .fh5co-cover {
@@ -546,7 +547,6 @@ h1, h3, h4, h5, h6, figure {
 	color: #fff;
 	text-transform: uppercase;
 	font-size: 35px;
-	letter-spacing: 2px;
 	font-weight: 600;
 }
 
@@ -595,7 +595,6 @@ h1, h3, h4, h5, h6, figure {
 	display: block;
 	padding-bottom: 20px;
 	text-transform: uppercase;
-	letter-spacing: 2px;
 }
 
 #fh5co-counter .event-wrap p, #fh5co-counter .event-wrap span,
@@ -723,7 +722,7 @@ h1, h3, h4, h5, h6, figure {
 	background-repeat: no-repeat;
 	position: relative;
 	color: #fff;
-	width: 160px;
+	width: 180px;
 	height: 160px;
 	line-height: 50px;
 	font-size: 1.4em;
@@ -775,7 +774,6 @@ h1, h3, h4, h5, h6, figure {
 	margin-bottom: 20px;
 	font-size: 13px;
 	text-transform: uppercase;
-	letter-spacing: 2px;
 }
 
 .timeline-body>p, .timeline-body>ul {
@@ -906,7 +904,6 @@ h1, h3, h4, h5, h6, figure {
 
 #fh5co-gallery-list li a .case-studies-summary span {
 	text-transform: uppercase;
-	letter-spacing: 2px;
 	font-size: 13px;
 	color: rgba(255, 255, 255, 0.7);
 }
@@ -935,6 +932,9 @@ h1, h3, h4, h5, h6, figure {
 @media screen and (max-width: 480px) {
 	#fh5co-gallery-list li.one-third {
 		width: 100%;
+	}
+	#navbar-logo-title{
+	font-size: 30px;
 	}
 }
 
@@ -1116,7 +1116,6 @@ form label {
 	margin-bottom: 0;
 	text-transform: uppercase;
 	color: rgba(255, 255, 255, 0.5);
-	letter-spacing: .1em;
 }
 
 @media screen and (max-width: 768px) {
@@ -1422,7 +1421,6 @@ transform:scale(1);
 .fh5co-heading span {
 	text-transform: uppercase;
 	font-size: 13px;
-	letter-spacing: 2px;
 	font-weight: 600;
 	color: rgba(0, 0, 0, 0.4);
 }
@@ -1438,7 +1436,6 @@ transform:scale(1);
 #fh5co-testimonial .wrap-testimony .testimony-slide span {
 	font-size: 12px;
 	text-transform: uppercase;
-	letter-spacing: 2px;
 	font-weight: 700;
 	display: block;
 }
@@ -1934,7 +1931,6 @@ transform:scale(1);
 }
 
 .btn {
-	margin-right: 4px;
 	margin-bottom: 4px;
 	font-family: "Work Sans", 'Aref Ruqaa', serif, Arial, sans-serif;
 	font-size: 16px;

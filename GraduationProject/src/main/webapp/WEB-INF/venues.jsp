@@ -100,7 +100,7 @@
 					<div class="col-xs-3">
 						<div id="fh5co-logo">
 							<img src="/resources/images/ring map logo.png" alt="logo" style
-								width="50px" height="60px"> <a href="/index">PalVenues<strong>.</strong></a>
+								width="50px" height="60px"> <a href="/index" id="navbar-logo-title">PalVenues<strong>.</strong></a>
 						</div>
 					</div>
 					<div class="col-xs-9 text-right menu-1">
@@ -165,7 +165,7 @@
 									<span class="product-image"> <c:if
 											test="${venueCard.images.size()==0}">
 											<a href="/venuePage/${venueCard.id}" class="image"> <img
-												class="pic-1" style="height: 200px;"
+												class="pic-1"
 												src="/resources/images/noImage.jpg">
 											</a>
 										</c:if> <c:forEach var="images" items="${venueCard.images}"
@@ -365,7 +365,7 @@
 
 						<div class="venue-a" style="margin-top: 5%;">
 							<input type="submit" class="round-black-btn"
-								value="ابحث عن القاعة" /> <a href="#" class="round-black-btn">عرض
+								value="ابحث عن القاعة" /> <a href="/venues/allVenues" class="round-black-btn">عرض
 								جميع القاعات</a>
 						</div>
 

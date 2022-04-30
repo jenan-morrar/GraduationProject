@@ -137,11 +137,13 @@
 								<h2>ابحث عن القاعة التي تناسبك</h2>
 
 								<div class="search">
-									<form action="" method="GET">
-										<input type="text" name="text" class="searchInput"
-											placeholder=" ... ابحث هنا"> <input type="submit"
-											name="submit" class="fa searchSubmit" value=&#xf002;>
-									</form>
+									<form:form action="/index/search/" method="post"
+										modelAttribute="search">
+										<form:input type="text" name="text" class="searchInput"
+											placeholder=" ... ابحث هنا" path="venueName" />
+										<input type="submit" name="submit" class="fa searchSubmit"
+											value=&#xf002;>
+									</form:form>
 								</div>
 
 								<!--<div class="input-wrapper">
@@ -166,7 +168,8 @@
 						<h3 style="margin-top: 40px;">الآن أصبح بأمكانك البحث عن قاعة
 							مميزة لفرحك و حجزها من خلال هذه الموقع</h3>
 						<h3 style="margin-bottom: 30px;">للمزيد من المعلومات</h3>
-						<a class="btn btn-default btn-block" href="/aboutPage">اضغط هنا</a>
+						<a class="btn btn-default btn-block" href="/aboutPage">اضغط
+							هنا</a>
 					</div>
 				</div>
 			</div>
@@ -187,22 +190,31 @@
 					<div class="display-t">
 						<div class="display-tc">
 							<div class="col-md-10 col-md-offset-1">
-								<div class="col-md-6 col-sm-6 text-center">
-									<div class="event-wrap animate-box">
-										<h3>قاعة جلوريا</h3>
-										<div class="event-col">
-											<i class="icon-phone"></i> <span>0568650650</span> <span>022955700</span>
-										</div>
-										<div class="event-col">
-											<i class="icon-location"></i> <span>رام الله-البيرة</span> <span>شارع
-												الارسال </span>
-										</div>
-										<img src="/resources/images/gloriaimg.png" alt="Gloria Venues">
+								<c:forEach items="${mostReservedVenues}" var="mostReservedVenue">
+									<div class="col-md-6 col-sm-6 text-center">
+										<div class="event-wrap animate-box">
+											<h3>${mostReservedVenue.name}</h3>
+											<div class="event-col">
+												<i class="icon-phone"></i> <span>${mostReservedVenue.venueContact}</span>
+											</div>
+											<div class="event-col">
+												<i class="icon-location"></i> <span>${mostReservedVenue.location}</span>
+											</div>
+											<c:forEach var="images" items="${mostReservedVenue.images}"
+												varStatus="loop">
+												<c:if test="${loop.first}">
+													<img alt="Gloria Venues"
+														style="width: 250px; height: 250px;"
+														src="<c:out value="/user-photos/${mostReservedVenue.id}/${images.image}"/>">
+												</c:if>
+											</c:forEach>
 
-										<!-- <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p> -->
+											<!-- <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p> -->
+										</div>
 									</div>
-								</div>
-								<div class="col-md-6 col-sm-6 text-center">
+								</c:forEach>
+
+								<!--<div class="col-md-6 col-sm-6 text-center">
 									<div class="event-wrap animate-box">
 										<h3>قاعة فيرست كلاس</h3>
 										<div class="event-col">
@@ -215,7 +227,7 @@
 										<img src="/resources/images/firstclassimg.jpg"
 											alt="First Class Venues">
 									</div>
-								</div>
+								</div>-->
 							</div>
 						</div>
 					</div>
@@ -235,48 +247,36 @@
 				<div class="row">
 					<div class="col-md-12 col-md-offset-0">
 						<ul class="timeline animate-box">
-							<li class="animate-box">
-								<div class="timeline-badge"
-									style="background-image: url(/resources/images/account_1.jpg);"></div>
-								<div class="timeline-panel">
-									<div class="timeline-heading"></div>
-									<div class="timeline-body">
-										<br> <br>
-										<p class="right">حقاٌ رائع و الافضل كيفية البحث على القاعة
-											وفرت علي الكثير من الوقت و الجهد عوضاً عن زيارة اي قاعة قد
-											اختارها</p>
-										<br> <br>
-									</div>
-								</div>
-							</li>
+							<c:forEach items="${websiteRateResult}" var="websiteRateResult" varStatus="status">
+							<c:if test="${status.index == 1}">
 							<li class="timeline-inverted animate-box">
-								<div class="timeline-badge"
-									style="background-image: url(/resources/images/account_2.jpg);"></div>
-								<div class="timeline-panel">
-									<div class="timeline-heading"></div>
-									<div class="timeline-body">
-										<br> <br>
-										<p class="right">اعتقد ان هذا البرنامج مفيد و خاصة صفحة
-											الاغاني ساعدتني كثيرة</p>
-										<br> <br>
+																<div class="timeline-badge"
+										style="background-image: url(/resources/images/personIcon.png);"></div>
+									<div class="timeline-panel">
+										<div class="timeline-heading"></div>
+										<div class="timeline-body">
+											<br> <br>
+											<p class="right">${websiteRateResult.message}</p>
+											<br> <br>
+										</div>
 									</div>
-								</div>
 							</li>
-							<li class="animate-box">
-								<div class="timeline-badge"
-									style="background-image: url(/resources/images/account_3.jpg);"></div>
-								<div class="timeline-panel">
-									<div class="timeline-heading"></div>
-									<div class="timeline-body">
-										<br> <br>
-										<p class="right">حقاٌ رائع و الافضل كيفية البحث على القاعة
-											وفرت علي الكثير من الوقت و الجهد عوضاً عن زيارة اي قاعة قد
-											اختارها</p>
-										<br> <br>
-
+							</c:if>
+							<c:if test="${status.index != 1}">
+								<li class="animate-box">
+									<div class="timeline-badge"
+										style="background-image: url(/resources/images/personIcon.png);"></div>
+									<div class="timeline-panel">
+										<div class="timeline-heading"></div>
+										<div class="timeline-body">
+											<br> <br>
+											<p class="right">${websiteRateResult.message}</p>
+											<br> <br>
+										</div>
 									</div>
-								</div>
-							</li>
+								</li>
+								</c:if>
+							</c:forEach>
 						</ul>
 					</div>
 				</div>
@@ -301,7 +301,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-6" style="margin-top: 5%;">
 						<div class="feature-left animate-box"
 							data-animate-effect="fadeInLeft">
 							<div class="feature-copy">
@@ -397,7 +397,8 @@
 							<small class="block">&copy; 2022 PalVenues Website.</small>
 						</p>
 						<p>
-						<ul class="fh5co-social-icons">
+
+							<ul class="fh5co-social-icons">
 							<li><a href="#"><i class="icon-twitter"></i></a></li>
 							<li><a href="#"><i class="icon-facebook"></i></a></li>
 							<li><a href="#"><i class="icon-linkedin"></i></a></li>
@@ -416,8 +417,8 @@
 	</div>
 
 	<!-- jQuery -->
-	<script src="/resources/js/jquery.min.js"></script>
-	<!-- jQuery Easing -->
+<script src="/resources/js/jquery.min.js"></script>
+							<!-- jQuery Easing -->
 	<script src="/resources/js/jquery.easing.1.3.js"></script>
 	<!-- Bootstrap -->
 	<script src="/resources/js/bootstrap.min.js"></script>
@@ -457,5 +458,6 @@
 			enableUtc : false
 		});
 	</script>
-</body>
+
+						</body>
 </html>

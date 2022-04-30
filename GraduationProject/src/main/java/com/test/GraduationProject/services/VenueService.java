@@ -81,4 +81,19 @@ public class VenueService {
 		List <Venue> venues = venueRepository.filterSearch(location,minPrice,maxPrice,minNumOfGuests,maxNumOfGuests);
 		return venues;
 	}
+	
+	// Retrieve most reserved venues
+	
+	public List<Venue> mostReservedVenues(){
+		List<Venue> venues = venueRepository.mostReservedVenues("reserved");
+		return venues;
+	}
+	
+	// Retrieve specific venue
+	
+	public List<Venue> venueSearch(String name){
+		List<Venue> venue = venueRepository.search(name);
+		return venue;
+	}
+	
 }
