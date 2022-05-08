@@ -2,6 +2,7 @@ package com.test.GraduationProject.controllers;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,8 +60,18 @@ public class Admins {
 	@RequestMapping("/adminVenuePage/{id}/edit")
 	public String edit(@PathVariable("id") Long id, Model model, Principal principal) {
 		Venue venue = venueService.findVenue(id);
+//		List<Reservation> reservations = reservationService.allReservation();
+//		model.addAttribute("reservationResult", reservations);
 		List<Reservation> reservations = reservationService.allReservation();
-		model.addAttribute("reservationResult", reservations);
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+
+		model.addAttribute("reservationResult", reservationsForVenue);
 
 		if (principal != null) {
 			String username = principal.getName();
@@ -194,23 +205,25 @@ public class Admins {
 
 	// Add Image
 	@RequestMapping(value = "/adminVenuePage/{id}/images/add", method = RequestMethod.POST)
-	public String addImages(@PathVariable("id") long id, @RequestParam("image") MultipartFile multipartFile,
+	public String addImages(@PathVariable("id") long id, @RequestParam("image") MultipartFile[] multipartFile,
 			Model model) throws IOException {
 		Venue venue = venueService.findVenue(id);
 		model.addAttribute("venue", venue);
 		model.addAttribute("serviceExist", "no");
-		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-		// Set<Images> imagesList = new HashSet<Images>();
-		Images image = new Images(null, fileName, null);
-		// imagesList.add(image);
-		// venue.setImages(imagesList);
-		venue.getImages().add(image);
-		imagesService.createImage(image);
-		venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
-				venue.getPrice(), venue.getNumOfGuests(), venue.getVenuePark(), venue.getVenueContact(),
-				venue.getServices(), venue.getImages());
-		String uploadDir = "user-photos/" + id;
-		FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		for (int i = 0; i < multipartFile.length; i++) {
+			String fileName = StringUtils.cleanPath(multipartFile[i].getOriginalFilename());
+			// Set<Images> imagesList = new HashSet<Images>();
+			Images image = new Images(null, fileName, null);
+			// imagesList.add(image);
+			// venue.setImages(imagesList);
+			venue.getImages().add(image);
+			imagesService.createImage(image);
+			venueService.updateVenue2(venue.getId(), venue.getName(), venue.getDescription(), venue.getLocation(),
+					venue.getPrice(), venue.getNumOfGuests(), venue.getVenuePark(), venue.getVenueContact(),
+					venue.getServices(), venue.getImages());
+			String uploadDir = "user-photos/" + id;
+			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile[i]);
+		}
 
 		return "redirect:/adminVenuePage/{id}/edit";
 	}

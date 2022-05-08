@@ -149,7 +149,7 @@
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
 							<c:if test="${userName == \"noUser\"}">
-								<li><a href="/login">تسجيل دخول</a></li>
+								<li><a href="/login/#login-form-part">تسجيل دخول</a></li>
 							</c:if>
 							<c:if test="${userName ==\"user\"}">
 								<form id="logoutForm" method="POST" action="/logout"
@@ -234,14 +234,16 @@
 									وصف القاعة &nbsp;&nbsp; <i class='far fa-building'
 										style='font-size: 25px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venuePage.description}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venuePage.description}" /></span>
 							</div>
 							<div class="venueDetaile">
 								<div class="venueDetaileTitle">
 									سعر القاعة &nbsp;&nbsp; <i class='fas fa-shekel-sign'
 										style='font-size: 22px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venuePage.price}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venuePage.price}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -249,7 +251,8 @@
 									عدد الضيوف &nbsp;&nbsp; <i class='far fa-id-badge'
 										style='font-size: 25px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venuePage.price}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venuePage.price}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -257,7 +260,8 @@
 									المصفات &nbsp; &nbsp; <i class='fas fa-car'
 										style='font-size: 24px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venuePage.venuePark}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venuePage.venuePark}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -265,7 +269,8 @@
 									موقع القاعة &nbsp; &nbsp; <i class='fas fa-map-marker-alt'
 										style='font-size: 24px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venuePage.location}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venuePage.location}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -273,7 +278,8 @@
 									للتواصل مع القاعة &nbsp; &nbsp; <i class="fa fa-phone"
 										style="font-size: 22px"></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venuePage.venueContact}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venuePage.venueContact}" /></span>
 							</div>
 
 						</div>
@@ -281,10 +287,12 @@
 				</div>
 
 				<ul class="nav nav-tabs" id="venueNavTabs">
-					<li><a  class="venueNavTabs-tilte" data-toggle="tab" href="#Reviews">تقييم القاعة</a></li>
-					<li><a class="venueNavTabs-tilte" data-toggle="tab" href="#venueLocation">موقع القاعة</a></li>
-					<li class="active"><a class="venueNavTabs-tilte" data-toggle="tab"
-						href="#VenueReservatio">حجز القاعة</a></li>
+					<li><a class="venueNavTabs-tilte" data-toggle="tab"
+						href="#Reviews">تقييم القاعة</a></li>
+					<li><a class="venueNavTabs-tilte" data-toggle="tab"
+						href="#venueLocation">موقع القاعة</a></li>
+					<li class="active"><a class="venueNavTabs-tilte"
+						data-toggle="tab" href="#VenueReservatio">حجز القاعة</a></li>
 				</ul>
 
 				<div class="tab-content" id="venueTabContent">
@@ -347,21 +355,20 @@
 									<div class="dropdown">
 										<button class="btn btn-default dropdown-toggle" type="button"
 											id="dropdownMenu1" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="true" style="font-size:20px;color:#cd7e53;">
+											aria-haspopup="true" aria-expanded="true"
+											style="font-size: 20px; color: #cd7e53;">
 											اختر من خدمات القاعة &nbsp;<span class="caret"></span>
 										</button>
-										<ul class="dropdown-menu checkbox-menu allow-focus" style="left:auto;"
-											aria-labelledby="dropdownMenu1">
+										<ul class="dropdown-menu checkbox-menu allow-focus"
+											style="left: auto;" aria-labelledby="dropdownMenu1">
 											<c:forEach items="${venuePage.services}" var="services"
 												varStatus="loop">
-												<li><label style="font-size: 16px;">
-															&nbsp; <i class='fas fa-shekel-sign'
-																style='font-size: 10px'></i>
-															<c:out value="${services.price}" />
-															&nbsp;&nbsp;&nbsp;
-															<c:out value="${services.name}" />
-															<form:checkbox value="${services.id}" id="${services.id}"
-																path="services" />
+												<li><label style="font-size: 16px;"> &nbsp; <i
+														class='fas fa-shekel-sign' style='font-size: 10px'></i> <c:out
+															value="${services.price}" /> &nbsp;&nbsp;&nbsp; <c:out
+															value="${services.name}" /> <form:checkbox
+															value="${services.id}" id="${services.id}"
+															path="services" />
 												</label></li>
 											</c:forEach>
 										</ul>
@@ -384,10 +391,67 @@
 													e.stopPropagation();
 												});
 									</script>
-									
+
 									<form:input type="date" value="" id="event-date"
 										style="display: none;" path="reservationDate" />
-									<input type="submit" class="round-black-btn" value="إحجز الآن" />
+
+									<!--<c:set var="toTimeAfterFromTime" scope="session"
+										value="${toTimeAfterFromTime}" />
+									<c:if
+										test="${toTimeAfterFromTime == \"notToTimeAfterFromTime\" }">
+										<div class="alert">
+											<span class="closebtn"
+												onclick="this.parentElement.style.display='none';">&times;</span>
+											<strong>يوجد خطأ!</strong>&emsp;يجب أن يكون تاريخ انتهاء
+											الحجز بعد تاريح بدء الحجز
+										</div>
+									</c:if>
+
+									<c:set var="conflictTime" scope="session"
+										value="${conflictTime}" />
+									<c:if test="${conflictTime == \"conflictTime\" }">
+										<div class="alert">
+											<span class="closebtn"
+												onclick="this.parentElement.style.display='none';">&times;</span>
+											<strong>يوجد خطأ!</strong>&emsp;يوجد حجز في هذا الموعد اختر
+											موعد آخر
+										</div>
+									</c:if>-->
+
+									<!--<c:set var="toTimeAfterFromTime" scope="session"
+										value="${toTimeAfterFromTime}" />
+									<c:set var="conflictTime" scope="session"
+										value="${conflictTime}" />
+									<c:choose>
+										<c:when
+											test="${toTimeAfterFromTime == \"notToTimeAfterFromTime\"}">
+											<input type="submit" id="reserveButt" class="round-black-btn"
+												formaction="#" value="إحجز الآن" />
+											<div class="alert">
+												<span class="closebtn"
+													onclick="this.parentElement.style.display='none';">&times;</span>
+												<strong>يوجد خطأ!</strong>&emsp;يجب أن يكون تاريخ انتهاء
+												الحجز بعد تاريح بدء الحجز
+											</div>
+										</c:when>
+										<c:when test="${conflictTime == \"conflictTime\"}">
+											<input type="submit" id="reserveButt" class="round-black-btn"
+												formaction="#" value="إحجز الآن" />
+											<div class="alert">
+												<span class="closebtn"
+													onclick="this.parentElement.style.display='none';">&times;</span>
+												<strong>يوجد خطأ!</strong>&emsp;يوجد حجز في هذا الموعد اختر
+												موعد آخر
+											</div>
+										</c:when>
+										<c:otherwise>
+											<input type="submit" id="reserveButt" class="round-black-btn"
+												value="إحجز الآن" />
+										</c:otherwise>
+									</c:choose>-->
+
+									<input type="submit" id="reserveButt" class="round-black-btn"
+										 value="إحجز الآن" />
 
 								</form:form>
 								<!--<h4>أختر التاريح الذي يناسبك</h4>

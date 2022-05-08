@@ -106,7 +106,7 @@
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
 							<c:if test="${userName == \"noUser\"}">
-								<li><a href="/login"> تسجيل الدخول</a></li>
+								<li><a href="/login/#login-form-part"> تسجيل الدخول</a></li>
 							</c:if>
 							<c:if test="${userName ==\"user\"}">
 								<form id="logoutForm" method="POST" action="/logout"
@@ -189,9 +189,9 @@
 				<div class="row">
 					<div class="display-t">
 						<div class="display-tc">
-							<div class="col-md-10 col-md-offset-1">
+							<div class="col-md-10 col-md-offset-1"">
 								<c:forEach items="${mostReservedVenues}" var="mostReservedVenue">
-									<div class="col-md-6 col-sm-6 text-center">
+									<div class="col-md-4 col-sm-7 text-center"">
 										<div class="event-wrap animate-box">
 											<h3>${mostReservedVenue.name}</h3>
 											<div class="event-col">
@@ -204,7 +204,7 @@
 												varStatus="loop">
 												<c:if test="${loop.first}">
 													<img alt="Gloria Venues"
-														style="width: 250px; height: 250px;"
+														style="width: 200px; height: 200px;"
 														src="<c:out value="/user-photos/${mostReservedVenue.id}/${images.image}"/>">
 												</c:if>
 											</c:forEach>

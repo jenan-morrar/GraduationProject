@@ -51,7 +51,7 @@ public class Users {
 	private ServicesOfVenueService ServicesOfVenueService;
 	public List<Venue> filterSearchResult1 = new ArrayList<>();
 	public List<WebsiteRate> websiteRateResult = new ArrayList<>();
-	
+
 	@Autowired
 	private JavaMailSender emailSender;
 
@@ -85,7 +85,7 @@ public class Users {
 			model.addAttribute("alreadyExist", "هذا المستخدم موجود! استخدم ايميل آخر");
 			return "registrationPage.jsp";
 		}
-		return "redirect:/login";
+		return "redirect:/login/#login-form-part";
 	}
 
 	@RequestMapping("/login")
@@ -120,20 +120,20 @@ public class Users {
 		model.addAttribute("userWebsiteRate", new WebsiteRate());
 		List<WebsiteRate> allwebsiteRate = websiteRateService.allWebsiteRates();
 		List<WebsiteRate> firstWebsiteRate = new ArrayList<>();
-		
-		if(allwebsiteRate.size()>=3) {
-		for(int i=0;i<3;i++) {
-			firstWebsiteRate.add(allwebsiteRate.get(i));
-		}
-		websiteRateResult = firstWebsiteRate;
-		model.addAttribute("websiteRateResult", websiteRateResult);
 
-		}else {
+		if (allwebsiteRate.size() >= 3) {
+			for (int i = 0; i < 3; i++) {
+				firstWebsiteRate.add(allwebsiteRate.get(i));
+			}
+			websiteRateResult = firstWebsiteRate;
+			model.addAttribute("websiteRateResult", websiteRateResult);
+
+		} else {
 			model.addAttribute("websiteRateResult", allwebsiteRate);
 		}
 		List<Venue> mostReservedVenues = venueService.mostReservedVenues();
 		model.addAttribute("mostReservedVenues", mostReservedVenues);
-		
+
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -149,14 +149,13 @@ public class Users {
 		}
 		return "index.jsp";
 	}
-	
+
 	@PostMapping("/index/search/")
-	public String indexSearch(@Valid @ModelAttribute("search") Search search,
-			BindingResult result, Model model) {
+	public String indexSearch(@Valid @ModelAttribute("search") Search search, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			return "index.jsp";
 		} else {
-			filterSearchResult1 =  new ArrayList<>();
+			filterSearchResult1 = new ArrayList<>();
 			filterSearchResult1 = venueService.venueSearch(search.getVenueName());
 			model.addAttribute("filterSearchResult1", filterSearchResult1);
 
@@ -319,7 +318,7 @@ public class Users {
 		reservation.setUser(user);
 		reservation.setVenue(venue);
 		reservation.setStatus("pending");
-		//reservation.setServices(servicesList);
+		// reservation.setServices(servicesList);
 
 		reservation.setFromTime(java.sql.Time.valueOf(reservation.getStartTime() + ":00"));
 		reservation.setToTime(java.sql.Time.valueOf(reservation.getEndTime() + ":00"));
@@ -338,6 +337,7 @@ public class Users {
 		}
 
 		if (reservationForVenue.size() != 0) {
+
 			boolean hasTheSameDate = false;
 			boolean hasTheSameTime = false;
 
@@ -365,6 +365,7 @@ public class Users {
 						if (reservation.getToTime().after(reservationForVenue.get(i).getFromTime())
 								&& reservation.getFromTime().before(reservationForVenue.get(i).getToTime())) {
 							System.out.println("same time, Try again!");
+							model.addAttribute("conflictTime","conflictTime");
 							hasTheSameTime = true;
 							break;
 						} else {
@@ -374,6 +375,35 @@ public class Users {
 				if (!hasTheSameTime) {
 					hasTheSameTime = false;
 					System.out.println("you can reserve!");
+					model.addAttribute("conflictTime","noConflictTime");
+					model.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
+
+					if (!reservation.getToTime().before(reservation.getFromTime())) {
+
+						reservationService.createReservation(reservation);
+						// Create the Expiration Date
+						Calendar calExpirationDate = Calendar.getInstance();
+						calExpirationDate.setTime(reservation.getCreatedAt());
+						calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+						reservation.setExpirationDate(calExpirationDate.getTime());
+
+						reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+								reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+								reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+					} else {
+						System.out.println("to time should be after from time");
+						model.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+					}
+				}
+
+			} else {
+				if (!reservation.getToTime().before(reservation.getFromTime())) {
+					
+					System.out.println("created correctly not same date!");
+					model.addAttribute("conflictTime","noConflictTime");
+					model.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
 					reservationService.createReservation(reservation);
 					// Create the Expiration Date
 					Calendar calExpirationDate = Calendar.getInstance();
@@ -384,10 +414,18 @@ public class Users {
 					reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
 							reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
 							reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+				} else {
+					System.out.println("to time should be after from time");
+					model.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 				}
+			}
+		} else {
+			if (!reservation.getToTime().before(reservation.getFromTime())) {
 
-			} else {
-				System.out.println("created correctly not same date!");
+				System.out.println("created correctly there is no reservation!");
+				model.addAttribute("conflictTime","noConflictTime");
+				model.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
 				reservationService.createReservation(reservation);
 				// Create the Expiration Date
 				Calendar calExpirationDate = Calendar.getInstance();
@@ -398,23 +436,52 @@ public class Users {
 				reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
 						reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
 						reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+			} else {
+				System.out.println("to time should be after from time");
+				model.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 			}
-		} else {
-			System.out.println("created correctly there is no reservation!");
-			reservationService.createReservation(reservation);
-			// Create the Expiration Date
-			Calendar calExpirationDate = Calendar.getInstance();
-			calExpirationDate.setTime(reservation.getCreatedAt());
-			calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
-			reservation.setExpirationDate(calExpirationDate.getTime());
-
-			reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
-					reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
-					reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
 		}
 
-		return "redirect:/venuePage/{id}";
+		if(reservation.getFromTime().after(reservation.getToTime())) {
+			model.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+			return "redirect:/venuePage/{id}/#VenueReservatio";
+		}
+		else{
+			return "redirect:/venuePage/{id}/#VenueReservatio";
+		}
 //		}
+	}
+	@RequestMapping("/venuePage/{id}/error")
+	public String venuePageError(@PathVariable("id") long id, Principal principal, Model model,
+			RedirectAttributes redirectAttrs) {
+		Venue venuePage = venueService.findVenue(id);
+		model.addAttribute("reservation", new Reservation());
+		model.addAttribute("venuePage", venuePage);
+		redirectAttrs.addAttribute("venuePage", venuePage);
+		List<Reservation> reservations = reservationService.allReservation();
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+
+		model.addAttribute("reservationResult", reservationsForVenue);
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+		return "venuePage.jsp";
 	}
 
 	@RequestMapping("/venues")
@@ -439,7 +506,7 @@ public class Users {
 		}
 		return "venues.jsp";
 	}
-	
+
 	@RequestMapping("/venues/allVenues")
 	public String allVenues(Principal principal, Model model) {
 		model.addAttribute("filterSearch", new FilterSearch());
@@ -486,9 +553,19 @@ public class Users {
 	}
 
 	@RequestMapping("/adminVenuePage/{id}")
-	public String adminVenuePage(Principal principal, Model model) {
+	public String adminVenuePage(@PathVariable("id") long id, Principal principal, Model model) {
+//		List<Reservation> reservations = reservationService.allReservation();
+//		model.addAttribute("reservationResult", reservations);
 		List<Reservation> reservations = reservationService.allReservation();
-		model.addAttribute("reservationResult", reservations);
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+
+		model.addAttribute("reservationResult", reservationsForVenue);
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
