@@ -100,7 +100,8 @@
 					<div class="col-xs-3">
 						<div id="fh5co-logo">
 							<img src="/resources/images/ring map logo.png" alt="logo" style
-								width="50px" height="60px"> <a href="/index" id="navbar-logo-title">PalVenues<strong>.</strong></a>
+								width="50px" height="60px"> <a href="/index"
+								id="navbar-logo-title">PalVenues<strong>.</strong></a>
 						</div>
 					</div>
 					<div class="col-xs-9 text-right menu-1">
@@ -127,7 +128,7 @@
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
 							<c:if test="${userName == \"noUser\"}">
-								<li><a href="/login/#login-form-part">تسجيل دخول</a></li>
+								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
 							<c:if test="${userName ==\"user\"}">
 								<form id="logoutForm" method="POST" action="/logout"
@@ -157,7 +158,7 @@
 					class="form-control"
 					style="width: 80%; float: right; margin-right: 4%"><br>
 				<br>
-				<c:if test="${filterSearchResult1.size()==0}">
+				<c:if test="${empty filterSearchResult}">
 					<div id="venueCardStyle">
 						<c:forEach items="${venues}" var="venueCard">
 							<div class="col-md-4" id="venueCardStyle">
@@ -165,8 +166,7 @@
 									<span class="product-image"> <c:if
 											test="${venueCard.images.size()==0}">
 											<a href="/venuePage/${venueCard.id}" class="image"> <img
-												class="pic-1"
-												src="/resources/images/noImage.jpg">
+												class="pic-1" src="/resources/images/noImage.jpg">
 											</a>
 										</c:if> <c:forEach var="images" items="${venueCard.images}"
 											varStatus="loop">
@@ -194,9 +194,9 @@
 						</c:forEach>
 					</div>
 				</c:if>
-				<c:if test="${filterSearchResult1.size() > 0}">
+				<c:if test="${not empty filterSearchResult}">
 					<div id="venueCardStyle">
-						<c:forEach items="${filterSearchResult1}" var="venueCard">
+						<c:forEach items="${filterSearchResult}" var="venueCard">
 							<div class="col-md-4" id="venueCardStyle">
 								<div class="product-grid">
 									<span class="product-image"> <c:if
@@ -308,16 +308,14 @@
 								<label>سعر القاعة</label> <br>
 								<div class="price-input">
 									<div class="field">
-										<form:input type="number" class="input-min"
-											path="minPrice" />
+										<form:input type="number" class="input-min" path="minPrice" />
 										<span>الحد الأدنى</span>
 
 									</div>
 									<div class="separator">-</div>
 									<div class="field">
 
-										<form:input type="number" class="input-max"
-											path="maxPrice" />
+										<form:input type="number" class="input-max" path="maxPrice" />
 										<span>الحد الأقصى</span>
 									</div>
 								</div>
@@ -365,8 +363,8 @@
 
 						<div class="venue-a" style="margin-top: 5%;">
 							<input type="submit" class="round-black-btn"
-								value="ابحث عن القاعة" /> <a href="/venues/allVenues" class="round-black-btn">عرض
-								جميع القاعات</a>
+								value="ابحث عن القاعة" /> <a href="/venues/allVenues"
+								class="round-black-btn">عرض جميع القاعات</a>
 						</div>
 
 					</form:form>

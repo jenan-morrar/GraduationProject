@@ -128,7 +128,7 @@
 									<li><a href="#">العربية</a></li>
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
-							<li class="active"><a href="/login/#login-form-part">تسجيل دخول</a></li>
+							<li class="active"><a href="/login">تسجيل دخول</a></li>
 						</ul>
 					</div>
 				</div>

@@ -508,3 +508,42 @@
 .closebtn:hover {
   color: black;
 }*/
+/* The Modal (background) */
+.error-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 2; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+}
+
+/* Modal Content/Box */
+.error-modal-content {
+  background-color:rgba(255, 0, 0, 0.753);
+  color:#fff;
+  font-size:25px;
+  border: 1px solid #ff9665;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 50px;
+  border: 1px solid #888;
+  width: 60%; /* Could be more or less, depending on screen size */
+  text-align: center;
+}
+
+/* The Close Button */
+.close {
+  color: #fff;
+  float: right;
+  font-size: 30px;
+  font-weight: bold;
+  margin-left: 15px;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

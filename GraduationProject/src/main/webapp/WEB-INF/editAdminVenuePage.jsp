@@ -144,7 +144,7 @@
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
 							<c:if test="${userName == \"noUser\"}">
-								<li><a href="/login/#login-form-part">تسجيل دخول</a></li>
+								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
 							<c:if test="${userName ==\"user\"}">
 								<form id="logoutForm" method="POST" action="/logout"

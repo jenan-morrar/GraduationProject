@@ -128,7 +128,7 @@
 									<li><a href="#">العربية</a></li>
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
-							<li class="active"><a href="/login/#login-form-part">تسجيل دخول</a></li>
+							<li class="active"><a href="/login">تسجيل دخول</a></li>
 
 						</ul>
 					</div>
@@ -161,13 +161,13 @@
 			<div class="container-login100">
 				<div class="wrap-login100 p-b-30" id="responsiveLoginForm">
 					<div class="loginForm">
-						<form method="POST" action="/login" id="login-form-part"
+						<form method="POST" action="/login"
 							class="login100-form validate-form">
 							<div class="login100-form-avatar">
 								<img src="/resources/images/profilePic.png" alt="AVATAR">
 							</div>
-							<span class="login100-form-title p-t-20 p-b-45"> تسجيل
-								الدخول </span>
+							<span class="login100-form-title p-t-20 p-b-45"> إنشاء
+								حساب </span>
 
 							<div class="wrap-input100 validate-input m-b-10"
 								data-validate=" أدخل ايميل المستخدم">

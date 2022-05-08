@@ -49,8 +49,8 @@ public class Users {
 	private WebsiteRateService websiteRateService;
 	private ReservationService reservationService;
 	private ServicesOfVenueService ServicesOfVenueService;
-	public List<Venue> filterSearchResult1 = new ArrayList<>();
 	public List<WebsiteRate> websiteRateResult = new ArrayList<>();
+	public List<Venue> filterSearchResult = new ArrayList<>();
 
 	@Autowired
 	private JavaMailSender emailSender;
@@ -85,7 +85,7 @@ public class Users {
 			model.addAttribute("alreadyExist", "هذا المستخدم موجود! استخدم ايميل آخر");
 			return "registrationPage.jsp";
 		}
-		return "redirect:/login/#login-form-part";
+		return "redirect:/login";
 	}
 
 	@RequestMapping("/login")
@@ -151,14 +151,14 @@ public class Users {
 	}
 
 	@PostMapping("/index/search/")
-	public String indexSearch(@Valid @ModelAttribute("search") Search search, BindingResult result, Model model) {
+	public String indexSearch(@Valid @ModelAttribute("search") Search search, BindingResult result, Model model,
+			RedirectAttributes redirectAttrs) {
 		if (result.hasErrors()) {
 			return "index.jsp";
 		} else {
-			filterSearchResult1 = new ArrayList<>();
-			filterSearchResult1 = venueService.venueSearch(search.getVenueName());
-			model.addAttribute("filterSearchResult1", filterSearchResult1);
-
+			filterSearchResult = venueService.venueSearch(search.getVenueName());
+			model.addAttribute("filterSearchResult", filterSearchResult);
+			// redirectAttrs.addAttribute("filterSearchResult", filterSearchResult);
 			return "redirect:/venues";
 		}
 	}
@@ -270,7 +270,12 @@ public class Users {
 
 	@RequestMapping("/venuePage/{id}")
 	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,
-			RedirectAttributes redirectAttrs) {
+			RedirectAttributes redirectAttrs, @ModelAttribute("toTimeAfterFromTime") String toTimeAfterFromTime,
+			@ModelAttribute("conflictTime") String conflictTime) {
+
+		model.addAttribute("toTimeAfterFromTime", toTimeAfterFromTime);
+		model.addAttribute("conflictTime", conflictTime);
+
 		Venue venuePage = venueService.findVenue(id);
 		model.addAttribute("reservation", new Reservation());
 		model.addAttribute("venuePage", venuePage);
@@ -303,8 +308,8 @@ public class Users {
 
 	@RequestMapping(value = "/venuePage/{id}", method = RequestMethod.POST)
 	public String reserveVenue(Model model, @PathVariable("id") long id, Principal principal,
-			@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result)
-			throws MessagingException {
+			@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result,
+			RedirectAttributes rattrs) throws MessagingException {
 //		if (result.hasErrors()) {
 //			return "venuePage.jsp";
 //		} else {
@@ -365,7 +370,7 @@ public class Users {
 						if (reservation.getToTime().after(reservationForVenue.get(i).getFromTime())
 								&& reservation.getFromTime().before(reservationForVenue.get(i).getToTime())) {
 							System.out.println("same time, Try again!");
-							model.addAttribute("conflictTime","conflictTime");
+							rattrs.addAttribute("conflictTime", "conflictTime");
 							hasTheSameTime = true;
 							break;
 						} else {
@@ -375,9 +380,8 @@ public class Users {
 				if (!hasTheSameTime) {
 					hasTheSameTime = false;
 					System.out.println("you can reserve!");
-					model.addAttribute("conflictTime","noConflictTime");
-					model.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
-
+					rattrs.addAttribute("conflictTime", "noConflictTime");
+					rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
 
 					if (!reservation.getToTime().before(reservation.getFromTime())) {
 
@@ -393,16 +397,16 @@ public class Users {
 								reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
 					} else {
 						System.out.println("to time should be after from time");
-						model.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+						rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 					}
 				}
 
 			} else {
 				if (!reservation.getToTime().before(reservation.getFromTime())) {
-					
+
 					System.out.println("created correctly not same date!");
-					model.addAttribute("conflictTime","noConflictTime");
-					model.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+					rattrs.addAttribute("conflictTime", "noConflictTime");
+					rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
 
 					reservationService.createReservation(reservation);
 					// Create the Expiration Date
@@ -416,15 +420,15 @@ public class Users {
 							reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
 				} else {
 					System.out.println("to time should be after from time");
-					model.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+					rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 				}
 			}
 		} else {
 			if (!reservation.getToTime().before(reservation.getFromTime())) {
 
 				System.out.println("created correctly there is no reservation!");
-				model.addAttribute("conflictTime","noConflictTime");
-				model.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+				rattrs.addAttribute("conflictTime", "noConflictTime");
+				rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
 
 				reservationService.createReservation(reservation);
 				// Create the Expiration Date
@@ -438,19 +442,13 @@ public class Users {
 						reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
 			} else {
 				System.out.println("to time should be after from time");
-				model.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+				rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 			}
 		}
 
-		if(reservation.getFromTime().after(reservation.getToTime())) {
-			model.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
-			return "redirect:/venuePage/{id}/#VenueReservatio";
-		}
-		else{
-			return "redirect:/venuePage/{id}/#VenueReservatio";
-		}
-//		}
+		return "redirect:/venuePage/{id}/#VenueReservatio";
 	}
+
 	@RequestMapping("/venuePage/{id}/error")
 	public String venuePageError(@PathVariable("id") long id, Principal principal, Model model,
 			RedirectAttributes redirectAttrs) {
@@ -486,11 +484,15 @@ public class Users {
 
 	@RequestMapping("/venues")
 	public String venues(Principal principal, Model model) {
+
 		List<Venue> venues = venueService.allVenues();
 		model.addAttribute("filterSearch", new FilterSearch());
-//		System.out.println(filterSearchResult1.size() + "heloo");
-		model.addAttribute("filterSearchResult1", filterSearchResult1);
+		model.addAttribute("filterSearchResult", filterSearchResult);
+
+		// model.addAttribute("filterSearchResult", filterSearchResult);
+
 		model.addAttribute("venues", venues);
+
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -509,9 +511,10 @@ public class Users {
 
 	@RequestMapping("/venues/allVenues")
 	public String allVenues(Principal principal, Model model) {
+		// for form model attribute
 		model.addAttribute("filterSearch", new FilterSearch());
 		List<Venue> venues = venueService.allVenues();
-		model.addAttribute("filterSearchResult1", new ArrayList<>());
+		model.addAttribute("filterSearchResult", new ArrayList<>());
 		model.addAttribute("venues", venues);
 		if (principal != null) {
 			String username = principal.getName();
@@ -532,22 +535,16 @@ public class Users {
 	// Still it needs an updates
 	@RequestMapping(value = "/venues", method = RequestMethod.POST)
 	public String venuesFilterSearch(Model model, @Valid @ModelAttribute("filterSearch") FilterSearch filterSearch,
-			BindingResult result) throws MessagingException {
+			BindingResult result, RedirectAttributes redirectAttrs) throws MessagingException {
 		if (result.hasErrors()) {
 			return "venues.jsp";
 		} else {
 
-			List<Venue> filterSarchResult = venueService.filterSearch(filterSearch.getLocation(),
-					filterSearch.getMinPrice(), filterSearch.getMaxPrice(), filterSearch.getMinNumOfGuests(),
-					filterSearch.getMaxNumOfGuests());
-			filterSearchResult1 = venueService.filterSearch(filterSearch.getLocation(), filterSearch.getMinPrice(),
+			filterSearchResult = venueService.filterSearch(filterSearch.getLocation(), filterSearch.getMinPrice(),
 					filterSearch.getMaxPrice(), filterSearch.getMinNumOfGuests(), filterSearch.getMaxNumOfGuests());
-//			System.out.println(filterSearchResult1.size());
-			model.addAttribute("filterSearchResult1", filterSearchResult1);
-			model.addAttribute("filterSarchResult", filterSarchResult);
-//			for (int i = 0; i < filterSarchResult.size(); i++) {
-//				System.out.println(filterSarchResult.get(i).getId());
-//			}
+//			redirectAttrs.addAttribute("filterSearchResult", filterSearchResult);
+			model.addAttribute("filterSearchResult", filterSearchResult);
+
 			return "redirect:/venues";
 		}
 	}

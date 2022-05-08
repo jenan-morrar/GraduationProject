@@ -149,7 +149,7 @@
 									<li><a href="#">الأنجليزية</a></li>
 								</ul></li>
 							<c:if test="${userName == \"noUser\"}">
-								<li><a href="/login/#login-form-part">تسجيل دخول</a></li>
+								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
 							<c:if test="${userName ==\"user\"}">
 								<form id="logoutForm" method="POST" action="/logout"
@@ -329,13 +329,99 @@
 							<h3>حجز القاعة</h3>
 							<c:set var="reservations" scope="session"
 								value="${reservationResult}" />
-							<!--<form:form method="post" action="/venuePage/${venuePage.id}" modelAttribute="reservation">
-								<form:input type="time" path="fromTime" />
-								<form:input type="time" path="toTime" />
-								<form:input type="date" path="reservationDate" />
-								<input type="submit" value="submit"/>
 
-							</form:form>-->
+							<c:set var="conflictTime" scope="session" value="${conflictTime}" />
+							<c:if test="${conflictTime == \"conflictTime\" }">
+								<div id="myModal" class="error-modal">
+
+									<!-- Modal content -->
+									<div class="error-modal-content">
+										<span class="close">&times;</span> <strong>هناك خلل
+											في عملية الحجز</strong>
+										<div>يوجد حجز في هذا الموعد اختر موعد آخر</div>
+									</div>
+
+								</div>
+								<script type="text/javascript">
+									// Get the modal
+									var modal = document
+											.getElementById("myModal");
+
+									// Get the <span> element that closes the modal
+									var span = document
+											.getElementsByClassName("close")[0];
+
+									// When the user clicks on the button, open the modal
+
+									modal.style.display = "block";
+
+									// When the user clicks on <span> (x), close the modal
+									span.onclick = function() {
+										modal.style.display = "none";
+									}
+
+									// When the user clicks anywhere outside of the modal, close it
+									/*window.onclick = function(event) {
+									  if (event.target == modal) {
+									    modal.style.display = "none";
+									  }
+									}*/
+								</script>
+								<!--<div class="alert">
+											<span class="closebtn"
+												onclick="this.parentElement.style.display='none';">&times;</span>
+											<strong>يوجد خطأ!</strong>&emsp;يوجد حجز في هذا الموعد اختر
+											موعد آخر
+										</div>-->
+							</c:if>
+
+							<c:set var="toTimeAfterFromTime" scope="session"
+								value="${toTimeAfterFromTime}" />
+							<c:if test="${toTimeAfterFromTime == \"noToTimeAfterFromTime\" }">
+								<div id="myModal" class="error-modal">
+
+									<!-- Modal content -->
+									<div class="error-modal-content">
+										<span class="close">&times;</span> <strong>هناك خلل
+											في عملية الحجز</strong>
+										<div>يجب أن يكون تاريخ انتهاء الحجز بعد تاريح بدء الحجز
+										</div>
+									</div>
+
+								</div>
+								<script type="text/javascript">
+									// Get the modal
+									var modal = document
+											.getElementById("myModal");
+
+									// Get the <span> element that closes the modal
+									var span = document
+											.getElementsByClassName("close")[0];
+
+									// When the user clicks on the button, open the modal
+
+									modal.style.display = "block";
+
+									// When the user clicks on <span> (x), close the modal
+									span.onclick = function() {
+										modal.style.display = "none";
+									}
+
+									// When the user clicks anywhere outside of the modal, close it
+									/*window.onclick = function(event) {
+									  if (event.target == modal) {
+									    modal.style.display = "none";
+									  }
+									}*/
+								</script>
+								<!--<div class="alert">
+									<span class="closebtn"
+										onclick="this.parentElement.style.display='none';">&times;</span>
+									<strong>يوجد خطأ!</strong>&emsp;يجب أن يكون تاريخ انتهاء الحجز
+									بعد تاريح بدء الحجز
+								</div>-->
+							</c:if>
+
 							<div class="user" id="add-event-form"
 								style="margin-top: 3%; display: none;">
 								<form:form method="post" action="/venuePage/${venuePage.id}"
@@ -397,29 +483,6 @@
 
 									<!--<c:set var="toTimeAfterFromTime" scope="session"
 										value="${toTimeAfterFromTime}" />
-									<c:if
-										test="${toTimeAfterFromTime == \"notToTimeAfterFromTime\" }">
-										<div class="alert">
-											<span class="closebtn"
-												onclick="this.parentElement.style.display='none';">&times;</span>
-											<strong>يوجد خطأ!</strong>&emsp;يجب أن يكون تاريخ انتهاء
-											الحجز بعد تاريح بدء الحجز
-										</div>
-									</c:if>
-
-									<c:set var="conflictTime" scope="session"
-										value="${conflictTime}" />
-									<c:if test="${conflictTime == \"conflictTime\" }">
-										<div class="alert">
-											<span class="closebtn"
-												onclick="this.parentElement.style.display='none';">&times;</span>
-											<strong>يوجد خطأ!</strong>&emsp;يوجد حجز في هذا الموعد اختر
-											موعد آخر
-										</div>
-									</c:if>-->
-
-									<!--<c:set var="toTimeAfterFromTime" scope="session"
-										value="${toTimeAfterFromTime}" />
 									<c:set var="conflictTime" scope="session"
 										value="${conflictTime}" />
 									<c:choose>
@@ -451,7 +514,7 @@
 									</c:choose>-->
 
 									<input type="submit" id="reserveButt" class="round-black-btn"
-										 value="إحجز الآن" />
+										value="إحجز الآن" />
 
 								</form:form>
 								<!--<h4>أختر التاريح الذي يناسبك</h4>
