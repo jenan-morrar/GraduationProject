@@ -33,10 +33,12 @@ import com.test.GraduationProject.models.Search;
 import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
+import com.test.GraduationProject.models.VenueRate;
 import com.test.GraduationProject.models.WebsiteRate;
 import com.test.GraduationProject.services.ReservationService;
 import com.test.GraduationProject.services.ServicesOfVenueService;
 import com.test.GraduationProject.services.UserService;
+import com.test.GraduationProject.services.VenueRateService;
 import com.test.GraduationProject.services.VenueService;
 import com.test.GraduationProject.services.WebsiteRateService;
 import com.test.GraduationProject.validator.UserValidator;
@@ -47,6 +49,7 @@ public class Users {
 	private UserValidator userValidator;
 	private VenueService venueService;
 	private WebsiteRateService websiteRateService;
+	private VenueRateService venueRateService;
 	private ReservationService reservationService;
 	private ServicesOfVenueService ServicesOfVenueService;
 	public List<WebsiteRate> websiteRateResult = new ArrayList<>();
@@ -57,13 +60,14 @@ public class Users {
 
 	public Users(UserService userService, UserValidator userValidator, VenueService venueService,
 			WebsiteRateService websiteRateService, ReservationService reservationService,
-			ServicesOfVenueService servicesOfVenueService) {
+			ServicesOfVenueService servicesOfVenueService, VenueRateService venueRateService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
 		this.websiteRateService = websiteRateService;
 		this.reservationService = reservationService;
 		this.ServicesOfVenueService = servicesOfVenueService;
+		this.venueRateService = venueRateService;
 	}
 
 	@RequestMapping("/registration")
@@ -279,7 +283,10 @@ public class Users {
 		Venue venuePage = venueService.findVenue(id);
 		model.addAttribute("reservation", new Reservation());
 		model.addAttribute("venuePage", venuePage);
+		model.addAttribute("venueRate", new VenueRate());
 		redirectAttrs.addAttribute("venuePage", venuePage);
+		
+		//Venue Services
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
 
@@ -288,8 +295,19 @@ public class Users {
 				reservationsForVenue.add(reservations.get(i));
 			}
 		}
-
 		model.addAttribute("reservationResult", reservationsForVenue);
+		
+		// Venue Rating Data
+		List<VenueRate> ratings = venueRateService.allVenueRates();
+		List<VenueRate> ratingsForVenue =  new ArrayList<>();
+		
+		for (int i = 0; i < ratings.size(); i++) {
+			if (ratings.get(i).getVenue().getId() == id) {
+				ratingsForVenue.add(ratings.get(i));
+			}
+		}
+		model.addAttribute("venueRatingsResult", ratingsForVenue);
+		
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -448,6 +466,16 @@ public class Users {
 
 		return "redirect:/venuePage/{id}/#VenueReservatio";
 	}
+	
+	
+	@RequestMapping(value = "/venuePage/{id}/rating", method = RequestMethod.POST)
+	public String venueRating(@PathVariable("id") long id, @ModelAttribute("venueRate") VenueRate venueRate, Model model) {
+			Venue venue = venueService.findVenue(id);
+			venueRate.setVenue(venue);
+			//venueRate.setRating(5);
+			venueRateService.createVenueRate(venueRate);
+			return "redirect:/venuePage/{id}";
+	}
 
 	@RequestMapping("/venuePage/{id}/error")
 	public String venuePageError(@PathVariable("id") long id, Principal principal, Model model,
@@ -553,6 +581,7 @@ public class Users {
 	public String adminVenuePage(@PathVariable("id") long id, Principal principal, Model model) {
 //		List<Reservation> reservations = reservationService.allReservation();
 //		model.addAttribute("reservationResult", reservations);
+		//Reservations data
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
 
@@ -561,8 +590,19 @@ public class Users {
 				reservationsForVenue.add(reservations.get(i));
 			}
 		}
-
 		model.addAttribute("reservationResult", reservationsForVenue);
+		
+		// Rating Data
+		List<VenueRate> ratings = venueRateService.allVenueRates();
+		List<VenueRate> ratingsForVenue =  new ArrayList<>();
+		
+		for (int i = 0; i < ratings.size(); i++) {
+			if (ratings.get(i).getVenue().getId() == id) {
+				ratingsForVenue.add(ratings.get(i));
+			}
+		}
+		model.addAttribute("venueRatingsResult", ratingsForVenue);
+		
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();

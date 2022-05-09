@@ -104,6 +104,8 @@
 
 <!-- Theme style  -->
 <link rel="stylesheet"
+	href="<c:url value="/resources/css/rating.css" />">
+<link rel="stylesheet"
 	href="<c:url value="/resources/css/imageSlider.css" />">
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 <link href="<c:url value="/resources/css/venuePage.css" />"
@@ -291,6 +293,8 @@
 						href="#Reviews">تقييم القاعة</a></li>
 					<li><a class="venueNavTabs-tilte" data-toggle="tab"
 						href="#venueLocation">موقع القاعة</a></li>
+					<li><a class="venueNavTabs-tilte" data-toggle="tab"
+						href="#VenueServices">خدمات القاعة</a></li>
 					<li class="active"><a class="venueNavTabs-tilte"
 						data-toggle="tab" href="#VenueReservatio">حجز القاعة</a></li>
 				</ul>
@@ -298,7 +302,7 @@
 				<div class="tab-content" id="venueTabContent">
 					<div id="VenueReservatio" class="tab-pane fade in active">
 						<c:if test="${userName == \"noUser\"}">
-							<h3>
+							<h3 id="reservation-no-user">
 								للحجز يجب <a href="/login">تسجيل الدخول</a>
 							</h3>
 
@@ -539,8 +543,22 @@
 							</script>
 							<div class="--noshadow" id="demoEvoCalendar"></div>
 						</c:if>
+					</div>
 
+					<div id="VenueServices" class="tab-pane fade">
+						<table class="service-table">
+							<tr>
+								<th>سعر الخدمة</th>
+								<th>اسم الخدمة</th>
+							</tr>
+							<c:forEach items="${venuePage.services}" var="service">
 
+								<tr>
+									<td><c:out value="${service.price}" /></td>
+									<td><c:out value="${service.name}" /></td>
+								</tr>
+							</c:forEach>
+						</table>
 					</div>
 
 					<div id="venueLocation" class="tab-pane fade">
@@ -558,12 +576,53 @@
 
 					<div id="Reviews" class="tab-pane fade">
 						<c:if test="${userName == \"noUser\"}">
-							<h3>للتقيم لقاعة يجب تسجيل الدخول</h3>
-							<a class="round-black-btn" href="/login">تسجيل الدخول</a>
+							<h3 id="rating-no-user">
+								لتقييم القاعة يجب <a href="/login">تسجيل الدخول</a>
+							</h3>
+							
+							<h3 id="rating2-no-user">تقيمات القاعة</h3>
+													<div>
+							<c:set var="venueRatingsResults" scope="session"
+								value="${venueRatingsResult}" />
+							<div class="rating-slider">
+								<div class="rating-slides">
+									<c:forEach items="${venueRatingsResults}"
+										var="venueRatingsResult" varStatus="loop">
+
+										<div id="#slide-${loop.index}">
+											<div>
+												<div class="rating-title" id="first-rating-tilte">اسم
+													المستخدم</div>
+												<div>
+													<c:out value="${venueRatingsResult.senderName}" />
+												</div>
+											</div>
+											<div>
+												<div class="rating-title">تقييم القاعة</div>
+												<div>
+													<c:out value="${venueRatingsResult.rating}/5" />
+												</div>
+											</div>
+											<div>
+												<div class="rating-title">تعليقه على القاعة</div>
+
+												<div>
+													<c:out value="${venueRatingsResult.ratingMasseag}" />
+												</div>
+											</div>
+
+										</div>
+
+									</c:forEach>
+								</div>
+							</div>
+						</div>
+
 						</c:if>
 						<c:if test="${userName == \"user\"}">
-							<div class="review-heading">تقييم القاعة</div>
-							<form class="review-form">
+							<form:form method="POST"
+								action="/venuePage/${venuePage.id}/rating"
+								modelAttribute="venueRate" class="review-form">
 								<div class="form-group">
 									<label>تقيمك للقاعة</label>
 									<div class="reviews-counter">
@@ -582,24 +641,27 @@
 								</div>
 								<div class="form-group">
 									<label>اكتب تقيمك</label>
-									<textarea class="form-control" rows="10"></textarea>
+									<form:textarea class="form-control" rows="10"
+										path="ratingMasseag" required="required" />
 								</div>
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<input type="text" name="" class="form-control"
-												placeholder="اسم المستخدم" required="required">
+											<form:input type="text" name="" class="form-control"
+												placeholder="اسم المستخدم" required="required"
+												path="senderName" />
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<input type="text" name="" class="form-control"
-												placeholder="ايميل المستخدم" required="required">
+											<form:input type="text" name="" class="form-control"
+												placeholder="ايميل المستخدم" required="required"
+												path="senderEmail" />
 										</div>
 									</div>
 								</div>
-								<button class="round-black-btn">Submit Review</button>
-							</form>
+								<input type="submit" value="أضف تقيميك" class="round-black-btn">
+							</form:form>
 						</c:if>
 					</div>
 				</div>

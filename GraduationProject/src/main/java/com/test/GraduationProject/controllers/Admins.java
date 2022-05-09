@@ -24,8 +24,10 @@ import com.test.GraduationProject.models.Images;
 import com.test.GraduationProject.models.Reservation;
 import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.Venue;
+import com.test.GraduationProject.models.VenueRate;
 import com.test.GraduationProject.services.ServicesOfVenueService;
 import com.test.GraduationProject.services.UserService;
+import com.test.GraduationProject.services.VenueRateService;
 import com.test.GraduationProject.services.VenueService;
 import com.test.GraduationProject.services.ImagesService;
 import com.test.GraduationProject.services.ReservationService;
@@ -38,14 +40,17 @@ public class Admins {
 	private ImagesService imagesService;
 	private UserService userService;
 	private ReservationService reservationService;
+	private VenueRateService venueRateService;
+
 
 	public Admins(VenueService venueService, ServicesOfVenueService servicesOfVenueService, ImagesService imagesService,
-			UserService userService, ReservationService reservationService) {
+			UserService userService, ReservationService reservationService, VenueRateService venueRateService) {
 		this.venueService = venueService;
 		this.servicesOfVenueService = servicesOfVenueService;
 		this.imagesService = imagesService;
 		this.userService = userService;
 		this.reservationService = reservationService;
+		this.venueRateService = venueRateService;
 	}
 
 //	@RequestMapping("/admin/venues/{id}")
@@ -62,6 +67,7 @@ public class Admins {
 		Venue venue = venueService.findVenue(id);
 //		List<Reservation> reservations = reservationService.allReservation();
 //		model.addAttribute("reservationResult", reservations);
+		// Venue Services
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
 
@@ -70,8 +76,18 @@ public class Admins {
 				reservationsForVenue.add(reservations.get(i));
 			}
 		}
-
 		model.addAttribute("reservationResult", reservationsForVenue);
+		
+		// Venue Rating Data
+		List<VenueRate> ratings = venueRateService.allVenueRates();
+		List<VenueRate> ratingsForVenue =  new ArrayList<>();
+		
+		for (int i = 0; i < ratings.size(); i++) {
+			if (ratings.get(i).getVenue().getId() == id) {
+				ratingsForVenue.add(ratings.get(i));
+			}
+		}
+		model.addAttribute("venueRatingsResult", ratingsForVenue);
 
 		if (principal != null) {
 			String username = principal.getName();

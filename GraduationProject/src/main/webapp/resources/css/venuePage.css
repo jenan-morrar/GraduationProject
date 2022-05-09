@@ -26,6 +26,46 @@
 	font-family: 'Poppins', sans-serif;
 }
 
+#rating-no-user{
+	margin-top: 15%;
+    margin-bottom: 5%;
+}
+#rating2-no-user{
+    margin-top: 2%;
+    margin-bottom: 2%;
+    text-align: center;
+}
+#reservation-no-user{
+	margin-top: 15%;
+    margin-bottom: 5%;
+}
+
+.service-detiles-part{
+	text-align: center;
+}
+.tr-service-style{
+	margin-bottom: 1%;
+}
+
+.service-table{
+  border-collapse: collapse;
+  width: 80%;
+  margin: auto;
+}
+
+.service-table th, td {
+  text-align: center;
+  padding: 8px;
+}
+
+.service-table tr:nth-child(even){background-color: #f2f2f2}
+
+.service-table th {
+  background-color: #cd7e53;
+  color: white;
+  text-align: center;
+}
+
 .user-img {
 	width: 80px;
 	height: 80px;
@@ -273,6 +313,9 @@
 	color: #7a7a7a;
 }
 
+.review-form{
+	width: 90%;
+}
 .review-form .form-group {
 	clear: both;
 }

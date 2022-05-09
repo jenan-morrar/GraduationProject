@@ -10,16 +10,15 @@ import org.springframework.stereotype.Repository;
 
 import com.test.GraduationProject.models.Reservation;
 import com.test.GraduationProject.models.Venue;
+import com.test.GraduationProject.models.VenueRate;
 
 @Repository
 public interface VenueRepository extends CrudRepository<Venue, Long> {
 
 	List<Venue> findAll();
-
 	Optional<Venue> findById(Long id);
-
 	void delete(Venue venue);
-
+	
 	// Search in Venue Name
 	@Query(value = "SELECT * FROM venues where name LIKE %:name% ", nativeQuery = true)
 	List<Venue> search(@Param("name") String name);

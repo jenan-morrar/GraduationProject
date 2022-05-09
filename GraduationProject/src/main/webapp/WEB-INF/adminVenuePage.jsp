@@ -97,6 +97,8 @@
 
 <!-- Theme style  -->
 <link rel="stylesheet"
+	href="<c:url value="/resources/css/rating.css" />">
+<link rel="stylesheet"
 	href="<c:url value="/resources/css/imageSlider.css" />">
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 <link href="<c:url value="/resources/css/venuePage.css" />"
@@ -289,40 +291,44 @@
 				<div class="tab-content" id="venueTabContent">
 
 					<div id="VenueServices" class="tab-pane fade in active">
-						<h3>خدمات القاعة</h3>
-						<c:forEach items="${venue.services}" var="service">
+						<table class="service-table">
 							<tr>
-								<td>Service Name: <c:out value="${service.name}" /></td>
-								<td>Service Price: <c:out value="${service.price}" /></td>
+								<th>سعر الخدمة</th>
+								<th>اسم الخدمة</th>
 							</tr>
-							<br>
-						</c:forEach>
+							<c:forEach items="${venue.services}" var="service">
+
+								<tr>
+									<td><c:out value="${service.price}" /></td>
+									<td><c:out value="${service.name}" /></td>
+								</tr>
+							</c:forEach>
+						</table>
 					</div>
 
 					<div id="VenueReservatio" class="tab-pane fade in">
-						<h3>حجوزات القاعة</h3>
 						<!-- <div class="--noshadow" id="demoEvoCalendar"></div> -->
 						<input type="date" value="" id="event-date" hidden />
 						<c:set var="reservations" scope="session"
-								value="${reservationResult}" />
-							<input hidden value id="reservations" />
-							<script>
-								var reservationsjs = new Array();
-								<c:forEach items="${reservations}" var="reservation">
-								res = new Object();
-								res.id = "${reservation.id}";
-								res.name = "wedding";
-								res.description = "from ${reservation.fromTime} to ${reservation.toTime}";
-								res.fromTime = "${reservation.fromTime}";
-								res.toTime = "${reservation.toTime}";
-								res.reservationDate = "${reservation.reservationDate}";
-								res.type = "event";
-								reservationsjs.push(res);
-								</c:forEach>
-								$("#reservations").val(
-										JSON.stringify(reservationsjs));
-							</script>
-							<div class="--noshadow" id="demoEvoCalendar"></div>
+							value="${reservationResult}" />
+						<input hidden value id="reservations" />
+						<script>
+							var reservationsjs = new Array();
+							<c:forEach items="${reservations}" var="reservation">
+							res = new Object();
+							res.id = "${reservation.id}";
+							res.name = "wedding";
+							res.description = "from ${reservation.fromTime} to ${reservation.toTime}";
+							res.fromTime = "${reservation.fromTime}";
+							res.toTime = "${reservation.toTime}";
+							res.reservationDate = "${reservation.reservationDate}";
+							res.type = "event";
+							reservationsjs.push(res);
+							</c:forEach>
+							$("#reservations").val(
+									JSON.stringify(reservationsjs));
+						</script>
+						<div class="--noshadow" id="demoEvoCalendar"></div>
 					</div>
 
 					<div id="venueLocation" class="tab-pane fade">
@@ -339,7 +345,48 @@
 					</div>
 
 					<div id="Reviews" class="tab-pane fade">
-						<div class="review-heading">تقييم القاعة</div>
+						<div>
+							<c:set var="venueRatingsResults" scope="session"
+								value="${venueRatingsResult}" />
+							<div class="rating-slider">
+
+								<!--<c:forEach items="${venueRatingsResults}"
+									var="venueRatingsResult" varStatus="loop">
+									<a href="#slide-${loop.index}">${loop.index}</a>
+								</c:forEach>-->
+
+								<div class="rating-slides">
+									<c:forEach items="${venueRatingsResults}"
+										var="venueRatingsResult" varStatus="loop">
+
+										<div id="#slide-${loop.index}">
+											<div>
+												<div class="rating-title" id="first-rating-tilte">اسم
+													المستخدم</div>
+												<div>
+													<c:out value="${venueRatingsResult.senderName}" />
+												</div>
+											</div>
+											<div>
+												<div class="rating-title">تقييم القاعة</div>
+												<div>
+													<c:out value="${venueRatingsResult.rating}/5" />
+												</div>
+											</div>
+											<div>
+												<div class="rating-title">تعليقه على القاعة</div>
+
+												<div>
+													<c:out value="${venueRatingsResult.ratingMasseag}" />
+												</div>
+											</div>
+
+										</div>
+
+									</c:forEach>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -457,6 +504,7 @@
 	<script src="/resources/js/imageSlider.js"></script>
 	<script src="/resources/js/evo-calendar.js"></script>
 	<script src="/resources/js/demo.js"></script>
+
 
 
 </body>
