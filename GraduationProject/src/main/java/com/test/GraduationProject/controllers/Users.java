@@ -301,12 +301,25 @@ public class Users {
 		List<VenueRate> ratings = venueRateService.allVenueRates();
 		List<VenueRate> ratingsForVenue =  new ArrayList<>();
 		
+		//to calculate venue rating
+		int venueRating =0;
+		int count=0;
+		int ratingSum =0;
+		
 		for (int i = 0; i < ratings.size(); i++) {
 			if (ratings.get(i).getVenue().getId() == id) {
 				ratingsForVenue.add(ratings.get(i));
+				ratingSum+=ratings.get(i).getRating();
+				count++;
 			}
 		}
+		
+		if(ratingsForVenue.size()>0) {
+			venueRating = ratingSum/count;
+		}
 		model.addAttribute("venueRatingsResult", ratingsForVenue);
+		model.addAttribute("venueRatingValue", venueRating);
+
 		
 		if (principal != null) {
 			String username = principal.getName();

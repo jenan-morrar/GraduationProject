@@ -97,6 +97,7 @@ public class Admins {
 
 			if (userRole.equals("ROLE_ADMIN")) {
 				model.addAttribute("serviceExist", "no");
+				model.addAttribute("venueId", id);
 
 				if (venue.getUser() != null) {
 					if (venue.getUser().getId() == userId) {

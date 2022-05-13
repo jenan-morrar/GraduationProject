@@ -229,14 +229,14 @@
 									وصف القاعة &nbsp;&nbsp; <i class='far fa-building'
 										style='font-size: 25px'></i>
 								</div>
-								<span><c:out value="${venue.description}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venue.description}" /></span>
 							</div>
 							<div class="venueDetaile">
 								<div class="venueDetaileTitle">
 									سعر القاعة &nbsp;&nbsp; <i class='fas fa-shekel-sign'
 										style='font-size: 22px'></i>
 								</div>
-								<span><c:out value="${venue.price}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venue.price}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -244,7 +244,7 @@
 									عدد الضيوف &nbsp;&nbsp; <i class='far fa-id-badge'
 										style='font-size: 25px'></i>
 								</div>
-								<span><c:out value="${venue.numOfGuests}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venue.numOfGuests}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -252,7 +252,7 @@
 									المصفات &nbsp; &nbsp; <i class='fas fa-car'
 										style='font-size: 24px'></i>
 								</div>
-								<span><c:out value="${venue.venuePark}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venue.venuePark}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -260,7 +260,7 @@
 									موقع القاعة &nbsp; &nbsp; <i class='fas fa-map-marker-alt'
 										style='font-size: 24px'></i>
 								</div>
-								<span><c:out value="${venue.location}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venue.location}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -268,7 +268,7 @@
 									للتواصل مع القاعة &nbsp; &nbsp; <i class="fa fa-phone"
 										style="font-size: 22px"></i>
 								</div>
-								<span><c:out value="${venue.venueContact}" /></span>
+								<span class="venueDetaile-span"><c:out value="${venue.venueContact}" /></span>
 							</div>
 							<div class="venue-a">
 								<a href="/adminVenuePage/${venue.id}/edit"

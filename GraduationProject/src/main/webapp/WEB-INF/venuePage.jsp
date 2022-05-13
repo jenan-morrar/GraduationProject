@@ -80,6 +80,10 @@
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 
+<!-- For Rating -->
+<link data-require="fontawesome@*" data-semver="4.5.0" rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.css" />
+
 <!-- Animate.css -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/animate.css" />">
@@ -212,18 +216,62 @@
 								<div class="product-name">
 									<c:out value="${venuePage.name}" />
 								</div>
+
 								<div class="reviews-counter">
 									<div class="rate" id="venueRate">
-										<input type="radio" id="star5" name="rate" value="5" checked />
-										<label for="star5" title="text">5 stars</label> <input
-											type="radio" id="star4" name="rate" value="4" checked /> <label
-											for="star4" title="text">4 stars</label> <input type="radio"
-											id="star3" name="rate" value="3" checked /> <label
-											for="star3" title="text">3 stars</label> <input type="radio"
-											id="star2" name="rate" value="2" /> <label for="star2"
-											title="text">2 stars</label> <input type="radio" id="star1"
-											name="rate" value="1" /> <label for="star1" title="text">1
-											star</label>
+										<c:set var="venueRatingValue" scope="session"
+											value="${venueRatingValue}" />
+
+										<!-- <input type="radio" id="star5" name="rate" value="5" /> <label
+											for="star5" title="text">5 stars</label> <input type="radio"
+											id="star4" name="rate" value="4" /> <label for="star4"
+											title="text">4 stars</label> <input type="radio" id="star3"
+											name="rate" value="3" /> <label for="star3" title="text">3
+											stars</label> <input type="radio" id="star2" name="rate" value="2" />
+										<label for="star2" title="text">2 stars</label> <input
+											type="radio" id="star1" name="rate" value="1" /> <label
+											for="star1" title="text">1 star</label>
+												<c:out value="${venueRatingValue}"></c:out>
+										<c:out
+											value="${(venueRatingValue + venueRatingValue)/venueRatingValue}"></c:out> -->
+
+										<c:forEach begin="1" end="5" varStatus="loop">
+
+											<c:choose>
+												<c:when test="${venueRatingValue == 5 and loop.index==1}">
+													<input type="radio" id="star1" name="rate" value="1"
+														checked />
+													<label for="star1" title="text">1 star</label>
+												</c:when>
+												<c:when test="${venueRatingValue == 4 and loop.index==2}">
+													<input type="radio" id="star2" name="rate" value="2"
+														checked />
+													<label for="star2" title="text">2 star</label>
+												</c:when>
+												<c:when test="${venueRatingValue == 3 and loop.index==3}">
+													<input type="radio" id="star3" name="rate" value="3"
+														checked />
+													<label for="star3" title="text">3 star</label>
+												</c:when>
+												<c:when test="${venueRatingValue == 2 and loop.index==4}">
+													<input type="radio" id="star4" name="rate" value="4"
+														checked />
+													<label for="star4" title="text">4 star</label>
+												</c:when>
+												<c:when test="${venueRatingValue == 1 and loop.index==5}">
+													<input type="radio" id="star5" name="rate" value="5"
+														checked />
+													<label for="star5" title="text">5 star</label>
+												</c:when>
+												<c:otherwise>
+													<input type="radio" id="star${loop.index }" name="rate"
+														value="${loop.index }" />
+													<label for="star${loop.index }" title="text">${loop.index }
+														star</label>
+												</c:otherwise>
+											</c:choose>
+
+										</c:forEach>
 									</div>
 								</div>
 							</div>
@@ -440,8 +488,6 @@
 										value="21:00" required="required" />
 									<label for="to">إلى الساعة</label>
 									<br>
-									<label>اختر قائمة أغانيك</label>
-									<br>
 									<div class="dropdown">
 										<button class="btn btn-default dropdown-toggle" type="button"
 											id="dropdownMenu1" data-toggle="dropdown"
@@ -579,44 +625,45 @@
 							<h3 id="rating-no-user">
 								لتقييم القاعة يجب <a href="/login">تسجيل الدخول</a>
 							</h3>
-							
+
+
 							<h3 id="rating2-no-user">تقيمات القاعة</h3>
+							<div>
+								<c:set var="venueRatingsResults" scope="session"
+									value="${venueRatingsResult}" />
+								<div class="rating-slider">
+									<div class="rating-slides">
+										<c:forEach items="${venueRatingsResults}"
+											var="venueRatingsResult" varStatus="loop">
+
+											<div id="#slide-${loop.index}">
+												<div>
+													<div class="rating-title" id="first-rating-tilte">اسم
+														المستخدم</div>
 													<div>
-							<c:set var="venueRatingsResults" scope="session"
-								value="${venueRatingsResult}" />
-							<div class="rating-slider">
-								<div class="rating-slides">
-									<c:forEach items="${venueRatingsResults}"
-										var="venueRatingsResult" varStatus="loop">
+														<c:out value="${venueRatingsResult.senderName}" />
+													</div>
+												</div>
+												<div>
+													<div class="rating-title">تقييم القاعة</div>
+													<div>
+														<c:out value="${venueRatingsResult.rating}/5" />
+													</div>
+												</div>
+												<div>
+													<div class="rating-title">تعليقه على القاعة</div>
 
-										<div id="#slide-${loop.index}">
-											<div>
-												<div class="rating-title" id="first-rating-tilte">اسم
-													المستخدم</div>
-												<div>
-													<c:out value="${venueRatingsResult.senderName}" />
+													<div>
+														<c:out value="${venueRatingsResult.ratingMasseag}" />
+													</div>
 												</div>
-											</div>
-											<div>
-												<div class="rating-title">تقييم القاعة</div>
-												<div>
-													<c:out value="${venueRatingsResult.rating}/5" />
-												</div>
-											</div>
-											<div>
-												<div class="rating-title">تعليقه على القاعة</div>
 
-												<div>
-													<c:out value="${venueRatingsResult.ratingMasseag}" />
-												</div>
 											</div>
 
-										</div>
-
-									</c:forEach>
+										</c:forEach>
+									</div>
 								</div>
 							</div>
-						</div>
 
 						</c:if>
 						<c:if test="${userName == \"user\"}">
@@ -624,9 +671,32 @@
 								action="/venuePage/${venuePage.id}/rating"
 								modelAttribute="venueRate" class="review-form">
 								<div class="form-group">
-									<label>تقيمك للقاعة</label>
+
+									<label class="rating-label">تقيمك للقاعة</label>
 									<div class="reviews-counter">
-										<div class="rate">
+
+										<form:input type="number" name="rating" id="rating-input"
+											min="1" max="5" style="display: none;" path="rating" />
+
+										<div class="rating" role="optgroup">
+											<!-- in Rails just use 1.upto(5) -->
+											<i class="fa fa-star-o fa-2x rating-star" id="rating-1"
+												data-rating="1" tabindex="0"
+												aria-label="Rate as one out of 5 stars" role="radio"></i> <i
+												class="fa fa-star-o fa-2x rating-star" id="rating-2"
+												data-rating="2" tabindex="0"
+												aria-label="Rate as two out of 5 stars" role="radio"></i> <i
+												class="fa fa-star-o fa-2x rating-star" id="rating-3"
+												data-rating="3" tabindex="0"
+												aria-label="Rate as three out of 5 stars" role="radio"></i>
+											<i class="fa fa-star-o fa-2x rating-star" id="rating-4"
+												data-rating="4" tabindex="0"
+												aria-label="Rate as four out of 5 stars" role="radio"></i> <i
+												class="fa fa-star-o fa-2x rating-star" id="rating-5"
+												data-rating="5" tabindex="0"
+												aria-label="Rate as five out of 5 stars" role="radio"></i>
+										</div>
+										<!--<div class="rate">
 											<input type="radio" id="star5" name="rate" value="5" /> <label
 												for="star5" title="text">5 stars</label> <input type="radio"
 												id="star4" name="rate" value="4" /> <label for="star4"
@@ -635,12 +705,11 @@
 												stars</label> <input type="radio" id="star2" name="rate" value="2" />
 											<label for="star2" title="text">2 stars</label> <input
 												type="radio" id="star1" name="rate" value="1" /> <label
-												for="star1" title="text">1 star</label>
-										</div>
+												for="star1" title="text">1 star</label></div>-->
 									</div>
 								</div>
-								<div class="form-group">
-									<label>اكتب تقيمك</label>
+								<div class="form-group" style="clear: both;">
+									<label class="rating-label">اكتب تقيمك</label>
 									<form:textarea class="form-control" rows="10"
 										path="ratingMasseag" required="required" />
 								</div>
@@ -660,7 +729,8 @@
 										</div>
 									</div>
 								</div>
-								<input type="submit" value="أضف تقيميك" class="round-black-btn">
+								<input type="submit" value="أضف تقيميك" class="round-black-btn"
+									id="rating-submit-butt">
 							</form:form>
 						</c:if>
 					</div>
@@ -721,10 +791,12 @@
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>
 
 	<!-- Main -->
+	<script src="/resources/js/rating.js"></script>
 	<script src="/resources/js/main.js"></script>
 	<script src="/resources/js/imageSlider.js"></script>
 	<script src="/resources/js/evo-calendar.js"></script>
 	<script src="/resources/js/demo.js"></script>
+
 
 
 

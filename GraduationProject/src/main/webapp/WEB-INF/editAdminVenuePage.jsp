@@ -202,7 +202,7 @@
 						</div>
 						<form:form action="/adminVenuePage/${venue.id}/images/add"
 							method="post" enctype="multipart/form-data"
-							modelAttribute="venue">
+							modelAttribute="venue" style="margin-top:2%;">
 							<c:forEach varStatus="us" var="images" items="${venue.images}">
 								<tr>
 									<td><img class="imageVenue"
@@ -214,6 +214,7 @@
 								</tr>
 								&nbsp; &nbsp;
 							</c:forEach>
+							<br>
 							<br>
 							<input type="file" class="form-control" name="image"
 								accept="image/png, image/jpeg" multiple="multiple"
