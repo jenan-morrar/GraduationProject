@@ -433,6 +433,9 @@ h1, h3, h4, h5, h6, figure {
   font-family: 'Aref Ruqaa', serif;
   float: right;
 }
+.checked {
+  color: orange;
+}
 .venueParg{
   font-family: 'Aref Ruqaa', serif;
   clear: both;
@@ -2175,4 +2178,13 @@ transform:scale(1);
 .right-Text {
 	text-align: right;
 	margin-right: 2%;
+}
+
+/* venue reservations page*/
+.x{
+  color:red;
+}
+
+.checkmark{
+  color:green;
 }

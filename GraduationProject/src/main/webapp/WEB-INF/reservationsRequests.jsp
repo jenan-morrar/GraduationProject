@@ -1,14 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page isErrorPage="true"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>تواص معنا</title>
+<title>PalVenues</title>
 <link rel="icon" type="image/png"
 	href="/resources/images/ring map logo.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,20 +24,55 @@
 <meta name="twitter:url" content="" />
 <meta name="twitter:card" content="" />
 
+<!-- For calendar -->
+<!-- CSS -->
+<link rel="stylesheet" type="text/css"
+	href="<c:url value="/resources/css/evo-calendar.min.css" />">
+<link rel="stylesheet" type="text/css"
+	href="<c:url value="/resources/css/evo-calendar.orange.coral.min.css" />">
+
+<!-- Fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Cormorant+Garamond:ital,wght@1,300&family=Montserrat:wght@100&family=Poiret+One&family=Rakkas&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Cormorant+Garamond:ital,wght@1,300&family=Lateef&family=Montserrat:wght@100&family=Poiret+One&display=swap"
+	rel="stylesheet">
 <link
 	href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700'
 	rel='stylesheet' type='text/css'>
 <link href="https://fonts.googleapis.com/css?family=Sacramento"
 	rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-	href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Dancing+Script:wght@700&display=swap"
-	rel="stylesheet">
-
 
 <link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></script>
+
+<link
+	href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
 <!-- Animate.css -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/animate.css" />">
@@ -64,6 +97,8 @@
 
 <!-- Theme style  -->
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
+<link href="<c:url value="/resources/css/venuePage.css" />"
+	rel="stylesheet">
 
 <!-- Modernizr JS -->
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
@@ -89,11 +124,11 @@
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
-								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
-										الحجز</a></li>
+								<li class="active"><a
+									href="/adminVenuePage/${venueId}/requests">طلبات الحجز</a></li>
 							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
-							<li class="active"><a href="/contactPage">تواصل معنا</a></li>
+							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
 								<ul class="dropdown">
 									<li><a href="/venues">القاعات</a></li>
@@ -123,88 +158,34 @@
 			</div>
 		</nav>
 
-		<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm"
-			role="banner"
-			style="background-image: url(/resources/images/img_bg_1.jpg);">
+		<header id="fh5co-header" role="banner" class="venuePageHeader">
 			<div class="overlay"></div>
-			<div class="fh5co-container">
-				<div class="row">
-					<div class="col-md-8 col-md-offset-2 text-center">
-						<div class="display-t">
-							<div class="display-tc animate-box" data-animate-effect="fadeIn">
-								<h1>PalVenues</h1>
-								<h2>تواصل معنا</h2>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 		</header>
 
-		<div class="fh5co-section">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6 col-md-push-5 animate-box">
-						<h3 class="contactHeader">تواصلوا معنا</h3>
-						<form:form method="POST" action="/contactPage" class="contactForm"
-							modelAttribute="contact">
-							<div class="row form-group">
-								<div class="col-md-12">
-									<label for="email">الايميل</label>
-									<form:input type="email" id="email" class="form-control"
-										placeholder="ايميل المستخدم" required="required"
-										path="emailSender" />
-								</div>
-							</div>
+		<div>
+			<table class="service-table"
+				style="margin-top: 3%; margin-bottom: 3%;">
+				<tr>
+					<th></th>
+					<th>نهاية الحجز</th>
+					<th>بداية الحجز</th>
+					<th>اسم الشحص</th>
+					<th>رقم الحجز</th>
 
-							<div class="row form-group">
-								<div class="col-md-12">
-									<label for="subject">الموضع</label>
-									<form:input type="text" id="subject" class="form-control"
-										placeholder="موضوع هذه الرسالة" required="required"
-										path="subject" />
-								</div>
-							</div>
+				</tr>
+				<c:forEach items="${reservationResult}" var="reservationResult"
+					varStatus="loop">
+					<tr>
+						<td><button class="x">&#10006;</button> &emsp;
+							<button class="checkmark">&#10004;</button></td>
+						<td>${reservationResult.fromTime}</td>
+						<td>${reservationResult.toTime}</td>
+						<td>${reservationResult.user.username}</td>
+						<td>${reservationResult.id}</td>
+					</tr>
 
-							<div class="row form-group">
-								<div class="col-md-12">
-									<label for="message">الرسالة</label>
-									<form:textarea name="message" id="message" cols="30" rows="10"
-										class="form-control" placeholder="اكتب شيئاً لنا.."
-										required="required" path="message" />
-								</div>
-							</div>
-							<div class="form-group">
-								<input type="submit" value="ارسل الرسالة"
-									class="btn btn-primary">
-							</div>
-
-						</form:form>
-					</div>
-					<div class="col-md-4 col-md-pull-7 animate-box">
-
-						<div class="fh5co-contact-info">
-							<h3 class="contactHeader">معلومات الاتصال</h3>
-							<ul class="contactList">
-								<li><a href="https://www.birzeit.edu/ar">Birziet
-										University</a> <span class="contactIcons">&#x1F4CD;</span></li>
-								<li><a href="tel://1234567920">+ 1235 2355 98 <span
-										class="contactIcons">&phone;</span>
-								</a></li>
-								<li><a href="palVenues@gmail.com">palVenues@gmail.com <span
-										class="contactIcons">&#9993;</span>
-								</a></li>
-
-								<!--<li class="address">Berziet Univirsity</li>
-								<li class="phone"><a href="tel://1234567920">+ 1235 2355 98</li>
-								<li class="email"><a href="mailto:info@yoursite.com">info@yoursite.com</a></li>-->
-							</ul>
-						</div>
-
-					</div>
-				</div>
-
-			</div>
+				</c:forEach>
+			</table>
 		</div>
 
 		<footer id="fh5co-footer" role="contentinfo"
@@ -230,10 +211,66 @@
 			</div>
 		</footer>
 	</div>
-
 	<div class="gototop js-top">
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
 	</div>
+
+	<script>
+		var responsiveSlider = function() {
+
+			var slider = document.getElementById("slider");
+			var sliderWidth = slider.offsetWidth;
+			var slideList = document.getElementById("slideWrap");
+			var count = 1;
+			var items = slideList.querySelectorAll("li").length;
+			var prev = document.getElementById("prev");
+			var next = document.getElementById("next");
+
+			window.addEventListener('resize', function() {
+				sliderWidth = slider.offsetWidth;
+			});
+
+			var prevSlide = function() {
+				if (count > 1) {
+					count = count - 2;
+					slideList.style.left = "-" + count * sliderWidth + "px";
+					count++;
+				} else if (count = 1) {
+					count = items - 1;
+					slideList.style.left = "-" + count * sliderWidth + "px";
+					count++;
+				}
+			};
+
+			var nextSlide = function() {
+				if (count < items) {
+					slideList.style.left = "-" + count * sliderWidth + "px";
+					count++;
+				} else if (count = items) {
+					slideList.style.left = "0px";
+					count = 1;
+				}
+			};
+
+			next.addEventListener("click", function() {
+				nextSlide();
+			});
+
+			prev.addEventListener("click", function() {
+				prevSlide();
+			});
+
+			setInterval(function() {
+				nextSlide()
+			}, 5000);
+
+		};
+
+		window.onload = function() {
+			responsiveSlider();
+		}
+	</script>
+
 
 	<!-- jQuery -->
 	<script src="/resources/js/jquery.min.js"></script>
@@ -259,5 +296,7 @@
 
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>
+
+
 </body>
 </html>

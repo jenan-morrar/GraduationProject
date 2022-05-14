@@ -285,8 +285,8 @@ public class Users {
 		model.addAttribute("venuePage", venuePage);
 		model.addAttribute("venueRate", new VenueRate());
 		redirectAttrs.addAttribute("venuePage", venuePage);
-		
-		//Venue Services
+
+		// Venue Services
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
 
@@ -296,31 +296,30 @@ public class Users {
 			}
 		}
 		model.addAttribute("reservationResult", reservationsForVenue);
-		
+
 		// Venue Rating Data
 		List<VenueRate> ratings = venueRateService.allVenueRates();
-		List<VenueRate> ratingsForVenue =  new ArrayList<>();
-		
-		//to calculate venue rating
-		int venueRating =0;
-		int count=0;
-		int ratingSum =0;
-		
+		List<VenueRate> ratingsForVenue = new ArrayList<>();
+
+		// to calculate venue rating
+		int venueRating = 0;
+		int count = 0;
+		int ratingSum = 0;
+
 		for (int i = 0; i < ratings.size(); i++) {
 			if (ratings.get(i).getVenue().getId() == id) {
 				ratingsForVenue.add(ratings.get(i));
-				ratingSum+=ratings.get(i).getRating();
+				ratingSum += ratings.get(i).getRating();
 				count++;
 			}
 		}
-		
-		if(ratingsForVenue.size()>0) {
-			venueRating = ratingSum/count;
+
+		if (ratingsForVenue.size() > 0) {
+			venueRating = ratingSum / count;
 		}
 		model.addAttribute("venueRatingsResult", ratingsForVenue);
 		model.addAttribute("venueRatingValue", venueRating);
 
-		
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -411,10 +410,12 @@ public class Users {
 				if (!hasTheSameTime) {
 					hasTheSameTime = false;
 					System.out.println("you can reserve!");
-					rattrs.addAttribute("conflictTime", "noConflictTime");
-					rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
 
-					if (!reservation.getToTime().before(reservation.getFromTime())) {
+					if (!reservation.getToTime().before(reservation.getFromTime())
+							&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
+
+						rattrs.addAttribute("conflictTime", "noConflictTime");
+						rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
 
 						reservationService.createReservation(reservation);
 						// Create the Expiration Date
@@ -433,7 +434,8 @@ public class Users {
 				}
 
 			} else {
-				if (!reservation.getToTime().before(reservation.getFromTime())) {
+				if (!reservation.getToTime().before(reservation.getFromTime())
+						&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
 
 					System.out.println("created correctly not same date!");
 					rattrs.addAttribute("conflictTime", "noConflictTime");
@@ -455,7 +457,8 @@ public class Users {
 				}
 			}
 		} else {
-			if (!reservation.getToTime().before(reservation.getFromTime())) {
+			if (!reservation.getToTime().before(reservation.getFromTime())
+					&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
 
 				System.out.println("created correctly there is no reservation!");
 				rattrs.addAttribute("conflictTime", "noConflictTime");
@@ -479,15 +482,15 @@ public class Users {
 
 		return "redirect:/venuePage/{id}/#VenueReservatio";
 	}
-	
-	
+
 	@RequestMapping(value = "/venuePage/{id}/rating", method = RequestMethod.POST)
-	public String venueRating(@PathVariable("id") long id, @ModelAttribute("venueRate") VenueRate venueRate, Model model) {
-			Venue venue = venueService.findVenue(id);
-			venueRate.setVenue(venue);
-			//venueRate.setRating(5);
-			venueRateService.createVenueRate(venueRate);
-			return "redirect:/venuePage/{id}";
+	public String venueRating(@PathVariable("id") long id, @ModelAttribute("venueRate") VenueRate venueRate,
+			Model model) {
+		Venue venue = venueService.findVenue(id);
+		venueRate.setVenue(venue);
+		// venueRate.setRating(5);
+		venueRateService.createVenueRate(venueRate);
+		return "redirect:/venuePage/{id}";
 	}
 
 	@RequestMapping("/venuePage/{id}/error")
@@ -594,7 +597,7 @@ public class Users {
 	public String adminVenuePage(@PathVariable("id") long id, Principal principal, Model model) {
 //		List<Reservation> reservations = reservationService.allReservation();
 //		model.addAttribute("reservationResult", reservations);
-		//Reservations data
+		// Reservations data
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
 
@@ -604,18 +607,30 @@ public class Users {
 			}
 		}
 		model.addAttribute("reservationResult", reservationsForVenue);
-		
-		// Rating Data
+
+		// Venue Rating Data
 		List<VenueRate> ratings = venueRateService.allVenueRates();
-		List<VenueRate> ratingsForVenue =  new ArrayList<>();
-		
+		List<VenueRate> ratingsForVenue = new ArrayList<>();
+
+		// to calculate venue rating
+		int venueRating = 0;
+		int count = 0;
+		int ratingSum = 0;
+
 		for (int i = 0; i < ratings.size(); i++) {
 			if (ratings.get(i).getVenue().getId() == id) {
 				ratingsForVenue.add(ratings.get(i));
+				ratingSum += ratings.get(i).getRating();
+				count++;
 			}
 		}
+
+		if (ratingsForVenue.size() > 0) {
+			venueRating = ratingSum / count;
+		}
 		model.addAttribute("venueRatingsResult", ratingsForVenue);
-		
+		model.addAttribute("venueRatingValue", venueRating);
+
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -632,5 +647,36 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "adminVenuePage.jsp";
+	}
+
+	@RequestMapping("/adminVenuePage/{id}/requests")
+	public String adminVenuePageRequests(@PathVariable("id") long id, Principal principal, Model model) {
+
+		List<Reservation> reservations = reservationService.allReservation();
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id && reservations.get(i).getStatus().equals("pending")) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+		model.addAttribute("reservationResult", reservationsForVenue);
+
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+		return "reservationsRequests.jsp";
 	}
 }

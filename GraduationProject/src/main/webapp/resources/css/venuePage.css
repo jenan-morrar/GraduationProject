@@ -506,6 +506,18 @@
 	color: #fff;
 }
 /* Reservation Form*/
+
+.event-list {
+  width: 335px;
+  height: 130px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #cd7e53;
+}
+
 .reservationForm {
 	padding: 20px;
 	border: 1px solid #cd7e53;

@@ -138,6 +138,10 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
+							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+										الحجز</a></li>
+							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown active"><a href="#">الخدمات</a>
@@ -149,11 +153,7 @@
 							<c:if test="${userName ==\"user\"}">
 								<li><a href="/cartPage">&#128722</a></li>
 							</c:if>
-							<li class="has-dropdown"><a href="#">اللغة</a>
-								<ul class="dropdown">
-									<li><a href="#">العربية</a></li>
-									<li><a href="#">الأنجليزية</a></li>
-								</ul></li>
+
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
@@ -646,9 +646,60 @@
 												</div>
 												<div>
 													<div class="rating-title">تقييم القاعة</div>
-													<div>
-														<c:out value="${venueRatingsResult.rating}/5" />
-													</div>
+
+													<c:choose>
+														<c:when test="${venueRatingsResult.rating ==1}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star "></span> <span class="fa fa-star "></span>
+																<span class="fa fa-star"></span> <span
+																	class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==2}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star "></span> <span class="fa fa-star"></span>
+																<span class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==3}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star"></span> <span class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==4}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==5}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span>
+															</div>
+														</c:when>
+														<c:otherwise>
+															<div>
+																<span class="fa fa-star"></span> <span
+																	class="fa fa-star"></span> <span class="fa fa-star"></span>
+																<span class="fa fa-star"></span> <span
+																	class="fa fa-star"></span>
+															</div>
+														</c:otherwise>
+													</c:choose>
+
 												</div>
 												<div>
 													<div class="rating-title">تعليقه على القاعة</div>

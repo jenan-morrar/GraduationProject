@@ -106,6 +106,10 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
+							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+										الحجز</a></li>
+							</c:if>
 							<li class="active"><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
@@ -117,11 +121,7 @@
 							<c:if test="${userName ==\"user\"}">
 								<li><a href="/cartPage">&#128722</a></li>
 							</c:if>
-							<li class="has-dropdown"><a href="#">اللغة</a>
-								<ul class="dropdown">
-									<li><a href="#">العربية</a></li>
-									<li><a href="#">الأنجليزية</a></li>
-								</ul></li>
+
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
@@ -164,12 +164,12 @@
 				<div class="row">
 					<div
 						class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-							<h2>PalVenues</h2>
-							<p style="font-size: 22px;">هو موقع للبحث عن أماكن الزفاف المحلية وحجزها. الهدف
-								الرئيسي من هذا الموقع هو تسهيل عملية العثور على الأماكن وحجزها
-								على العملاء. هذا الموقع مجاني ويمكن استخدامه بواسطة أجهزة
-								الكمبيوتر وأجهزة الكمبيوتر المحمولة والهواتف الذكية طالما أن
-								المتصفح قيد التشغيل متصل بالإنترنت.</p>
+						<h2>PalVenues</h2>
+						<p style="font-size: 22px;">هو موقع للبحث عن أماكن الزفاف
+							المحلية وحجزها. الهدف الرئيسي من هذا الموقع هو تسهيل عملية العثور
+							على الأماكن وحجزها على العملاء. هذا الموقع مجاني ويمكن استخدامه
+							بواسطة أجهزة الكمبيوتر وأجهزة الكمبيوتر المحمولة والهواتف الذكية
+							طالما أن المتصفح قيد التشغيل متصل بالإنترنت.</p>
 					</div>
 				</div>
 			</div>
@@ -242,9 +242,10 @@
 				<div class="row justify-content-center animate-box">
 					<div class="col-lg-7 text-center">
 						<div class="section-title">
-							<span class="h4 text-color" style="font-size: 20px;">مرمجين هذا الموقع </span>
-							<h2 class="mt-3 content-title" style="font-size: 25px;">أعضاء الفريق الخبراء القائمين
-								على هذا الموقع</h2>
+							<span class="h4 text-color" style="font-size: 20px;">مرمجين
+								هذا الموقع </span>
+							<h2 class="mt-3 content-title" style="font-size: 25px;">أعضاء
+								الفريق الخبراء القائمين على هذا الموقع</h2>
 						</div>
 					</div>
 				</div>

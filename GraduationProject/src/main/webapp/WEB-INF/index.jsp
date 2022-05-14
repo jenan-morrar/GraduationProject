@@ -89,6 +89,10 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
+							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+										الحجز</a></li>
+							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
@@ -100,11 +104,7 @@
 							<c:if test="${userName ==\"user\"}">
 								<li><a href="/cartPage">&#128722</a></li>
 							</c:if>
-							<li class="has-dropdown"><a href="#">اللغة</a>
-								<ul class="dropdown">
-									<li><a href="#">العربية</a></li>
-									<li><a href="#">الأنجليزية</a></li>
-								</ul></li>
+
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login"> تسجيل الدخول</a></li>
 							</c:if>
@@ -247,34 +247,35 @@
 				<div class="row">
 					<div class="col-md-12 col-md-offset-0">
 						<ul class="timeline animate-box">
-							<c:forEach items="${websiteRateResult}" var="websiteRateResult" varStatus="status">
-							<c:if test="${status.index == 1}">
-							<li class="timeline-inverted animate-box">
-																<div class="timeline-badge"
-										style="background-image: url(/resources/images/personIcon.png);"></div>
-									<div class="timeline-panel">
-										<div class="timeline-heading"></div>
-										<div class="timeline-body">
-											<br> <br>
-											<p class="right">${websiteRateResult.message}</p>
-											<br> <br>
+							<c:forEach items="${websiteRateResult}" var="websiteRateResult"
+								varStatus="status">
+								<c:if test="${status.index == 1}">
+									<li class="timeline-inverted animate-box">
+										<div class="timeline-badge"
+											style="background-image: url(/resources/images/personIcon.png);"></div>
+										<div class="timeline-panel">
+											<div class="timeline-heading"></div>
+											<div class="timeline-body">
+												<br> <br>
+												<p class="right">${websiteRateResult.message}</p>
+												<br> <br>
+											</div>
 										</div>
-									</div>
-							</li>
-							</c:if>
-							<c:if test="${status.index != 1}">
-								<li class="animate-box">
-									<div class="timeline-badge"
-										style="background-image: url(/resources/images/personIcon.png);"></div>
-									<div class="timeline-panel">
-										<div class="timeline-heading"></div>
-										<div class="timeline-body">
-											<br> <br>
-											<p class="right">${websiteRateResult.message}</p>
-											<br> <br>
+									</li>
+								</c:if>
+								<c:if test="${status.index != 1}">
+									<li class="animate-box">
+										<div class="timeline-badge"
+											style="background-image: url(/resources/images/personIcon.png);"></div>
+										<div class="timeline-panel">
+											<div class="timeline-heading"></div>
+											<div class="timeline-body">
+												<br> <br>
+												<p class="right">${websiteRateResult.message}</p>
+												<br> <br>
+											</div>
 										</div>
-									</div>
-								</li>
+									</li>
 								</c:if>
 							</c:forEach>
 						</ul>
@@ -397,8 +398,7 @@
 							<small class="block">&copy; 2022 PalVenues Website.</small>
 						</p>
 						<p>
-
-							<ul class="fh5co-social-icons">
+						<ul class="fh5co-social-icons">
 							<li><a href="#"><i class="icon-twitter"></i></a></li>
 							<li><a href="#"><i class="icon-facebook"></i></a></li>
 							<li><a href="#"><i class="icon-linkedin"></i></a></li>
@@ -417,8 +417,8 @@
 	</div>
 
 	<!-- jQuery -->
-<script src="/resources/js/jquery.min.js"></script>
-							<!-- jQuery Easing -->
+	<script src="/resources/js/jquery.min.js"></script>
+	<!-- jQuery Easing -->
 	<script src="/resources/js/jquery.easing.1.3.js"></script>
 	<!-- Bootstrap -->
 	<script src="/resources/js/bootstrap.min.js"></script>
@@ -459,5 +459,5 @@
 		});
 	</script>
 
-						</body>
+</body>
 </html>

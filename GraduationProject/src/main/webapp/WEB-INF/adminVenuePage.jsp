@@ -127,6 +127,9 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li class="active"><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
+							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li><a href="/adminVenuePage/${venueId}/requests">طلبات الحجز</a></li>
+							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
@@ -138,11 +141,7 @@
 							<c:if test="${userName ==\"user\"}">
 								<li><a href="/cartPage">&#128722</a></li>
 							</c:if>
-							<li class="has-dropdown"><a href="#">اللغة</a>
-								<ul class="dropdown">
-									<li><a href="#">العربية</a></li>
-									<li><a href="#">الأنجليزية</a></li>
-								</ul></li>
+
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
@@ -207,16 +206,43 @@
 								</div>
 								<div class="reviews-counter">
 									<div class="rate" id="venueRate">
-										<input type="radio" id="star5" name="rate" value="5" checked />
-										<label for="star5" title="text">5 stars</label> <input
-											type="radio" id="star4" name="rate" value="4" checked /> <label
-											for="star4" title="text">4 stars</label> <input type="radio"
-											id="star3" name="rate" value="3" checked /> <label
-											for="star3" title="text">3 stars</label> <input type="radio"
-											id="star2" name="rate" value="2" /> <label for="star2"
-											title="text">2 stars</label> <input type="radio" id="star1"
-											name="rate" value="1" /> <label for="star1" title="text">1
-											star</label>
+										<c:forEach begin="1" end="5" varStatus="loop">
+
+											<c:choose>
+												<c:when test="${venueRatingValue == 5 and loop.index==1}">
+													<input type="radio" id="star1" name="rate" value="1"
+														checked />
+													<label for="star1" title="text">1 star</label>
+												</c:when>
+												<c:when test="${venueRatingValue == 4 and loop.index==2}">
+													<input type="radio" id="star2" name="rate" value="2"
+														checked />
+													<label for="star2" title="text">2 star</label>
+												</c:when>
+												<c:when test="${venueRatingValue == 3 and loop.index==3}">
+													<input type="radio" id="star3" name="rate" value="3"
+														checked />
+													<label for="star3" title="text">3 star</label>
+												</c:when>
+												<c:when test="${venueRatingValue == 2 and loop.index==4}">
+													<input type="radio" id="star4" name="rate" value="4"
+														checked />
+													<label for="star4" title="text">4 star</label>
+												</c:when>
+												<c:when test="${venueRatingValue == 1 and loop.index==5}">
+													<input type="radio" id="star5" name="rate" value="5"
+														checked />
+													<label for="star5" title="text">5 star</label>
+												</c:when>
+												<c:otherwise>
+													<input type="radio" id="star${loop.index }" name="rate"
+														value="${loop.index }" />
+													<label for="star${loop.index }" title="text">${loop.index }
+														star</label>
+												</c:otherwise>
+											</c:choose>
+
+										</c:forEach>
 									</div>
 								</div>
 							</div>
@@ -229,14 +255,16 @@
 									وصف القاعة &nbsp;&nbsp; <i class='far fa-building'
 										style='font-size: 25px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venue.description}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venue.description}" /></span>
 							</div>
 							<div class="venueDetaile">
 								<div class="venueDetaileTitle">
 									سعر القاعة &nbsp;&nbsp; <i class='fas fa-shekel-sign'
 										style='font-size: 22px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venue.price}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venue.price}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -244,7 +272,8 @@
 									عدد الضيوف &nbsp;&nbsp; <i class='far fa-id-badge'
 										style='font-size: 25px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venue.numOfGuests}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venue.numOfGuests}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -252,7 +281,8 @@
 									المصفات &nbsp; &nbsp; <i class='fas fa-car'
 										style='font-size: 24px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venue.venuePark}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venue.venuePark}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -260,7 +290,8 @@
 									موقع القاعة &nbsp; &nbsp; <i class='fas fa-map-marker-alt'
 										style='font-size: 24px'></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venue.location}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venue.location}" /></span>
 							</div>
 
 							<div class="venueDetaile">
@@ -268,7 +299,8 @@
 									للتواصل مع القاعة &nbsp; &nbsp; <i class="fa fa-phone"
 										style="font-size: 22px"></i>
 								</div>
-								<span class="venueDetaile-span"><c:out value="${venue.venueContact}" /></span>
+								<span class="venueDetaile-span"><c:out
+										value="${venue.venueContact}" /></span>
 							</div>
 							<div class="venue-a">
 								<a href="/adminVenuePage/${venue.id}/edit"
@@ -370,7 +402,58 @@
 											<div>
 												<div class="rating-title">تقييم القاعة</div>
 												<div>
-													<c:out value="${venueRatingsResult.rating}/5" />
+													<c:choose>
+														<c:when test="${venueRatingsResult.rating ==1}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star "></span> <span class="fa fa-star "></span>
+																<span class="fa fa-star"></span> <span
+																	class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==2}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star "></span> <span class="fa fa-star"></span>
+																<span class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==3}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star"></span> <span class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==4}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==5}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span>
+															</div>
+														</c:when>
+														<c:otherwise>
+															<div>
+																<span class="fa fa-star"></span> <span
+																	class="fa fa-star"></span> <span class="fa fa-star"></span>
+																<span class="fa fa-star"></span> <span
+																	class="fa fa-star"></span>
+															</div>
+														</c:otherwise>
+													</c:choose>
 												</div>
 											</div>
 											<div>
