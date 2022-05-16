@@ -111,5 +111,11 @@ public class SuperAdmin {
 			return "redirect:/superAdmin/users";
 		}
 	}
+	// delete a user 
+	 @RequestMapping(value="/{id}/delete", method=RequestMethod.DELETE)
+	    public String deleteUser(@PathVariable("id") Long id) {
+	        superAdminService.deleteUser(id); 
+	        return "redirect:/superAdmin/users";
+	    }
 
 }

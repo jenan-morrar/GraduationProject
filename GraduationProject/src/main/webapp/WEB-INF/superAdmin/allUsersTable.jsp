@@ -3,6 +3,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page isErrorPage="true" %>
 <!doctype html>
 <html dir="rtl" lang="ar">
 <head>
@@ -121,10 +122,11 @@
 											</div>
 										</td>
 										<td>
-											<button type="button" class="close" data-dismiss="alert"
-												aria-label="Close">
-												<span aria-hidden="true"><i class="fa fa-close"></i></span>
-											</button>
+											<form id="delete-form" action="/superAdmin/${user.id}/delete"
+												method="post">
+												<input type="hidden" name="_method" value="delete">
+												<button class="btn btn-danger" type="submit" value="Delete"><i class="fa fa-close"></i></button>
+											</form>
 										</td>
 									</tr>
 								</c:forEach>
@@ -221,7 +223,7 @@
 	<script src="/js/jquery.min.js"></script>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		
+
 	<script type="text/javascript">
 		function reply_click(clicked_id) {
 			console.log(clicked_id);
