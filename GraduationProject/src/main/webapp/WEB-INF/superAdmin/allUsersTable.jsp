@@ -43,44 +43,8 @@
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 <link rel="stylesheet" href="/css/style.css">
 
-
-
-
 </head>
 <body>
-	<!-- 	<nav class="fh5co-nav" role="navigation">
-		<div class="container">
-			<div class="row">
-				<div class="col-xs-3">
-					<div id="fh5co-logo">
-						<img src="/resources/images/ring map logo.png" alt="logo"
-							style="width: 50px; height: 60px;"> <a href="/index">PalVenues<strong>.</strong></a>
-					</div>
-				</div>
-				<div class="col-xs-9 text-right menu-1">
-					<ul style="margin-top: 2%;">
-						<li><a href="/cartPage">&#128722</a></li>
-						<li><a href="/index">الصفحة الرئيسية</a></li>
-						<li><a href="/aboutPage">من نحن</a></li>
-						<li><a href="/contactPage">تواصل معنا</a></li>
-						<li class="has-dropdown"><a href="#">الخدمات</a>
-							<ul class="dropdown">
-								<li><a href="/venues">القاعات</a></li>
-								<li><a href="/songsPage">الأغاني</a></li>
-							</ul></li>
-						<li class="has-dropdown"><a href="#">اللغة</a>
-							<ul class="dropdown">
-								<li><a href="#">العربية</a></li>
-								<li><a href="#">الأنجليزية</a></li>
-							</ul></li>
-						<li class="active"><a href="/login">تسجيل دخول</a></li>
-
-					</ul>
-				</div>
-			</div>
-		</div>
-	</nav> -->
-
 	<div class="container">
 		<form action="/superAdmin/users/search">
 			<input type="text" name="freeText" placeholder="ابحث">

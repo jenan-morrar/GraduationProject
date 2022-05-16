@@ -159,23 +159,18 @@ public class Users {
 		return "aboutPage.jsp";
 	}
 
-	@RequestMapping("/cartPage")
-	public String cartPage(Principal principal, Model model) {
-		if (principal != null) {
-			String username = principal.getName();
-			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
-			if (userRole.equals("ROLE_ADMIN")) {
-				Venue venue = userService.findByEmail(username).getVenue();
-				model.addAttribute("venue", venue);
-				model.addAttribute("venueId", venue.getId());
-				model.addAttribute("serviceExist", "no");
-			}
-		} else {
-			model.addAttribute("currentUser", "noUser");
-		}
-		return "cartPage.jsp";
-	}
+	/*
+	 * @RequestMapping("/cartPage") public String cartPage(Principal principal,
+	 * Model model) { if (principal != null) { String username =
+	 * principal.getName(); String userRole =
+	 * userService.findByEmail(username).getRoles().get(0).getName();
+	 * model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+	 * if (userRole.equals("ROLE_ADMIN")) { Venue venue =
+	 * userService.findByEmail(username).getVenue(); model.addAttribute("venue",
+	 * venue); model.addAttribute("venueId", venue.getId());
+	 * model.addAttribute("serviceExist", "no"); } } else {
+	 * model.addAttribute("currentUser", "noUser"); } return "cartPage.jsp"; }
+	 */
 
 	@RequestMapping("/contactPage")
 	public String contactForm(Principal principal, Model model) {
@@ -244,13 +239,13 @@ public class Users {
 		redirectAttrs.addAttribute("venuePage", venuePage);
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
-		
-		for(int i=0;i<reservations.size();i++) {
-			if(reservations.get(i).getVenue().getId()==id) {
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id) {
 				reservationsForVenue.add(reservations.get(i));
 			}
 		}
-		
+
 		model.addAttribute("reservationResult", reservationsForVenue);
 		if (principal != null) {
 			String username = principal.getName();
@@ -377,4 +372,32 @@ public class Users {
 		}
 		return "adminVenuePage.jsp";
 	}
+
+     // show cart page for logged in user 
+	@RequestMapping("/cartPage")
+	public String cart(Model model, Principal principal, @ModelAttribute("reservation") Reservation reservation) {
+		if (principal != null) {
+			String username = principal.getName();
+			long userId = userService.findByEmail(username).getId();
+			// User user = userService.finduserById(userId);
+			List<Reservation> reservations = reservationService.getUserReservation(userId);
+			model.addAttribute("reservations", reservations);
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+
+		return "/cartPage.jsp";
+	}
+
+	// edit reservation on cart Page
+	@RequestMapping(value = "/reservation/{id}", method = RequestMethod.PUT)
+	public String update(@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result) {
+		if (result.hasErrors()) {
+			return "/cartPage.jsp";
+		} else {
+			reservationService.update(reservation);
+			return "redirect:/cart";
+		}
+	}
+
 }

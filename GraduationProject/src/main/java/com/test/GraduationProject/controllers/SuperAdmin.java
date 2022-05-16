@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.test.GraduationProject.models.Role;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.services.SuperAdminService;
@@ -107,8 +105,8 @@ public class SuperAdmin {
 			venueService.createVenue(venue);
 			for (Venue v : venueService.allVenues()) {
 				User user = v.getUser();
-				
-				userService.updateUser(user) ; 
+
+				userService.updateUser(user);
 			}
 			return "redirect:/superAdmin/users";
 		}
