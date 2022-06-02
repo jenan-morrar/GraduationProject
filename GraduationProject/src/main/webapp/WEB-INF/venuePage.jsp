@@ -388,8 +388,7 @@
 
 									<!-- Modal content -->
 									<div class="error-modal-content">
-										<span class="close">&times;</span> <strong>هناك خلل
-											في عملية الحجز</strong>
+										<span class="close">&times;</span> <strong> لا يمكن اتمام عملية الحجز</strong>
 										<div>يوجد حجز في هذا الموعد اختر موعد آخر</div>
 									</div>
 
@@ -434,8 +433,7 @@
 
 									<!-- Modal content -->
 									<div class="error-modal-content">
-										<span class="close">&times;</span> <strong>هناك خلل
-											في عملية الحجز</strong>
+										<span class="close">&times;</span> <strong>لا يمكن اتمام عملية الحجز</strong>
 										<div>يجب أن يكون تاريخ انتهاء الحجز بعد تاريح بدء الحجز
 										</div>
 									</div>

@@ -640,13 +640,13 @@ h1, h3, h4, h5, h6, figure {
 	content: " ";
 	width: 1px;
 	background-color: #d4d4d4;
-	left: 50%;
+	left: 48.5%;
 	margin-left: 0px;
 }
 
 @media screen and (max-width: 480px) {
 	.timeline:before {
-		margin-left: -64px;
+		margin-left: -55px;
 	}
 	.search form {
 		width: 300px;
@@ -788,7 +788,7 @@ h1, h3, h4, h5, h6, figure {
 
 @media ( max-width : 992px) {
 	ul.timeline:before {
-		left: 90px;
+		left: 80px;
 	}
 	ul.timeline>li>.timeline-panel {
 		width: calc(100% - 200px);

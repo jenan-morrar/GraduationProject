@@ -162,13 +162,14 @@
 			<div class="overlay"></div>
 		</header>
 
-		<div>
+		<div style="overflow-x:auto;">
 			<table class="service-table"
 				style="margin-top: 3%; margin-bottom: 3%;">
 				<tr>
 					<th></th>
 					<th>نهاية الحجز</th>
 					<th>بداية الحجز</th>
+					<th>تاريخ الحجز</th>
 					<th>اسم الشحص</th>
 					<th>رقم الحجز</th>
 
@@ -180,6 +181,7 @@
 							<button class="checkmark">&#10004;</button></td>
 						<td>${reservationResult.fromTime}</td>
 						<td>${reservationResult.toTime}</td>
+						<td>${reservationResult.reservationDate}</td>
 						<td>${reservationResult.user.username}</td>
 						<td>${reservationResult.id}</td>
 					</tr>
@@ -215,7 +217,7 @@
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
 	</div>
 
-	<script>
+<!-- 	<script>
 		var responsiveSlider = function() {
 
 			var slider = document.getElementById("slider");
@@ -270,7 +272,7 @@
 			responsiveSlider();
 		}
 	</script>
-
+ -->
 
 	<!-- jQuery -->
 	<script src="/resources/js/jquery.min.js"></script>

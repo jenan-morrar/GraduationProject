@@ -286,8 +286,7 @@ header p {
 	width: 100%;
 	height: 100%;
 	outline: none;
-	font-size: 19px;
-	margin-left: 12px;
+	font-size: 17px;
 	border-radius: 5px;
 	text-align: center;
 	border: 1px solid #999;
@@ -400,4 +399,7 @@ input[type="range"]::-moz-range-thumb {
 
 #venues-card-item {
 	margin-top: 2%;
+}
+.filter-range-tilte{
+	margin-left: 10px;
 }

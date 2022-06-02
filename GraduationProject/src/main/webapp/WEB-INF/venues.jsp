@@ -309,14 +309,14 @@
 								<div class="price-input">
 									<div class="field">
 										<form:input type="number" class="input-min" path="minPrice" />
-										<span>الحد الأدنى</span>
+										<span class="filter-range-tilte">الحد الأدنى</span>
 
 									</div>
 									<div class="separator">-</div>
 									<div class="field">
 
 										<form:input type="number" class="input-max" path="maxPrice" />
-										<span>الحد الأقصى</span>
+										<span class="filter-range-tilte">الحد الأقصى</span>
 									</div>
 								</div>
 								<div class="slider">
@@ -338,14 +338,14 @@
 									<div class="field">
 										<form:input type="number" class="input2-min"
 											path="minNumOfGuests" />
-										<span>الحد الأدنى</span>
+										<span class="filter-range-tilte">الحد الأدنى</span>
 
 									</div>
 									<div class="separator">-</div>
 									<div class="field">
 										<form:input type="number" class="input2-max"
 											path="maxNumOfGuests" />
-										<span>الحد الأقصى</span>
+										<span class="filter-range-tilte">الحد الأقصى</span>
 
 									</div>
 								</div>

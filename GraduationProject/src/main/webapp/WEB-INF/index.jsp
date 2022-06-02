@@ -240,8 +240,8 @@
 				<div class="row">
 					<div
 						class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-						<h2>: ردود الفعل</h2>
-						<p>: عرض بعض التعليقات و التغذية الراجعة من مستخدمين الصفحة</p>
+						<h2>: رأي المستخدمين بموقعنا</h2>
+						<p>: عرض بعض التعليقات  من مستخدمين الموقع</p>
 					</div>
 				</div>
 				<div class="row">

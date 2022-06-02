@@ -32,11 +32,13 @@ import com.test.GraduationProject.models.Reservation;
 import com.test.GraduationProject.models.Search;
 import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.User;
+import com.test.GraduationProject.models.UserSongs;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.models.VenueRate;
 import com.test.GraduationProject.models.WebsiteRate;
 import com.test.GraduationProject.services.ReservationService;
 import com.test.GraduationProject.services.ServicesOfVenueService;
+import com.test.GraduationProject.services.SongsService;
 import com.test.GraduationProject.services.UserService;
 import com.test.GraduationProject.services.VenueRateService;
 import com.test.GraduationProject.services.VenueService;
@@ -52,6 +54,7 @@ public class Users {
 	private VenueRateService venueRateService;
 	private ReservationService reservationService;
 	private ServicesOfVenueService ServicesOfVenueService;
+    private SongsService  songsService;
 	public List<WebsiteRate> websiteRateResult = new ArrayList<>();
 	public List<Venue> filterSearchResult = new ArrayList<>();
 
@@ -60,7 +63,7 @@ public class Users {
 
 	public Users(UserService userService, UserValidator userValidator, VenueService venueService,
 			WebsiteRateService websiteRateService, ReservationService reservationService,
-			ServicesOfVenueService servicesOfVenueService, VenueRateService venueRateService) {
+			ServicesOfVenueService servicesOfVenueService, VenueRateService venueRateService, SongsService songsService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
@@ -68,6 +71,7 @@ public class Users {
 		this.reservationService = reservationService;
 		this.ServicesOfVenueService = servicesOfVenueService;
 		this.venueRateService = venueRateService;
+		this.songsService = songsService;
 	}
 
 	@RequestMapping("/registration")
@@ -255,7 +259,7 @@ public class Users {
 	}
 
 	@RequestMapping("/songsPage")
-	public String songsPage(Principal principal, Model model) {
+	public String songsPage(Principal principal, Model model, @ModelAttribute("userSongs") UserSongs userSongs) {
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -266,11 +270,25 @@ public class Users {
 				model.addAttribute("venueId", venue.getId());
 				model.addAttribute("serviceExist", "no");
 			}
+					
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
+		//System.out.println(userSongs.getSongs());
 		return "songsPage.jsp";
 	}
+	
+	@RequestMapping(value = "/songsPage", method = RequestMethod.POST)
+	public String createUserSongs(Principal principal, Model model, @ModelAttribute("userSongs") UserSongs userSongs) {
+		if (principal != null) {
+			String username = principal.getName();
+			User user = userService.findByEmail(username);
+            userSongs.setUserSongs(user);
+			songsService.createUserSongs(userSongs);
+		} 
+		return "redirect:/songsPage";
+	}
+	
 
 	@RequestMapping("/venuePage/{id}")
 	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,

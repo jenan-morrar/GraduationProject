@@ -49,6 +49,9 @@ public class User {
 	
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
     private List<Reservation> reservations;
+    
+    @OneToMany(mappedBy="userSongs", fetch = FetchType.LAZY)
+    private List<UserSongs> userSongs;
 
 	public User() {
 	}
