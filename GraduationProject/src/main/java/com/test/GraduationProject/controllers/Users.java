@@ -159,18 +159,7 @@ public class Users {
 		return "aboutPage.jsp";
 	}
 
-	/*
-	 * @RequestMapping("/cartPage") public String cartPage(Principal principal,
-	 * Model model) { if (principal != null) { String username =
-	 * principal.getName(); String userRole =
-	 * userService.findByEmail(username).getRoles().get(0).getName();
-	 * model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
-	 * if (userRole.equals("ROLE_ADMIN")) { Venue venue =
-	 * userService.findByEmail(username).getVenue(); model.addAttribute("venue",
-	 * venue); model.addAttribute("venueId", venue.getId());
-	 * model.addAttribute("serviceExist", "no"); } } else {
-	 * model.addAttribute("currentUser", "noUser"); } return "cartPage.jsp"; }
-	 */
+
 
 	@RequestMapping("/contactPage")
 	public String contactForm(Principal principal, Model model) {
@@ -373,12 +362,14 @@ public class Users {
 		return "adminVenuePage.jsp";
 	}
 
-     // show cart page for logged in user 
+	// show cart page for logged in user
 	@RequestMapping("/cartPage")
 	public String cart(Model model, Principal principal, @ModelAttribute("reservation") Reservation reservation) {
 		if (principal != null) {
 			String username = principal.getName();
 			long userId = userService.findByEmail(username).getId();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
 			// User user = userService.finduserById(userId);
 			List<Reservation> reservations = reservationService.getUserReservation(userId);
 			model.addAttribute("reservations", reservations);
@@ -386,8 +377,24 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 
-		return "/cartPage.jsp";
+		return "/cart/cartPage.jsp";
 	}
+	
+	
+	/*
+	 * @RequestMapping("/cartPage") public String cartPage(Principal principal,
+	 * Model model) { if (principal != null) { String username =
+	 * principal.getName(); String userRole =
+	 * userService.findByEmail(username).getRoles().get(0).getName();
+	 * model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+	 * if (userRole.equals("ROLE_ADMIN")) { Venue venue =
+	 * userService.findByEmail(username).getVenue(); model.addAttribute("venue",
+	 * venue); model.addAttribute("venueId", venue.getId());
+	 * model.addAttribute("serviceExist", "no"); } } else {
+	 * model.addAttribute("currentUser", "noUser"); } return "cartPage.jsp"; }
+	 * 
+	 */
+	
 
 	// edit reservation on cart Page
 	@RequestMapping(value = "/reservation/{id}", method = RequestMethod.PUT)
