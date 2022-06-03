@@ -1,5 +1,6 @@
 package com.test.GraduationProject.controllers;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -40,6 +41,7 @@ public class SuperAdmin {
 	public String index(Model model) {
 		List<Venue> venues = venueService.allVenues();
 		model.addAttribute("venues", venues);
+		
 		return "/venues/index.jsp";
 	}
 
@@ -76,23 +78,62 @@ public class SuperAdmin {
 
 	// return all users to superAdmin
 	@RequestMapping("/users")
-	public String getAllUsers(@ModelAttribute("venue") Venue venue, Model model) {
+	public String getAllUsers(@ModelAttribute("venue") Venue venue, Model model, Principal principal) {
 		List<User> allUsers = superAdminService.allUsers();
 		model.addAttribute("allUsers", allUsers);
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue AdminVenue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", AdminVenue);
+				model.addAttribute("venueId", AdminVenue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
 		return "/superAdmin/allUsersTable.jsp";
 	}
 
 	// filterSearch for users
 	@RequestMapping("/users/search")
 	public String userSearch(@RequestParam(value = "freeText", required = false) String freeText, Model model,
-			@ModelAttribute("venue") Venue venue) {
+			@ModelAttribute("venue") Venue venue, Principal principal) {
 		List<User> allUsers = superAdminService.getUser(freeText);
 		model.addAttribute("allUsers", allUsers);
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue AdminVenue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", AdminVenue);
+				model.addAttribute("venueId", AdminVenue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
 		return "/superAdmin/allUsersTable.jsp";
 	}
 
 	@GetMapping("/venues/add")
-	public String assignedVenue(@ModelAttribute("venue") Venue venue) {
+	public String assignedVenue(@ModelAttribute("venue") Venue venue, Model model, Principal principal) {
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue AdminVenue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", AdminVenue);
+				model.addAttribute("venueId", AdminVenue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
 		return "/superAdmin/allUsersTable.jsp";
 	}
 

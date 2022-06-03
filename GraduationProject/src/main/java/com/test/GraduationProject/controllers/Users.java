@@ -6,15 +6,12 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,7 +51,7 @@ public class Users {
 	private VenueRateService venueRateService;
 	private ReservationService reservationService;
 	private ServicesOfVenueService ServicesOfVenueService;
-    private SongsService  songsService;
+	private SongsService songsService;
 	public List<WebsiteRate> websiteRateResult = new ArrayList<>();
 	public List<Venue> filterSearchResult = new ArrayList<>();
 
@@ -63,7 +60,8 @@ public class Users {
 
 	public Users(UserService userService, UserValidator userValidator, VenueService venueService,
 			WebsiteRateService websiteRateService, ReservationService reservationService,
-			ServicesOfVenueService servicesOfVenueService, VenueRateService venueRateService, SongsService songsService) {
+			ServicesOfVenueService servicesOfVenueService, VenueRateService venueRateService,
+			SongsService songsService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
@@ -200,7 +198,40 @@ public class Users {
 		return "aboutPage.jsp";
 	}
 
+	// show cart page for logged in user
+	@RequestMapping("/cartPage")
+	public String cart(Model model, Principal principal, @ModelAttribute("reservation") Reservation reservation) {
+		if (principal != null) {
+			String username = principal.getName();
+			long userId = userService.findByEmail(username).getId();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			// User user = userService.finduserById(userId);
+			List<Reservation> reservations = reservationService.getUserReservation(userId);
+			model.addAttribute("reservations", reservations);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
 
+		return "/cart/cartPage.jsp";
+	}
+
+	// edit reservation on cart Page
+	@RequestMapping(value = "/reservation/{id}", method = RequestMethod.PUT)
+	public String update(@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result) {
+		if (result.hasErrors()) {
+			return "/cartPage.jsp";
+		} else {
+			reservationService.update(reservation);
+			return "redirect:/cart";
+		}
+	}
 
 	@RequestMapping("/contactPage")
 	public String contactForm(Principal principal, Model model) {
@@ -254,25 +285,24 @@ public class Users {
 				model.addAttribute("venueId", venue.getId());
 				model.addAttribute("serviceExist", "no");
 			}
-					
+
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
-		//System.out.println(userSongs.getSongs());
+		// System.out.println(userSongs.getSongs());
 		return "songsPage.jsp";
 	}
-	
+
 	@RequestMapping(value = "/songsPage", method = RequestMethod.POST)
 	public String createUserSongs(Principal principal, Model model, @ModelAttribute("userSongs") UserSongs userSongs) {
 		if (principal != null) {
 			String username = principal.getName();
 			User user = userService.findByEmail(username);
-            userSongs.setUserSongs(user);
+			userSongs.setUserSongs(user);
 			songsService.createUserSongs(userSongs);
-		} 
+		}
 		return "redirect:/songsPage";
 	}
-	
 
 	@RequestMapping("/venuePage/{id}")
 	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,
@@ -652,3 +682,34 @@ public class Users {
 		return "adminVenuePage.jsp";
 	}
 
+	@RequestMapping("/adminVenuePage/{id}/requests")
+	public String adminVenuePageRequests(@PathVariable("id") long id, Principal principal, Model model) {
+
+		List<Reservation> reservations = reservationService.allReservation();
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id && reservations.get(i).getStatus().equals("pending")) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+		model.addAttribute("reservationResult", reservationsForVenue);
+
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+		return "reservationsRequests.jsp";
+	}
+}

@@ -19,15 +19,15 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object object, Errors errors) {
         User user = (User) object;
-        Reservation resevation = (Reservation)object;
+       // Reservation resevation = (Reservation)object;
         
         if (!user.getPasswordConfirmation().equals(user.getPassword())) {
             // 3
             errors.rejectValue("passwordConfirmation", "Match");
         }  
         
-        if(resevation.getToTime().before(resevation.getFromTime())) {
-        	errors.rejectValue("toTime", "TimeError");
-        }
+//        if(resevation.getToTime().before(resevation.getFromTime())) {
+//        	errors.rejectValue("toTime", "TimeError");
+//        }
     }
 }

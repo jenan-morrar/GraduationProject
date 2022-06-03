@@ -89,6 +89,12 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
+							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+										الحجز</a></li>
+							</c:if>
+							<c:if test="${userRole == \"ROLE_SUPERADMIN\"}">
+								<li><a href="/superAdmin/users">المستخدمين</a></li>
 							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
@@ -238,7 +244,7 @@
 					<div
 						class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
 						<h2>: رأي المستخدمين بموقعنا</h2>
-						<p>: عرض بعض التعليقات  من مستخدمين الموقع</p>
+						<p>: عرض بعض التعليقات من مستخدمين الموقع</p>
 					</div>
 				</div>
 				<div class="row">
