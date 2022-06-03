@@ -69,7 +69,7 @@
 }
 
 .section {
-	padding: 100px 0;
+	padding: 50px 0;
 }
 
 .section-sm {
@@ -92,7 +92,7 @@
 
 .subtitle {
 	color: #f75757;
-	font-size: 14px;
+	font-size: 20px;
 	letter-spacing: 1px;
 }
 
@@ -113,15 +113,15 @@
 }
 
 .text-sm {
-	font-size: 14px;
+	font-size: 20px;
 }
 
 .text-md {
-	font-size: 2.25rem;
+	font-size: 3.25rem;
 }
 
 .text-lg {
-	font-size: 3.75rem;
+	font-size: 4.75rem;
 }
 
 .no-spacing {

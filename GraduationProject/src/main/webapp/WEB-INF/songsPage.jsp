@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page isErrorPage="true"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,9 +64,18 @@
 
 <!-- Theme style  -->
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
+<link href="<c:url value="/resources/css/venuePage.css" />"
+	rel="stylesheet">
+
+<!-- For Songs -->
+<link rel="stylesheet"
+	href="<c:url value="/resources/css/songsPage.css" />">
+<script src="/resources/js/songsPage.js"></script>
 
 <!-- Modernizr JS -->
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
+
+
 </head>
 <body>
 	<div class="fh5co-loader"></div>
@@ -86,6 +97,10 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
+							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+										الحجز</a></li>
+							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown active"><a href="#">الخدمات</a>
@@ -97,11 +112,7 @@
 							<c:if test="${userName ==\"user\"}">
 								<li><a href="/cartPage">&#128722</a></li>
 							</c:if>
-							<li class="has-dropdown"><a href="#">اللغة</a>
-								<ul class="dropdown">
-									<li><a href="#">العربية</a></li>
-									<li><a href="#">الأنجليزية</a></li>
-								</ul></li>
+
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
@@ -121,23 +132,34 @@
 			</div>
 		</nav>
 
-		<header id="fh5co-header" class="fh5co-cover fh5co-cover-sm"
-			role="banner"
-			style="background-image: url(/resources/images/img_bg_1.jpg);">
+		<header id="fh5co-header" role="banner" class="venuePageHeader">
 			<div class="overlay"></div>
-			<div class="fh5co-container">
-				<div class="row">
-					<div class="col-md-8 col-md-offset-2 text-center">
-						<div class="display-t">
-							<div class="display-tc animate-box" data-animate-effect="fadeIn">
-								<h1>PalVenues</h1>
-								<h2>اختر الأغاني التي تناسبك</h2>
-							</div>
-						</div>
+		</header>
+
+		<div>
+			<h2 class="songs-title">يمكنك اختيار اكثر الاغاني شعبية لإنشاء
+				قائمة أغاني زفافك</h2>
+			<p class="songs-title2">يتم إرسال القائمة التي تنشأها مع الحجز
+				لأرسالها الى القاعة التي تريد حجزها</p>
+
+			<form:form modelAttribute="userSongs" action="/songsPage" method="post">
+				<input type="text" value="" id="hidden_token" style="display: none;">
+				<div class="music-player-container">
+					<div class="songs-list-container" >
 					</div>
 				</div>
-			</div>
-		</header>
+				<form:input type="text" id="selected-tracks" value="" path="songs" style="display: none;"/>
+				<input type="submit" value="إنشاء القائمة" class="round-black-btn" id="playlist-submit">
+				<script>
+					document.getElementById("playlist-submit").addEventListener("click",function(){
+						var selectedTracks = [];
+						document.querySelectorAll('input[class=song-checkbox]:checked')
+							    .forEach(el => selectedTracks.push(el.name));
+						document.getElementById("selected-tracks").setAttribute("value",selectedTracks);
+					});
+				</script>
+			</form:form>
+		</div>
 
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">

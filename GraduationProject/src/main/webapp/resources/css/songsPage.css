@@ -1,0 +1,161 @@
+@charset "ISO-8859-1";
+
+.songs-title{
+	text-align: right;
+	color:#cd7e53;
+	margin-top: 30px;
+	margin-right: 40px;
+}
+.songs-title2{
+	text-align: right;
+	margin-top: 20px;
+	margin-right: 40px;
+	font-size: 20px;
+}
+#playlist-submit{
+	display:block;
+    margin: 0 auto;
+    margin-bottom: 40px;   
+}
+.music-player-container{
+    width: 100%;
+}
+.songs-list-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-left: 150px;
+}
+.songs-list-container-header{
+    display: flex;
+    flex-direction: row;
+}
+.header-cell{
+    width: 200px;
+    text-align: right;
+    font-size: larger;
+    font-weight: bold;
+}
+.song-card{
+    border: 1px solid darkred;
+    border-radius: 5px 2px;
+    width: 25%;
+    background-image: url("./images/poster.jpg");
+    margin: 40px 20px;
+    height: 250px;
+}
+.song-card-data{
+    padding-top: 93px;
+    padding-bottom: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 18px;
+    color: white;
+    background-color: rgb(0,0,0,0.5);
+    border-radius: 5px 3px;
+    width: 100%;
+    }
+.song-labels{
+display: flex;
+flex-direction: column;
+width: 100%;
+align-items: center;
+}
+.song-card-data audio{
+    width: 100%;
+    height: 40px;
+    margin-top: 5px;
+}
+audio::-webkit-media-controls-play-button{
+    align-items: center;
+}
+audio::-webkit-media-controls-panel {
+    background-color: rgb(0,0,0,0.1);
+
+  }
+  audio::-webkit-media-controls-current-time-display {
+    color: #fff;
+  }
+
+.song-info{
+    display: flex;
+    width: 100%;
+}
+.song-checkbox{
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    transition: box-shadow .3s;
+    background: white;
+    cursor: pointer;
+    border: 0;
+    appearance: none; -webkit-appearance: none; 
+    margin-right: 10px;
+    cursor: pointer;
+}
+.song-checkbox:hover{
+    transform: scale(1.01);
+}
+.song-checkbox:checked { 
+    box-shadow: inset 0 0 0 20px #FFF7F4;  
+}
+.song-checkbox:checked::after{
+    content: "\2713";
+    color: #CC3902;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 0px 5px;
+}
+@media (min-width:1200px) {
+    .song-card:hover{
+        transform: scale(1.05);
+    } 
+}
+@media  screen and (max-width:1024px) {
+    .songs-list-container{
+        padding: 5px;
+    }
+    .song-card{
+        width: 45%;
+    }
+}
+
+@media  screen and (max-width:840px) {
+    .songs-list-container{
+        padding: 10px 30px;
+    }
+    .song-card{
+        width: 40%;
+    }
+}
+
+@media  screen and (max-width:768px) {
+    .songs-list-container{
+        padding: 10px 15px;
+    }
+    .song-card{
+        width: 45%;
+        margin: 20px 10px;
+    }
+}
+
+@media  screen and (max-width:600px) {
+    .songs-list-container{
+        padding: 10px 5px;
+    }
+    .song-card{
+        margin: 10px;
+    }
+}
+@media (max-width: 500px){
+    .songs-list-container{
+        padding: 0;
+    }
+    .song-card{
+        width: 100%;
+        margin: 20px;
+    }
+}
+
+

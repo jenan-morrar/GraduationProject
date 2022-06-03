@@ -160,7 +160,7 @@
 			<div class="container-login100">
 				<div class="wrap-login100 p-b-30" id="responsiveLoginForm">
 					<div class="loginForm">
-						<form:form method="POST" action="/registration"
+						<form:form method="POST" action="/registration" id="registration-form-part"
 							modelAttribute="user" class="login100-form validate-form">
 							<div class="login100-form-avatar">
 								<img src="/resources/images/registerIcon.png" alt="AVATAR">
@@ -185,7 +185,7 @@
 								<form:errors path="username" class="error" />
 							</p>
 							<div class="wrap-input100 validate-input m-b-10"
-								data-validate=" أدخل ايميل المستخدم">
+								data-validate=" أدخل ايميل المستخدم" style="margin-bottom:7%;">
 								<form:input path="email" class="input100" type="text"
 									name="email" placeholder="ايميل المستخدم" />
 								<span class="focus-input100"></span> <span
@@ -194,7 +194,7 @@
 							</div>
 
 							<div class="wrap-input100 validate-input m-b-10"
-								data-validate=" أدخل رقم هاتف المستخدم">
+								data-validate=" أدخل رقم هاتف المستخدم" style="margin-bottom:7%;">
 								<form:input path="mobileNumber" class="input100" type="text"
 									name="mobile" placeholder="رقم الهاتف المستخدم" />
 								<span class="focus-input100"></span> <span

@@ -29,13 +29,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.test.GraduationProject.models.Contact;
 import com.test.GraduationProject.models.FilterSearch;
 import com.test.GraduationProject.models.Reservation;
+import com.test.GraduationProject.models.Search;
 import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.User;
+import com.test.GraduationProject.models.UserSongs;
 import com.test.GraduationProject.models.Venue;
+import com.test.GraduationProject.models.VenueRate;
 import com.test.GraduationProject.models.WebsiteRate;
 import com.test.GraduationProject.services.ReservationService;
 import com.test.GraduationProject.services.ServicesOfVenueService;
+import com.test.GraduationProject.services.SongsService;
 import com.test.GraduationProject.services.UserService;
+import com.test.GraduationProject.services.VenueRateService;
 import com.test.GraduationProject.services.VenueService;
 import com.test.GraduationProject.services.WebsiteRateService;
 import com.test.GraduationProject.validator.UserValidator;
@@ -46,21 +51,28 @@ public class Users {
 	private UserValidator userValidator;
 	private VenueService venueService;
 	private WebsiteRateService websiteRateService;
+	private VenueRateService venueRateService;
 	private ReservationService reservationService;
 	private ServicesOfVenueService ServicesOfVenueService;
-	public List<Venue> filterSearchResult1 = new ArrayList<>();
+	private SongsService songsService;
+	public List<WebsiteRate> websiteRateResult = new ArrayList<>();
+	public List<Venue> filterSearchResult = new ArrayList<>();
+
 	@Autowired
 	private JavaMailSender emailSender;
 
 	public Users(UserService userService, UserValidator userValidator, VenueService venueService,
 			WebsiteRateService websiteRateService, ReservationService reservationService,
-			ServicesOfVenueService servicesOfVenueService) {
+			ServicesOfVenueService servicesOfVenueService, VenueRateService venueRateService,
+			SongsService songsService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
 		this.websiteRateService = websiteRateService;
 		this.reservationService = reservationService;
 		this.ServicesOfVenueService = servicesOfVenueService;
+		this.venueRateService = venueRateService;
+		this.songsService = songsService;
 	}
 
 	@RequestMapping("/registration")
@@ -113,7 +125,24 @@ public class Users {
 
 	@RequestMapping(value = { "/", "/index" })
 	public String home(Principal principal, Model model) {
+		model.addAttribute("search", new Search());
 		model.addAttribute("userWebsiteRate", new WebsiteRate());
+		List<WebsiteRate> allwebsiteRate = websiteRateService.allWebsiteRates();
+		List<WebsiteRate> firstWebsiteRate = new ArrayList<>();
+
+		if (allwebsiteRate.size() >= 3) {
+			for (int i = 0; i < 3; i++) {
+				firstWebsiteRate.add(allwebsiteRate.get(i));
+			}
+			websiteRateResult = firstWebsiteRate;
+			model.addAttribute("websiteRateResult", websiteRateResult);
+
+		} else {
+			model.addAttribute("websiteRateResult", allwebsiteRate);
+		}
+		List<Venue> mostReservedVenues = venueService.mostReservedVenues();
+		model.addAttribute("mostReservedVenues", mostReservedVenues);
+
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -128,6 +157,19 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "index.jsp";
+	}
+
+	@PostMapping("/index/search/")
+	public String indexSearch(@Valid @ModelAttribute("search") Search search, BindingResult result, Model model,
+			RedirectAttributes redirectAttrs) {
+		if (result.hasErrors()) {
+			return "index.jsp";
+		} else {
+			filterSearchResult = venueService.venueSearch(search.getVenueName());
+			model.addAttribute("filterSearchResult", filterSearchResult);
+			// redirectAttrs.addAttribute("filterSearchResult", filterSearchResult);
+			return "redirect:/venues";
+		}
 	}
 
 	@PostMapping("/index")
@@ -159,7 +201,40 @@ public class Users {
 		return "aboutPage.jsp";
 	}
 
+	// show cart page for logged in user
+	@RequestMapping("/cartPage")
+	public String cart(Model model, Principal principal, @ModelAttribute("reservation") Reservation reservation) {
+		if (principal != null) {
+			String username = principal.getName();
+			long userId = userService.findByEmail(username).getId();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			// User user = userService.finduserById(userId);
+			List<Reservation> reservations = reservationService.getUserReservation(userId);
+			model.addAttribute("reservations", reservations);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
 
+		return "/cart/cartPage.jsp";
+	}
+
+	// edit reservation on cart Page
+	@RequestMapping(value = "/reservation/{id}", method = RequestMethod.PUT)
+	public String update(@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result) {
+		if (result.hasErrors()) {
+			return "/cartPage.jsp";
+		} else {
+			reservationService.update(reservation);
+			return "redirect:/cart";
+		}
+	}
 
 	@RequestMapping("/contactPage")
 	public String contactForm(Principal principal, Model model) {
@@ -202,7 +277,85 @@ public class Users {
 	}
 
 	@RequestMapping("/songsPage")
-	public String songsPage(Principal principal, Model model) {
+	public String songsPage(Principal principal, Model model, @ModelAttribute("userSongs") UserSongs userSongs) {
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+		// System.out.println(userSongs.getSongs());
+		return "songsPage.jsp";
+	}
+
+	@RequestMapping(value = "/songsPage", method = RequestMethod.POST)
+	public String createUserSongs(Principal principal, Model model, @ModelAttribute("userSongs") UserSongs userSongs) {
+		if (principal != null) {
+			String username = principal.getName();
+			User user = userService.findByEmail(username);
+			userSongs.setUserSongs(user);
+			songsService.createUserSongs(userSongs);
+		}
+		return "redirect:/songsPage";
+	}
+
+	@RequestMapping("/venuePage/{id}")
+	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,
+			RedirectAttributes redirectAttrs, @ModelAttribute("toTimeAfterFromTime") String toTimeAfterFromTime,
+			@ModelAttribute("conflictTime") String conflictTime) {
+
+		model.addAttribute("toTimeAfterFromTime", toTimeAfterFromTime);
+		model.addAttribute("conflictTime", conflictTime);
+
+		Venue venuePage = venueService.findVenue(id);
+		model.addAttribute("reservation", new Reservation());
+		model.addAttribute("venuePage", venuePage);
+		model.addAttribute("venueRate", new VenueRate());
+		redirectAttrs.addAttribute("venuePage", venuePage);
+
+		// Venue Services
+		List<Reservation> reservations = reservationService.allReservation();
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+
+		model.addAttribute("reservationResult", reservationsForVenue);
+
+		// Venue Rating Data
+		List<VenueRate> ratings = venueRateService.allVenueRates();
+		List<VenueRate> ratingsForVenue = new ArrayList<>();
+
+		// to calculate venue rating
+		int venueRating = 0;
+		int count = 0;
+		int ratingSum = 0;
+
+		for (int i = 0; i < ratings.size(); i++) {
+			if (ratings.get(i).getVenue().getId() == id) {
+				ratingsForVenue.add(ratings.get(i));
+				ratingSum += ratings.get(i).getRating();
+				count++;
+			}
+		}
+
+		if (ratingsForVenue.size() > 0) {
+			venueRating = ratingSum / count;
+		}
+		model.addAttribute("venueRatingsResult", ratingsForVenue);
+		model.addAttribute("venueRatingValue", venueRating);
+
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -216,11 +369,168 @@ public class Users {
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
-		return "songsPage.jsp";
+		return "venuePage.jsp";
 	}
 
-	@RequestMapping("/venuePage/{id}")
-	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,
+	@RequestMapping(value = "/venuePage/{id}", method = RequestMethod.POST)
+	public String reserveVenue(Model model, @PathVariable("id") long id, Principal principal,
+			@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result,
+			RedirectAttributes rattrs) throws MessagingException {
+//		if (result.hasErrors()) {
+//			return "venuePage.jsp";
+//		} else {
+		long sid = 2;
+		ServiceOfVenue service = ServicesOfVenueService.findService(sid);
+		List<ServiceOfVenue> servicesList = new ArrayList<>();
+		servicesList.add(service);
+		String username = principal.getName();
+		User user = userService.findByEmail(username);
+		Venue venue = venueService.findVenue(id);
+		reservation.setUser(user);
+		reservation.setVenue(venue);
+		reservation.setStatus("pending");
+		// reservation.setServices(servicesList);
+
+		reservation.setFromTime(java.sql.Time.valueOf(reservation.getStartTime() + ":00"));
+		reservation.setToTime(java.sql.Time.valueOf(reservation.getEndTime() + ":00"));
+		reservation.setId(null);
+
+		// Check Conflicts
+		List<Reservation> allReseravtions = reservationService.allReservation();
+		List<Reservation> reservationForVenue = new ArrayList<>();
+
+		if (allReseravtions.size() != 0) {
+			for (int i = 0; i < allReseravtions.size(); i++) {
+				if (allReseravtions.get(i).getVenue().getId() == id) {
+					reservationForVenue.add(allReseravtions.get(i));
+				}
+			}
+		}
+
+		if (reservationForVenue.size() != 0) {
+
+			boolean hasTheSameDate = false;
+			boolean hasTheSameTime = false;
+
+			for (int i = 0; i < reservationForVenue.size(); i++) {
+				int resultOfConflictDay = reservation.getReservationDate()
+						.compareTo(reservationForVenue.get(i).getReservationDate());
+				if (resultOfConflictDay == 0) {
+					hasTheSameDate = true;
+					break;
+				} else {
+					hasTheSameDate = false;
+				}
+			}
+
+			if (hasTheSameDate) {
+				System.out.println("same Date");
+				for (int i = 0; i < reservationForVenue.size(); i++) {
+					int resultOfConflictDay = reservation.getReservationDate()
+							.compareTo(reservationForVenue.get(i).getReservationDate());
+					if (resultOfConflictDay == 0) {
+						System.out.println(reservation.getToTime());
+						System.out.println(reservationForVenue.get(i).getFromTime());
+						System.out.println(reservation.getFromTime());
+						System.out.println(reservationForVenue.get(i).getToTime());
+						if (reservation.getToTime().after(reservationForVenue.get(i).getFromTime())
+								&& reservation.getFromTime().before(reservationForVenue.get(i).getToTime())) {
+							System.out.println("same time, Try again!");
+							rattrs.addAttribute("conflictTime", "conflictTime");
+							hasTheSameTime = true;
+							break;
+						} else {
+						}
+					}
+				}
+				if (!hasTheSameTime) {
+					hasTheSameTime = false;
+					System.out.println("you can reserve!");
+
+					if (!reservation.getToTime().before(reservation.getFromTime())
+							&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
+
+						rattrs.addAttribute("conflictTime", "noConflictTime");
+						rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
+						reservationService.createReservation(reservation);
+						// Create the Expiration Date
+						Calendar calExpirationDate = Calendar.getInstance();
+						calExpirationDate.setTime(reservation.getCreatedAt());
+						calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+						reservation.setExpirationDate(calExpirationDate.getTime());
+
+						reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+								reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+								reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+					} else {
+						System.out.println("to time should be after from time");
+						rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+					}
+				}
+
+			} else {
+				if (!reservation.getToTime().before(reservation.getFromTime())
+						&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
+
+					System.out.println("created correctly not same date!");
+					rattrs.addAttribute("conflictTime", "noConflictTime");
+					rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
+					reservationService.createReservation(reservation);
+					// Create the Expiration Date
+					Calendar calExpirationDate = Calendar.getInstance();
+					calExpirationDate.setTime(reservation.getCreatedAt());
+					calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+					reservation.setExpirationDate(calExpirationDate.getTime());
+
+					reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+							reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+							reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+				} else {
+					System.out.println("to time should be after from time");
+					rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+				}
+			}
+		} else {
+			if (!reservation.getToTime().before(reservation.getFromTime())
+					&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
+
+				System.out.println("created correctly there is no reservation!");
+				rattrs.addAttribute("conflictTime", "noConflictTime");
+				rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
+				reservationService.createReservation(reservation);
+				// Create the Expiration Date
+				Calendar calExpirationDate = Calendar.getInstance();
+				calExpirationDate.setTime(reservation.getCreatedAt());
+				calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+				reservation.setExpirationDate(calExpirationDate.getTime());
+
+				reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+						reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+						reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+			} else {
+				System.out.println("to time should be after from time");
+				rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+			}
+		}
+
+		return "redirect:/venuePage/{id}/#VenueReservatio";
+	}
+
+	@RequestMapping(value = "/venuePage/{id}/rating", method = RequestMethod.POST)
+	public String venueRating(@PathVariable("id") long id, @ModelAttribute("venueRate") VenueRate venueRate,
+			Model model) {
+		Venue venue = venueService.findVenue(id);
+		venueRate.setVenue(venue);
+		// venueRate.setRating(5);
+		venueRateService.createVenueRate(venueRate);
+		return "redirect:/venuePage/{id}";
+	}
+
+	@RequestMapping("/venuePage/{id}/error")
+	public String venuePageError(@PathVariable("id") long id, Principal principal, Model model,
 			RedirectAttributes redirectAttrs) {
 		Venue venuePage = venueService.findVenue(id);
 		model.addAttribute("reservation", new Reservation());
@@ -252,54 +562,39 @@ public class Users {
 		return "venuePage.jsp";
 	}
 
-	@RequestMapping(value = "/venuePage/{id}", method = RequestMethod.POST)
-	public String reserveVenue(Model model, @PathVariable("id") long id, Principal principal,
-			@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result)
-			throws MessagingException {
-//		if (result.hasErrors()) {
-//			return "venuePage.jsp";
-//		} else {
-		long sid = 2;
-		ServiceOfVenue service = ServicesOfVenueService.findService(sid);
-		List<ServiceOfVenue> servicesList = new ArrayList<>();
-		servicesList.add(service);
-		String username = principal.getName();
-		User user = userService.findByEmail(username);
-		Venue venue = venueService.findVenue(id);
-		reservation.setUser(user);
-		reservation.setVenue(venue);
-		reservation.setStatus("pending");
-		reservation.setServices(servicesList);
-//		System.out.println(reservation.getStartTime());
-//		System.out.println(reservation.getEndTime());
-		reservation.setFromTime(java.sql.Time.valueOf(reservation.getStartTime() + ":00"));
-		reservation.setToTime(java.sql.Time.valueOf(reservation.getEndTime() + ":00"));
-		reservation.setId(null);
-//		System.out.println(reservation.getFromTime());
-//		System.out.println(reservation.getToTime());
-//		System.out.println(reservation.getReservationDate());
-		reservationService.createReservation(reservation);
-
-		// Create the Expiration Date
-		Calendar calExpirationDate = Calendar.getInstance();
-		calExpirationDate.setTime(reservation.getCreatedAt());
-		calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
-		reservation.setExpirationDate(calExpirationDate.getTime());
-
-		reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
-				reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
-				reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
-
-		return "redirect:/venuePage/{id}";
-//		}
-	}
-
 	@RequestMapping("/venues")
 	public String venues(Principal principal, Model model) {
+
 		List<Venue> venues = venueService.allVenues();
 		model.addAttribute("filterSearch", new FilterSearch());
-//		System.out.println(filterSearchResult1.size() + "heloo");
-		model.addAttribute("filterSearchResult1", filterSearchResult1);
+		model.addAttribute("filterSearchResult", filterSearchResult);
+
+		// model.addAttribute("filterSearchResult", filterSearchResult);
+
+		model.addAttribute("venues", venues);
+
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+		return "venues.jsp";
+	}
+
+	@RequestMapping("/venues/allVenues")
+	public String allVenues(Principal principal, Model model) {
+		// for form model attribute
+		model.addAttribute("filterSearch", new FilterSearch());
+		List<Venue> venues = venueService.allVenues();
+		model.addAttribute("filterSearchResult", new ArrayList<>());
 		model.addAttribute("venues", venues);
 		if (principal != null) {
 			String username = principal.getName();
@@ -320,30 +615,58 @@ public class Users {
 	// Still it needs an updates
 	@RequestMapping(value = "/venues", method = RequestMethod.POST)
 	public String venuesFilterSearch(Model model, @Valid @ModelAttribute("filterSearch") FilterSearch filterSearch,
-			BindingResult result) throws MessagingException {
+			BindingResult result, RedirectAttributes redirectAttrs) throws MessagingException {
 		if (result.hasErrors()) {
 			return "venues.jsp";
 		} else {
 
-			List<Venue> filterSarchResult = venueService.filterSearch(filterSearch.getLocation(),
-					filterSearch.getMinPrice(), filterSearch.getMaxPrice(), filterSearch.getMinNumOfGuests(),
-					filterSearch.getMaxNumOfGuests());
-			filterSearchResult1 = venueService.filterSearch(filterSearch.getLocation(), filterSearch.getMinPrice(),
+			filterSearchResult = venueService.filterSearch(filterSearch.getLocation(), filterSearch.getMinPrice(),
 					filterSearch.getMaxPrice(), filterSearch.getMinNumOfGuests(), filterSearch.getMaxNumOfGuests());
-//			System.out.println(filterSearchResult1.size());
-			model.addAttribute("filterSearchResult1", filterSearchResult1);
-			model.addAttribute("filterSarchResult", filterSarchResult);
-//			for (int i = 0; i < filterSarchResult.size(); i++) {
-//				System.out.println(filterSarchResult.get(i).getId());
-//			}
+//			redirectAttrs.addAttribute("filterSearchResult", filterSearchResult);
+			model.addAttribute("filterSearchResult", filterSearchResult);
+
 			return "redirect:/venues";
 		}
 	}
 
 	@RequestMapping("/adminVenuePage/{id}")
-	public String adminVenuePage(Principal principal, Model model) {
+	public String adminVenuePage(@PathVariable("id") long id, Principal principal, Model model) {
+//		List<Reservation> reservations = reservationService.allReservation();
+//		model.addAttribute("reservationResult", reservations);
+		// Reservations data
 		List<Reservation> reservations = reservationService.allReservation();
-		model.addAttribute("reservationResult", reservations);
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+		model.addAttribute("reservationResult", reservationsForVenue);
+
+		// Venue Rating Data
+		List<VenueRate> ratings = venueRateService.allVenueRates();
+		List<VenueRate> ratingsForVenue = new ArrayList<>();
+
+		// to calculate venue rating
+		int venueRating = 0;
+		int count = 0;
+		int ratingSum = 0;
+
+		for (int i = 0; i < ratings.size(); i++) {
+			if (ratings.get(i).getVenue().getId() == id) {
+				ratingsForVenue.add(ratings.get(i));
+				ratingSum += ratings.get(i).getRating();
+				count++;
+			}
+		}
+
+		if (ratingsForVenue.size() > 0) {
+			venueRating = ratingSum / count;
+		}
+		model.addAttribute("venueRatingsResult", ratingsForVenue);
+		model.addAttribute("venueRatingValue", venueRating);
+
 		if (principal != null) {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
@@ -362,49 +685,34 @@ public class Users {
 		return "adminVenuePage.jsp";
 	}
 
-	// show cart page for logged in user
-	@RequestMapping("/cartPage")
-	public String cart(Model model, Principal principal, @ModelAttribute("reservation") Reservation reservation) {
+	@RequestMapping("/adminVenuePage/{id}/requests")
+	public String adminVenuePageRequests(@PathVariable("id") long id, Principal principal, Model model) {
+
+		List<Reservation> reservations = reservationService.allReservation();
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id && reservations.get(i).getStatus().equals("pending")) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+		model.addAttribute("reservationResult", reservationsForVenue);
+
 		if (principal != null) {
 			String username = principal.getName();
-			long userId = userService.findByEmail(username).getId();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
 			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
-			// User user = userService.finduserById(userId);
-			List<Reservation> reservations = reservationService.getUserReservation(userId);
-			model.addAttribute("reservations", reservations);
+
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+
 		} else {
 			model.addAttribute("currentUser", "noUser");
 		}
-
-		return "/cart/cartPage.jsp";
+		return "reservationsRequests.jsp";
 	}
-	
-	
-	/*
-	 * @RequestMapping("/cartPage") public String cartPage(Principal principal,
-	 * Model model) { if (principal != null) { String username =
-	 * principal.getName(); String userRole =
-	 * userService.findByEmail(username).getRoles().get(0).getName();
-	 * model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
-	 * if (userRole.equals("ROLE_ADMIN")) { Venue venue =
-	 * userService.findByEmail(username).getVenue(); model.addAttribute("venue",
-	 * venue); model.addAttribute("venueId", venue.getId());
-	 * model.addAttribute("serviceExist", "no"); } } else {
-	 * model.addAttribute("currentUser", "noUser"); } return "cartPage.jsp"; }
-	 * 
-	 */
-	
-
-	// edit reservation on cart Page
-	@RequestMapping(value = "/reservation/{id}", method = RequestMethod.PUT)
-	public String update(@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result) {
-		if (result.hasErrors()) {
-			return "/cartPage.jsp";
-		} else {
-			reservationService.update(reservation);
-			return "redirect:/cart";
-		}
-	}
-
 }

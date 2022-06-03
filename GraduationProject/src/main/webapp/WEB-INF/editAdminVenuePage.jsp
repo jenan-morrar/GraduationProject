@@ -99,6 +99,8 @@
 
 <!-- Theme style  -->
 <link rel="stylesheet"
+	href="<c:url value="/resources/css/rating.css" />">
+<link rel="stylesheet"
 	href="<c:url value="/resources/css/imageSlider.css" />">
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 <link href="<c:url value="/resources/css/venuePage.css" />"
@@ -127,6 +129,10 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li class="active"><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
+							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+										الحجز</a></li>
+							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
@@ -138,11 +144,7 @@
 							<c:if test="${userName ==\"user\"}">
 								<li><a href="/cartPage">&#128722</a></li>
 							</c:if>
-							<li class="has-dropdown"><a href="#">اللغة</a>
-								<ul class="dropdown">
-									<li><a href="#">العربية</a></li>
-									<li><a href="#">الأنجليزية</a></li>
-								</ul></li>
+
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
@@ -200,7 +202,7 @@
 						</div>
 						<form:form action="/adminVenuePage/${venue.id}/images/add"
 							method="post" enctype="multipart/form-data"
-							modelAttribute="venue">
+							modelAttribute="venue" style="margin-top:2%;">
 							<c:forEach varStatus="us" var="images" items="${venue.images}">
 								<tr>
 									<td><img class="imageVenue"
@@ -213,8 +215,10 @@
 								&nbsp; &nbsp;
 							</c:forEach>
 							<br>
+							<br>
 							<input type="file" class="form-control" name="image"
-								accept="image/png, image/jpeg" required="required" />
+								accept="image/png, image/jpeg" multiple="multiple"
+								required="required" />
 							<div class="venue-a">
 								<input type="submit" class="round-black-btn"
 									value="إضافة الصورة" />
@@ -319,19 +323,22 @@
 				<div class="tab-content" id="venueTabContent">
 
 					<div id="VenueServices" class="tab-pane fade in active">
-						<h3>خدمات القاعة</h3>
 						<form:form action="/adminVenuePage/${venue.id}/services/add"
 							method="post" modelAttribute="venue">
 							<c:forEach varStatus="us" var="service" items="${venue.services}">
-								<tr>
-									<td><form:input path="services[${us.index}].name" /></td>
-									<td><form:input path="services[${us.index}].price" /></td>
-									<form:input type="hidden" path="services[${us.index}].id" />
-								</tr>
-								<td><a
-									href="/adminVenuePage/${venue.id}/services/delete/${service.id}">Delete</a></td>
-								<br>
-								<br>
+								<div class="tr-service-style">
+									<td><a style="margin-right: 1%;"
+										href="/adminVenuePage/${venue.id}/services/delete/${service.id}">حذف
+											الخدمة</a></td>
+									<tr>
+										<td><form:input path="services[${us.index}].name"
+												disabled="true" class="service-detiles-part" /></td>
+										<td><form:input path="services[${us.index}].price"
+												disabled="true" class="service-detiles-part" /></td>
+										<form:input type="hidden" path="services[${us.index}].id" />
+
+									</tr>
+								</div>
 							</c:forEach>
 							<br>
 
@@ -349,29 +356,28 @@
 					</div>
 
 					<div id="VenueReservatio" class="tab-pane fade in">
-						<h3>حجوزات القاعة</h3>
 						<!-- <divclass="--noshadow" id="demoEvoCalendar"></div> -->
 						<input type="date" value="" id="event-date" hidden />
 						<c:set var="reservations" scope="session"
-								value="${reservationResult}" />
-							<input hidden value id="reservations" />
-							<script>
-								var reservationsjs = new Array();
-								<c:forEach items="${reservations}" var="reservation">
-								res = new Object();
-								res.id = "${reservation.id}";
-								res.name = "wedding";
-								res.description = "from ${reservation.fromTime} to ${reservation.toTime}";
-								res.fromTime = "${reservation.fromTime}";
-								res.toTime = "${reservation.toTime}";
-								res.reservationDate = "${reservation.reservationDate}";
-								res.type = "event";
-								reservationsjs.push(res);
-								</c:forEach>
-								$("#reservations").val(
-										JSON.stringify(reservationsjs));
-							</script>
-							<div class="--noshadow" id="demoEvoCalendar"></div>
+							value="${reservationResult}" />
+						<input hidden value id="reservations" />
+						<script>
+							var reservationsjs = new Array();
+							<c:forEach items="${reservations}" var="reservation">
+							res = new Object();
+							res.id = "${reservation.id}";
+							res.name = "wedding";
+							res.description = "from ${reservation.fromTime} to ${reservation.toTime}";
+							res.fromTime = "${reservation.fromTime}";
+							res.toTime = "${reservation.toTime}";
+							res.reservationDate = "${reservation.reservationDate}";
+							res.type = "event";
+							reservationsjs.push(res);
+							</c:forEach>
+							$("#reservations").val(
+									JSON.stringify(reservationsjs));
+						</script>
+						<div class="--noshadow" id="demoEvoCalendar"></div>
 					</div>
 
 					<div id="VenueLocation" class="tab-pane fade">
@@ -388,7 +394,99 @@
 					</div>
 
 					<div id="Reviews" class="tab-pane fade">
-						<div class="review-heading">تقييم القاعة</div>
+						<div>
+							<c:set var="venueRatingsResults" scope="session"
+								value="${venueRatingsResult}" />
+							<div class="rating-slider">
+
+								<!--<c:forEach items="${venueRatingsResults}"
+									var="venueRatingsResult" varStatus="loop">
+									<a href="#slide-${loop.index}">${loop.index}</a>
+								</c:forEach>-->
+
+								<div class="rating-slides">
+									<c:forEach items="${venueRatingsResults}"
+										var="venueRatingsResult" varStatus="loop">
+
+										<div id="#slide-${loop.index}">
+											<div>
+												<div class="rating-title" id="first-rating-tilte">اسم
+													المستخدم</div>
+												<div>
+													<c:out value="${venueRatingsResult.senderName}" />
+												</div>
+											</div>
+											<div>
+												<div class="rating-title">تقييم القاعة</div>
+												<div>
+													<c:choose>
+														<c:when test="${venueRatingsResult.rating ==1}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star "></span> <span class="fa fa-star "></span>
+																<span class="fa fa-star"></span> <span
+																	class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==2}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star "></span> <span class="fa fa-star"></span>
+																<span class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==3}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star"></span> <span class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==4}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star"></span>
+															</div>
+														</c:when>
+														<c:when test="${venueRatingsResult.rating ==5}">
+															<div>
+																<span class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span> <span
+																	class="fa fa-star checked"></span>
+															</div>
+														</c:when>
+														<c:otherwise>
+															<div>
+																<span class="fa fa-star"></span> <span
+																	class="fa fa-star"></span> <span class="fa fa-star"></span>
+																<span class="fa fa-star"></span> <span
+																	class="fa fa-star"></span>
+															</div>
+														</c:otherwise>
+													</c:choose>
+												</div>
+											</div>
+											<div>
+												<div class="rating-title">تعليقه على القاعة</div>
+
+												<div>
+													<c:out value="${venueRatingsResult.ratingMasseag}" />
+												</div>
+											</div>
+
+										</div>
+
+									</c:forEach>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 

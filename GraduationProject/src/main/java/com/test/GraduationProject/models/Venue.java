@@ -58,6 +58,9 @@ public class Venue {
 	
     @OneToMany(mappedBy="venue", fetch = FetchType.LAZY)
     private List<Reservation> reservations;
+    
+    @OneToMany(mappedBy="venue", fetch = FetchType.LAZY)
+    private List<VenueRate> ratings;
 
 	public Venue() {
 
@@ -200,6 +203,14 @@ public class Venue {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public List<VenueRate> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<VenueRate> ratings) {
+		this.ratings = ratings;
 	}
 
 	@PrePersist
