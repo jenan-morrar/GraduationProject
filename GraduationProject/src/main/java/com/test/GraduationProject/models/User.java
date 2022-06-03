@@ -47,9 +47,6 @@ public class User {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Venue venue;
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-	private List<Reservation> reservations;
-
 	public User() {
 	}
 

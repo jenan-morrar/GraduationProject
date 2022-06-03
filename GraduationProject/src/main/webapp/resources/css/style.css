@@ -432,7 +432,9 @@ h1, h3, h4, h5, h6, figure {
 #venueRate{
   font-family: 'Aref Ruqaa', serif;
   float: right;
-  margin-top: 3%;
+}
+.checked {
+  color: orange;
 }
 .venueParg{
   font-family: 'Aref Ruqaa', serif;
@@ -459,6 +461,7 @@ h1, h3, h4, h5, h6, figure {
 }
 .venueDetaileTitle{
   color: #cd7e53;
+  font-size: 20px;
 }
 
 .fh5co-cover {
@@ -546,7 +549,6 @@ h1, h3, h4, h5, h6, figure {
 	color: #fff;
 	text-transform: uppercase;
 	font-size: 35px;
-	letter-spacing: 2px;
 	font-weight: 600;
 }
 
@@ -595,7 +597,6 @@ h1, h3, h4, h5, h6, figure {
 	display: block;
 	padding-bottom: 20px;
 	text-transform: uppercase;
-	letter-spacing: 2px;
 }
 
 #fh5co-counter .event-wrap p, #fh5co-counter .event-wrap span,
@@ -639,13 +640,13 @@ h1, h3, h4, h5, h6, figure {
 	content: " ";
 	width: 1px;
 	background-color: #d4d4d4;
-	left: 50%;
+	left: 48.5%;
 	margin-left: 0px;
 }
 
 @media screen and (max-width: 480px) {
 	.timeline:before {
-		margin-left: -64px;
+		margin-left: -55px;
 	}
 	.search form {
 		width: 300px;
@@ -723,8 +724,8 @@ h1, h3, h4, h5, h6, figure {
 	background-repeat: no-repeat;
 	position: relative;
 	color: #fff;
-	width: 160px;
-	height: 160px;
+	width: 120px;
+	height: 100px;
 	line-height: 50px;
 	font-size: 1.4em;
 	text-align: center;
@@ -775,7 +776,6 @@ h1, h3, h4, h5, h6, figure {
 	margin-bottom: 20px;
 	font-size: 13px;
 	text-transform: uppercase;
-	letter-spacing: 2px;
 }
 
 .timeline-body>p, .timeline-body>ul {
@@ -788,7 +788,7 @@ h1, h3, h4, h5, h6, figure {
 
 @media ( max-width : 992px) {
 	ul.timeline:before {
-		left: 90px;
+		left: 80px;
 	}
 	ul.timeline>li>.timeline-panel {
 		width: calc(100% - 200px);
@@ -906,7 +906,6 @@ h1, h3, h4, h5, h6, figure {
 
 #fh5co-gallery-list li a .case-studies-summary span {
 	text-transform: uppercase;
-	letter-spacing: 2px;
 	font-size: 13px;
 	color: rgba(255, 255, 255, 0.7);
 }
@@ -935,6 +934,9 @@ h1, h3, h4, h5, h6, figure {
 @media screen and (max-width: 480px) {
 	#fh5co-gallery-list li.one-third {
 		width: 100%;
+	}
+	#navbar-logo-title{
+	font-size: 30px;
 	}
 }
 
@@ -1116,7 +1118,6 @@ form label {
 	margin-bottom: 0;
 	text-transform: uppercase;
 	color: rgba(255, 255, 255, 0.5);
-	letter-spacing: .1em;
 }
 
 @media screen and (max-width: 768px) {
@@ -1422,7 +1423,6 @@ transform:scale(1);
 .fh5co-heading span {
 	text-transform: uppercase;
 	font-size: 13px;
-	letter-spacing: 2px;
 	font-weight: 600;
 	color: rgba(0, 0, 0, 0.4);
 }
@@ -1438,7 +1438,6 @@ transform:scale(1);
 #fh5co-testimonial .wrap-testimony .testimony-slide span {
 	font-size: 12px;
 	text-transform: uppercase;
-	letter-spacing: 2px;
 	font-weight: 700;
 	display: block;
 }
@@ -1934,7 +1933,6 @@ transform:scale(1);
 }
 
 .btn {
-	margin-right: 4px;
 	margin-bottom: 4px;
 	font-family: "Work Sans", 'Aref Ruqaa', serif, Arial, sans-serif;
 	font-size: 16px;
@@ -2180,4 +2178,13 @@ transform:scale(1);
 .right-Text {
 	text-align: right;
 	margin-right: 2%;
+}
+
+/* venue reservations page*/
+.x{
+  color:red;
+}
+
+.checkmark{
+  color:green;
 }

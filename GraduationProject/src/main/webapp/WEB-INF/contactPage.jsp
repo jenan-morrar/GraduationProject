@@ -88,6 +88,10 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
+							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+										الحجز</a></li>
+							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li class="active"><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
@@ -99,11 +103,7 @@
 							<c:if test="${userName ==\"user\"}">
 								<li><a href="/cartPage">&#128722</a></li>
 							</c:if>
-							<li class="has-dropdown"><a href="#">اللغة</a>
-								<ul class="dropdown">
-									<li><a href="#">العربية</a></li>
-									<li><a href="#">الأنجليزية</a></li>
-								</ul></li>
+
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
@@ -146,19 +146,23 @@
 				<div class="row">
 					<div class="col-md-6 col-md-push-5 animate-box">
 						<h3 class="contactHeader">تواصلوا معنا</h3>
-						<form:form method="POST" action="/contactPage" class="contactForm" modelAttribute="contact">
+						<form:form method="POST" action="/contactPage" class="contactForm"
+							modelAttribute="contact">
 							<div class="row form-group">
 								<div class="col-md-12">
-									<label for="email">الايميل</label> <form:input type="email"
-										id="email" class="form-control" placeholder="ايميل المستخدم" required="required" path="emailSender"/>
+									<label for="email">الايميل</label>
+									<form:input type="email" id="email" class="form-control"
+										placeholder="ايميل المستخدم" required="required"
+										path="emailSender" />
 								</div>
 							</div>
 
 							<div class="row form-group">
 								<div class="col-md-12">
-									<label for="subject">الموضع</label> <form:input type="text"
-										id="subject" class="form-control"
-										placeholder="موضوع هذه الرسالة" required="required" path="subject" />
+									<label for="subject">الموضع</label>
+									<form:input type="text" id="subject" class="form-control"
+										placeholder="موضوع هذه الرسالة" required="required"
+										path="subject" />
 								</div>
 							</div>
 
@@ -166,7 +170,8 @@
 								<div class="col-md-12">
 									<label for="message">الرسالة</label>
 									<form:textarea name="message" id="message" cols="30" rows="10"
-										class="form-control" placeholder="اكتب شيئاً لنا.." required="required" path="message"/>
+										class="form-control" placeholder="اكتب شيئاً لنا.."
+										required="required" path="message" />
 								</div>
 							</div>
 							<div class="form-group">

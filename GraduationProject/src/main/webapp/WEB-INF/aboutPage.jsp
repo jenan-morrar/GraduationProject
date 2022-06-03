@@ -106,6 +106,10 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
+							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+										الحجز</a></li>
+							</c:if>
 							<li class="active"><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
@@ -117,11 +121,7 @@
 							<c:if test="${userName ==\"user\"}">
 								<li><a href="/cartPage">&#128722</a></li>
 							</c:if>
-							<li class="has-dropdown"><a href="#">اللغة</a>
-								<ul class="dropdown">
-									<li><a href="#">العربية</a></li>
-									<li><a href="#">الأنجليزية</a></li>
-								</ul></li>
+
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login">تسجيل دخول</a></li>
 							</c:if>
@@ -164,10 +164,12 @@
 				<div class="row">
 					<div
 						class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-						<span>What We do</span>
 						<h2>PalVenues</h2>
-						<p>Far far away, behind the word mountains, far from the
-							countries Vokalia and Consonantia, there live the blind texts.</p>
+						<p style="font-size: 22px;">هو موقع للبحث عن أماكن الزفاف
+							المحلية وحجزها. الهدف الرئيسي من هذا الموقع هو تسهيل عملية العثور
+							على الأماكن وحجزها على العملاء. هذا الموقع مجاني ويمكن استخدامه
+							بواسطة أجهزة الكمبيوتر وأجهزة الكمبيوتر المحمولة والهواتف الذكية
+							طالما أن المتصفح قيد التشغيل متصل بالإنترنت.</p>
 					</div>
 				</div>
 			</div>
@@ -177,35 +179,59 @@
 			<div class="container">
 				<div class="row justify-content-center">
 					<div class="col-lg-4 col-md-6 col-sm-6 animate-box">
-						<div class="about-info-item mb-4 mb-lg-0">
+						<div class="about-info-item mb-4 mb-lg-0"
+							style="text-align: right; font-size: 18px;">
 							<h3 class="mb-3">
-								<span class="text-color mr-2 text-md ">01.</span>Our Mission
+								<span class="text-color mr-2 text-md">رؤيتنا</span>
 							</h3>
-							<p>llum similique ducimus accusamus laudantium praesentium,
-								impedit quaerat, itaque maxime sunt deleniti voluptas distinctio
-								.</p>
+							<p>يضم هذا الموقع كل قاعات رام الله و نتطلع الى تطوير هذا
+								الموقع ليصبح يشمل كل قاعات فلسطين. باللإضافة نحن نسعى إلى تطوير
+								هذا الموقع من خلال استخدام تقنيات جديدة تساعد على تنظيم حفل
+								الزفاف مثلا تمكين المستخدمين من اختيار ديكورات القاعة و تصميم
+								كرت الزفاف و تحديد قائمة الضيوف و غيرها من الخدمات المميزة</p>
 						</div>
 					</div>
 					<div class="col-lg-4 col-md-6 col-sm-6 animate-box">
-						<div class="about-info-item mb-4 mb-lg-0">
+						<div class="about-info-item mb-4 mb-lg-0"
+							style="text-align: right; font-size: 18px;">
 							<h3 class="mb-3">
-								<span class="text-color mr-2 text-md">02.</span>Vission
+
+								<span class="text-color mr-2 text-md">نهجنا</span>
+
 							</h3>
-							<p>llum similique ducimus accusamus laudantium praesentium,
-								impedit quaerat, itaque maxime sunt deleniti voluptas distinctio
-								.</p>
+							<p>يساعد هذا الموقع الأزواج والمخطوبين بالبحث عن قاعات
+								الأفراح ومقارنة أسعارهم وخدماتهم وتفاصيل أخرى ، وحتى حجزها من
+								أجهزة الكمبيوتر الخاصة بهم. الفكرة الرئيسية مستوحاة من التجارب
+								السابقة للأزواج عند التخطيط لحفل زفافهم. كان العثور على الأوصاف
+								التفصيلية ومعلومات التسعير الدقيقة وتوافر أماكن الزفاف أمرًا شبه
+								مستحيل بدون مكالمات هاتفية واسعة النطاق واجتماعات شخصية وحتى
+								العثور على موعد متاح مناسب. لذا ، فإن الهدف هو تبسيط عملية البحث
+								عن المواقع وعملية الحجز وصولاً إلى نقرة على فأرة الكمبيوتر
+								وبالتالي توفير الوقت والجهد بالنسبة لهم.</p>
 						</div>
 					</div>
+
 					<div class="col-lg-4 col-md-6 col-sm-6 animate-box">
-						<div class="about-info-item mb-4 mb-lg-0">
+						<div class="about-info-item mb-4 mb-lg-0"
+							style="text-align: right; font-size: 18px;">
 							<h3 class="mb-3">
-								<span class="text-color mr-2 text-md">03.</span>Our Approach
+								<span class="text-color mr-2 text-md ">مهمتنا</span>
 							</h3>
-							<p>llum similique ducimus accusamus laudantium praesentium,
-								impedit quaerat, itaque maxime sunt deleniti voluptas distinctio
-								.</p>
+							<p>يقدم هذا الموقع العديد من الميزات والخدمات المفيدة ، حيث
+								انه يمكن العملاء من البحث عن مكان معين ، أو بدلاً من ذلك ،
+								يمكنهم تقديم بعض المعايير ويقدم هذا الموقع قائمة بالأماكن التي
+								تتوافق مع معايير البحث الخاصة بهم. يمكن للعميل عرض صفحة تفاصيل
+								كل مكان والاختيار من بين خدماته مع خيار حجزه في الأماكن المتاحة
+								الموضحة في التقويم. يمكن للعميل مراجعة عربة التسوق الخاصة به
+								التي تحتوي على أماكن محجوزة مع حالة الدفع (على سبيل المثال ، غير
+								مدفوعة ، مدفوعة) وحالة المكان (معلق ، محجوز ، متاح) ، وجميع
+								التفاصيل الأخرى. بالأضافة يعرض الموقع أكثر الأماكن حجزاً لهذا
+								العام من خلال نظام التوصية. بالإضافة إلى ذلك ، يقدم الموقع
+								اقتراحات لأغاني الزفاف العربية الأكثر شعبية حتى يتمكن العملاء من
+								عمل قوائم تشغيل.</p>
 						</div>
 					</div>
+
 				</div>
 			</div>
 		</section>
@@ -216,9 +242,10 @@
 				<div class="row justify-content-center animate-box">
 					<div class="col-lg-7 text-center">
 						<div class="section-title">
-							<span class="h4 text-color">Our Team</span>
-							<h2 class="mt-3 content-title">Expert Team member to get
-								best service</h2>
+							<span class="h4 text-color" style="font-size: 20px;">مرمجين
+								هذا الموقع </span>
+							<h2 class="mt-3 content-title" style="font-size: 25px;">أعضاء
+								الفريق الخبراء القائمين على هذا الموقع</h2>
 						</div>
 					</div>
 				</div>
@@ -244,8 +271,8 @@
 								</div>
 							</div>
 							<div class="team-item-content">
-								<h4 class="mt-3 mb-0 text-capitalize">Justin hammer</h4>
-								<p>Digital Marketer</p>
+								<h4 class="mt-3 mb-0 text-capitalize">Batoul Sammoudi</h4>
+								<p>Software Developer</p>
 							</div>
 						</div>
 					</div>
@@ -270,8 +297,8 @@
 								</div>
 							</div>
 							<div class="team-item-content">
-								<h4 class="mt-3 mb-0 text-capitalize">Jason roy</h4>
-								<p>UI/UX Designer</p>
+								<h4 class="mt-3 mb-0 text-capitalize">Jenan Morrar</h4>
+								<p>Software Developer</p>
 							</div>
 						</div>
 					</div>
@@ -296,8 +323,8 @@
 								</div>
 							</div>
 							<div class="team-item-content">
-								<h4 class="mt-3 mb-0 text-capitalize">Henry oswald</h4>
-								<p>Developer</p>
+								<h4 class="mt-3 mb-0 text-capitalize">Noora Qwasmi</h4>
+								<p>Software Developer</p>
 							</div>
 						</div>
 					</div>
