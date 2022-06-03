@@ -27,11 +27,11 @@ public class ReservationService {
 	}
 
 	// returns all the Reservations
-	
+
 	public List<Reservation> allReservation() {
 		return reservationRepository.findAll();
 	}
-	
+
 	// retrieves a Reservations
 	public Reservation findReservation(Long id) {
 		Optional<Reservation> optionalVenue = reservationRepository.findById(id);
@@ -42,8 +42,9 @@ public class ReservationService {
 		}
 	}
 
-	// edit a reservatio
-	public Reservation updatereservation(Long id, Date reservationDate, Time fromTime, Time toTime, String status, Date expirationDate, Venue venue, User user) {
+	// edit a reservation
+	public Reservation updatereservation(Long id, Date reservationDate, Time fromTime, Time toTime, String status,
+			Date expirationDate, Venue venue, User user) {
 		Reservation reservation = findReservation(id);
 		reservation.setId(id);
 		reservation.setReservationDate(reservationDate);
@@ -54,6 +55,16 @@ public class ReservationService {
 		reservation.setVenue(venue);
 		reservation.setUser(user);
 
+		return reservationRepository.save(reservation);
+	}
+
+	// return reservations for specific user
+	public List<Reservation> getUserReservation(Long id) {
+		return reservationRepository.getUserReservation(id);
+	}
+
+	// updating the reservation
+	public Reservation update(Reservation reservation) {
 		return reservationRepository.save(reservation);
 	}
 

@@ -127,7 +127,7 @@
 				<div class="row">
 					<div class="col-xs-3">
 						<div id="fh5co-logo">
-							<img src="/resources/images/ring map logo.png" alt="logo" style
+							<img src="/resources/images/ring map logo.png" alt="logo" 
 								width="50px" height="60px"> <a href="/index">PalVenues<strong>.</strong></a>
 						</div>
 					</div>

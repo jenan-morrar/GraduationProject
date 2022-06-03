@@ -24,4 +24,8 @@ public class SuperAdminService {
 		return userRepo.getSearchedUser(txt);
 	}
 
+	public void deleteUser(Long id) {
+		userRepo.deleteById(id);
+	}
+
 }

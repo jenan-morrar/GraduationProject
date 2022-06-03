@@ -33,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	 http.csrf().disable() ; 
         http.
             authorizeRequests()
                 .antMatchers("/resources/**","/static/**", "/registration","/index/**","/contactPage","/aboutPage","/venues/**","/venuePage/**","/user-photos/**").permitAll()

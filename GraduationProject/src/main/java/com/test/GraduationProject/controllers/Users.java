@@ -200,23 +200,7 @@ public class Users {
 		return "aboutPage.jsp";
 	}
 
-	@RequestMapping("/cartPage")
-	public String cartPage(Principal principal, Model model) {
-		if (principal != null) {
-			String username = principal.getName();
-			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
-			if (userRole.equals("ROLE_ADMIN")) {
-				Venue venue = userService.findByEmail(username).getVenue();
-				model.addAttribute("venue", venue);
-				model.addAttribute("venueId", venue.getId());
-				model.addAttribute("serviceExist", "no");
-			}
-		} else {
-			model.addAttribute("currentUser", "noUser");
-		}
-		return "cartPage.jsp";
-	}
+
 
 	@RequestMapping("/contactPage")
 	public String contactForm(Principal principal, Model model) {
@@ -313,6 +297,7 @@ public class Users {
 				reservationsForVenue.add(reservations.get(i));
 			}
 		}
+
 		model.addAttribute("reservationResult", reservationsForVenue);
 
 		// Venue Rating Data
@@ -667,34 +652,3 @@ public class Users {
 		return "adminVenuePage.jsp";
 	}
 
-	@RequestMapping("/adminVenuePage/{id}/requests")
-	public String adminVenuePageRequests(@PathVariable("id") long id, Principal principal, Model model) {
-
-		List<Reservation> reservations = reservationService.allReservation();
-		List<Reservation> reservationsForVenue = new ArrayList<>();
-
-		for (int i = 0; i < reservations.size(); i++) {
-			if (reservations.get(i).getVenue().getId() == id && reservations.get(i).getStatus().equals("pending")) {
-				reservationsForVenue.add(reservations.get(i));
-			}
-		}
-		model.addAttribute("reservationResult", reservationsForVenue);
-
-		if (principal != null) {
-			String username = principal.getName();
-			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
-			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
-
-			if (userRole.equals("ROLE_ADMIN")) {
-				Venue venue = userService.findByEmail(username).getVenue();
-				model.addAttribute("venue", venue);
-				model.addAttribute("venueId", venue.getId());
-				model.addAttribute("serviceExist", "no");
-			}
-
-		} else {
-			model.addAttribute("currentUser", "noUser");
-		}
-		return "reservationsRequests.jsp";
-	}
-}

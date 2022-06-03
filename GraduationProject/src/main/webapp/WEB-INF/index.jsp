@@ -89,9 +89,6 @@
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
-							<c:if test="${userRole == \"ROLE_ADMIN\"}">
-								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
-										الحجز</a></li>
 							</c:if>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
