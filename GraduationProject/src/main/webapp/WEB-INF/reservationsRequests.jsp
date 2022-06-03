@@ -162,11 +162,12 @@
 			<div class="overlay"></div>
 		</header>
 
-		<div style="overflow-x:auto;">
+		<div style="overflow-x: auto;">
 			<table class="service-table"
 				style="margin-top: 3%; margin-bottom: 3%;">
 				<tr>
 					<th></th>
+					<th>تفاصيل الحجز</th>
 					<th>نهاية الحجز</th>
 					<th>بداية الحجز</th>
 					<th>تاريخ الحجز</th>
@@ -179,6 +180,87 @@
 					<tr>
 						<td><button class="x">&#10006;</button> &emsp;
 							<button class="checkmark">&#10004;</button></td>
+						<td><button id="myBtn${loop.index}">عرض التفاصيل</button> <!-- The Modal -->
+							<div id="myModal" class="detail-modal">
+
+								<!-- Modal content -->
+								<div class="modal-content">
+									<span class="close">&times;</span>
+									<div class="grid-container">
+
+										<div>
+											<h2>الخدمات المطلوبة</h2>
+											<c:forEach items="${reservationResult.services}"
+												var="service">
+												<i class='fas fa-shekel-sign' style='font-size: 10px'></i>
+												<c:out value="${service.price}"></c:out>
+												<c:out value="${service.name}"></c:out>
+												<br>
+											</c:forEach>
+										</div>
+
+										<div>
+											<h2>قائمة الأغاني</h2>
+											
+                                              song 1
+                                              <br>
+                                              song 2
+                                              <br>
+                                              song 3
+                                              <br>
+                                              song 4
+                                              <br>
+                                              song 5
+                                              <br>
+                                              song 6
+                                              <br>
+                                               song 1
+                                              <br>
+                                              song 2
+                                              <br>
+                                              song 3
+                                              <br>
+                                              song 4
+                                              <br>
+                                              song 5
+                                              <br>
+                                              song 6
+                                              <br>
+										</div>
+
+									</div>
+
+								</div>
+
+							</div> <script type="text/javascript">
+								// Get the modal
+								var modal = document.getElementById("myModal");
+
+								// Get the button that opens the modal
+								var index = ${loop.index};
+								var btn = document.getElementById("myBtn"+index);
+
+								// Get the <span> element that closes the modal
+								var span = document
+										.getElementsByClassName("close")[0];
+
+								// When the user clicks on the button, open the modal
+								btn.onclick = function() {
+									modal.style.display = "block";
+								}
+
+								// When the user clicks on <span> (x), close the modal
+								span.onclick = function() {
+									modal.style.display = "none";
+								}
+
+								// When the user clicks anywhere outside of the modal, close it
+								window.onclick = function(event) {
+									if (event.target == modal) {
+										modal.style.display = "none";
+									}
+								}
+							</script></td>
 						<td>${reservationResult.fromTime}</td>
 						<td>${reservationResult.toTime}</td>
 						<td>${reservationResult.reservationDate}</td>
@@ -217,7 +299,7 @@
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
 	</div>
 
-<!-- 	<script>
+	<!-- 	<script>
 		var responsiveSlider = function() {
 
 			var slider = document.getElementById("slider");
