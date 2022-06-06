@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -67,14 +68,10 @@ public class Reservation {
     @JoinColumn(name="user_id")
     private User user;
     
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "userSongs_id")
 	private UserSongs userSongs;
 	
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name="userSongs_id")
-//    private List<UserSongs> userSongs;
-
     public Reservation() {
     	
     }

@@ -280,6 +280,9 @@ public class Users {
 			String username = principal.getName();
 			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
 			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			List<Reservation> userReservations = userService.findByEmail(username).getReservations();
+			model.addAttribute("userReservations", userReservations);
+			
 			if (userRole.equals("ROLE_ADMIN")) {
 				Venue venue = userService.findByEmail(username).getVenue();
 				model.addAttribute("venue", venue);
@@ -299,8 +302,17 @@ public class Users {
 		if (principal != null) {
 			String username = principal.getName();
 			User user = userService.findByEmail(username);
+			List<Reservation> userReservations = user.getReservations();
+			model.addAttribute("userReservations", userReservations);
+//			if(userSongs.getReservation() != null) {
+//				System.out.println(userSongs.getReservation().getId());
+//				System.out.println(userSongs);
+//			//reservationService.findReservation(userSongs.getReservation().getId()).setUserSongs(userSongs);
+//			//userSongs.setReservation(userSongs.getReservation());
+//			}
 			userSongs.setUserSongs(user);
 			songsService.createUserSongs(userSongs);
+			reservationService.updatereservation2(userSongs.getReservation().getId(), userSongs);
 		}
 		return "redirect:/songsPage";
 	}

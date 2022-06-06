@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @ Entity
 @ Table(name ="userSongs")
@@ -26,13 +27,13 @@ public class UserSongs {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User userSongs;
-    
+	
 	@OneToOne(mappedBy = "userSongs", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Reservation reservation;
 	
-//    @OneToMany(mappedBy="userSongs", fetch = FetchType.LAZY)
-//    private List<Reservation> reservations;
-
+	public UserSongs() {
+		
+	}
 	public UserSongs(Long id, String songs, User userSongs, Reservation reservation) {
 		super();
 		this.id = id;
@@ -73,5 +74,5 @@ public class UserSongs {
 		this.reservation = reservation;
 	}
 
-	
+
 }

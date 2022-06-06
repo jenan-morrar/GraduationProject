@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page isErrorPage="true"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
@@ -137,19 +138,48 @@
 		</header>
 
 		<div>
-			<h2 class="songs-title">يمكنك اختيار اكثر الاغاني شعبية لإنشاء
-				قائمة أغاني زفافك</h2>
-			<p class="songs-title2">يتم إرسال القائمة التي تنشأها مع الحجز
-				لأرسالها الى القاعة التي تريد حجزها</p>
+			<h2 class="songs-title">اختر الحجز الذي تريد إنشاء قائمة أغاني
+				مميزة خاصة به</h2>
 
-			<form:form modelAttribute="userSongs" action="/songsPage" method="post">
+			<form:form modelAttribute="userSongs" action="/songsPage"
+				method="post">
+				<div class="search_categories">
+					<c:if test="${ empty userReservations }">
+						<div class="select">
+							<select name="search_categories" id="search_categories">
+								<option value="noReserv" selected="selected">لا يوجد
+									لديك أي حجوزات</option>
+							</select>
+						</div>
+					</c:if>
+					<c:if test="${ not empty userReservations }">
+						<div class="select">
+							<form:select name="search_categories" id="search_categories"
+								path="reservation">
+								<c:forEach items="${userReservations }" var="userReservation">
+									<form:option value="${userReservation }">
+										<fmt:formatDate value="${userReservation.reservationDate}"
+											pattern="dd MMM yyyy" />
+										<c:out value="حجز ${userReservation.venue.name } في تاريخ"></c:out>
+									</form:option>
+
+								</c:forEach>
+							</form:select>
+						</div>
+					</c:if>
+				</div>
+				<hr>
 				<input type="text" value="" id="hidden_token" style="display: none;">
 				<div class="music-player-container">
-					<div class="songs-list-container" >
-					</div>
+					<div class="songs-list-container"></div>
 				</div>
-				<form:input type="text" id="selected-tracks" value="" path="songs" style="display: none;"/>
-				<input type="submit" value="إنشاء القائمة" class="round-black-btn" id="playlist-submit">
+				<form:input type="text" id="selected-tracks" value="" path="songs"
+					style="display: none;" />
+				<c:if test="${ not empty userReservations }">
+					<input type="submit" value="إنشاء القائمة" class="round-black-btn"
+						id="playlist-submit">
+				</c:if>
+
 				<script>
 					document.getElementById("playlist-submit").addEventListener("click",function(){
 						var selectedTracks = [];

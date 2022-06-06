@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.test.GraduationProject.models.Reservation;
 import com.test.GraduationProject.models.User;
+import com.test.GraduationProject.models.UserSongs;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.repositories.ReservationRepository;
 
@@ -55,6 +56,12 @@ public class ReservationService {
 		reservation.setVenue(venue);
 		reservation.setUser(user);
 
+		return reservationRepository.save(reservation);
+	}
+
+	public Reservation updatereservation2(Long id, UserSongs userSongs) {
+		Reservation reservation = findReservation(id);
+		reservation.setUserSongs(userSongs);
 		return reservationRepository.save(reservation);
 	}
 

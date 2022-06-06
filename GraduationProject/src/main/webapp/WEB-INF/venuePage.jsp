@@ -305,7 +305,7 @@
 										style='font-size: 25px'></i>
 								</div>
 								<span class="venueDetaile-span"><c:out
-										value="${venuePage.price}" /></span>
+										value="${venuePage.numOfGuests}" /></span>
 							</div>
 
 							<div class="venueDetaile">
