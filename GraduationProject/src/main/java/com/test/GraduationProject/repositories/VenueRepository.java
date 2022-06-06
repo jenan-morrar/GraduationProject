@@ -22,7 +22,8 @@ public interface VenueRepository extends CrudRepository<Venue, Long> {
 	// Search in Venue Name
 	@Query(value = "SELECT * FROM venues where name LIKE %:name% ", nativeQuery = true)
 	List<Venue> search(@Param("name") String name);
-
+	
+	List<Venue> findByIdIn(List<Long> ids);
 	
 	// @Query("SELECT venue FROM venues venue WHERE venue.price = :#{#price} or
 	// venue.location = :#{#location}")

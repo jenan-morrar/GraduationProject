@@ -9,17 +9,25 @@ import com.test.GraduationProject.models.Images;
 import com.test.GraduationProject.models.ServiceOfVenue;
 import com.test.GraduationProject.models.User;
 import com.test.GraduationProject.models.Venue;
+import com.test.GraduationProject.recommendation_system.KnnClassifier;
 import com.test.GraduationProject.repositories.VenueRepository;
 
 @Service
 public class VenueService {
 
 	private final VenueRepository venueRepository;
+	private final KnnClassifier knnClassifier;
 
-	public VenueService(VenueRepository venueRepository) {
+	public VenueService(VenueRepository venueRepository,KnnClassifier knnClassifier) {
 		this.venueRepository = venueRepository;
+		this.knnClassifier = knnClassifier;
 	}
 
+	public List<Venue> getRecommendedVenues(Long id){
+		List<Long> recommendedIds = knnClassifier.start(id, 3);
+		System.out.println(recommendedIds);
+		return venueRepository.findByIdIn(recommendedIds);
+	}
 	// returns all the venues
 	public List<Venue> allVenues() {
 		return venueRepository.findAll();
