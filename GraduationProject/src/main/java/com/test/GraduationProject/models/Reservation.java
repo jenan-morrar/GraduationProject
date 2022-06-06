@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -64,13 +66,21 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
+    
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "userSongs_id")
+	private UserSongs userSongs;
+	
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="userSongs_id")
+//    private List<UserSongs> userSongs;
 
     public Reservation() {
     	
     }
     
 
-	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime,Date expirationDate,String status, List<ServiceOfVenue> services,Venue venue, User user) {
+	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime,Date expirationDate,String status, List<ServiceOfVenue> services,Venue venue, User user, UserSongs userSongs) {
 		super();
 		this.id = id;
 		this.reservationDate = reservationDate;
@@ -81,6 +91,7 @@ public class Reservation {
 		this.services=services;
 		this.venue = venue;
 		this.user = user;
+		this.userSongs = userSongs;
 	}
 
 
@@ -193,6 +204,16 @@ public class Reservation {
 		this.user = user;
 	}
 	
+	public UserSongs getUserSongs() {
+		return userSongs;
+	}
+
+
+	public void setUserSongs(UserSongs userSongs) {
+		this.userSongs = userSongs;
+	}
+
+
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = new Date();

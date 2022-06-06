@@ -123,11 +123,7 @@
 									<li><a href="/venues">القاعات</a></li>
 									<li><a href="/songsPage">الأغاني</a></li>
 								</ul></li>
-							<li class="has-dropdown"><a href="#">اللغة</a>
-								<ul class="dropdown">
-									<li><a href="#">العربية</a></li>
-									<li><a href="#">الأنجليزية</a></li>
-								</ul></li>
+
 							<li class="active"><a href="/login">تسجيل دخول</a></li>
 						</ul>
 					</div>
