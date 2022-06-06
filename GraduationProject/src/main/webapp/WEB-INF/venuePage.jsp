@@ -109,9 +109,12 @@
 <!-- Theme style  -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/rating.css" />">
+
+<link rel="stylesheet"
+	href="<c:url value="/resources/css/venueCard.css" />">
+<link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/imageSlider.css" />">
-<link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 <link href="<c:url value="/resources/css/venuePage.css" />"
 	rel="stylesheet">
 
@@ -127,7 +130,7 @@
 				<div class="row">
 					<div class="col-xs-3">
 						<div id="fh5co-logo">
-							<img src="/resources/images/ring map logo.png" alt="logo" 
+							<img src="/resources/images/ring map logo.png" alt="logo"
 								width="50px" height="60px"> <a href="/index">PalVenues<strong>.</strong></a>
 						</div>
 					</div>
@@ -600,8 +603,7 @@
 							<c:forEach items="${venuePage.services}" var="service">
 
 								<tr>
-									<td>
-									<i class='fas fa-shekel-sign' style='font-size: 10px'></i>
+									<td><i class='fas fa-shekel-sign' style='font-size: 10px'></i>
 										<c:out value="${service.price}" /></td>
 									<td><c:out value="${service.name}" /></td>
 								</tr>
@@ -791,6 +793,50 @@
 
 			</div>
 		</div>
+		<!-- Recommendation results -->
+		
+			<div class="col-md-8" id="venues-card-item"  style="float: right; padding: 15px; margin:11.534px; ">
+				<div id="venueCardStyle">
+					<h1 style="text-align: right; color:#cd7e53; padding: 30px; border-bottom: 2px solid #cd7e53;">قاعات مشابهة قد تعجبك</h1>
+					<!-- <div>
+						<hr style="color:#cd7e53;">
+					</div> -->
+					<c:forEach items="${recommendedVenues}" var="venueCard">
+						<div class="col-md-4" id="venueCardStyle" style="float: right;">
+							<div class="product-grid">
+								<span class="product-image"> <c:if
+										test="${venueCard.images.size()==0}">
+										<a href="/venuePage/${venueCard.id}" class="image"> <img
+											class="pic-1" style="height: 200px;"
+											src="/resources/images/noImage.jpg">
+										</a>
+									</c:if> <c:forEach var="images" items="${venueCard.images}"
+										varStatus="loop">
+										<c:if test="${loop.first}">
+											<a href="/venuePage/${venueCard.id}" class="image"> <img
+												class="pic-1"
+												src="<c:out value="/user-photos/${venueCard.id}/${images.image}"/>">
+											</a>
+										</c:if>
+									</c:forEach>
+								</span>
+								<div class="product-content">
+
+									<h3 class="title">
+										<a href="/venuePage/${venueCard.id}"><c:out
+												value="${venueCard.name}" /></a>
+										<h4>${venueCard.location }</h4>
+
+									</h3>
+									<a class="add-to-cart" href="/venuePage/${venueCard.id}">اذهب
+										إلى القاعة</a>
+								</div>
+							</div>
+						</div>
+					</c:forEach>
+				</div>
+
+			</div>
 
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">

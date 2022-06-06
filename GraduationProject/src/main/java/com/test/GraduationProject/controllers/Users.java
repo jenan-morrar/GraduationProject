@@ -33,6 +33,7 @@ import com.test.GraduationProject.models.UserSongs;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.models.VenueRate;
 import com.test.GraduationProject.models.WebsiteRate;
+import com.test.GraduationProject.recommendation_system.KnnClassifier;
 import com.test.GraduationProject.services.ReservationService;
 import com.test.GraduationProject.services.ServicesOfVenueService;
 import com.test.GraduationProject.services.SongsService;
@@ -303,6 +304,7 @@ public class Users {
 		}
 		return "redirect:/songsPage";
 	}
+	
 
 	@RequestMapping("/venuePage/{id}")
 	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,
@@ -317,6 +319,11 @@ public class Users {
 		model.addAttribute("venuePage", venuePage);
 		model.addAttribute("venueRate", new VenueRate());
 		redirectAttrs.addAttribute("venuePage", venuePage);
+		
+		// get recommended venues
+		List<Venue> recommendedVenues = venueService.getRecommendedVenues(id);
+		model.addAttribute("recommendedVenues", recommendedVenues);
+		System.out.println(recommendedVenues);
 
 		// Venue Services
 		List<Reservation> reservations = reservationService.allReservation();
@@ -712,4 +719,5 @@ public class Users {
 		}
 		return "reservationsRequests.jsp";
 	}
+	
 }

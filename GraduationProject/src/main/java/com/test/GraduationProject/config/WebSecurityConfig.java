@@ -1,4 +1,5 @@
 package com.test.GraduationProject.config;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -13,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.test.GraduationProject.recommendation_system.KnnClassifier;
 
  
 @Configuration
@@ -29,6 +32,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    
+    @Bean
+    public KnnClassifier knnClassifier() throws IOException {
+    	return new KnnClassifier();
     }
     
     @Override

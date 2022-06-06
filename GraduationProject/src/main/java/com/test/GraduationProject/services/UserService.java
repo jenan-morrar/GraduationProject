@@ -23,6 +23,7 @@ public class UserService {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	private JavaMailSender emailSender;
+	
 
 	public UserService(UserRepository userRepository, RoleRepository roleRepository,
 			BCryptPasswordEncoder bCryptPasswordEncoder) {
