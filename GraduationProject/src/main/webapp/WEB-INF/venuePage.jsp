@@ -372,6 +372,7 @@
 								res.toTime = "${reservation.toTime}";
 								res.reservationDate = "${reservation.reservationDate}";
 								res.type = "event";
+								res.status = "${reservation.status}";
 								reservationsjs.push(res);
 								</c:forEach>
 								$("#reservations").val(
@@ -585,6 +586,7 @@
 								res.toTime = "${reservation.toTime}";
 								res.reservationDate = "${reservation.reservationDate}";
 								res.type = "event";
+								res.status = "${reservation.status}";
 								reservationsjs.push(res);
 								</c:forEach>
 								$("#reservations").val(

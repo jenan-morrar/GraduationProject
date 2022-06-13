@@ -308,6 +308,7 @@ h1, h3, h4, h5, h6, figure {
 	line-height: 1.2;
 	text-transform: none;
 	font-size: 15px;
+	text-align: right;
 }
 
 .fh5co-nav ul li.has-dropdown .dropdown li a:hover {

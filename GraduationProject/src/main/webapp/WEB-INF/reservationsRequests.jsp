@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>PalVenues</title>
+<title>طلبات الحجز</title>
 <link rel="icon" type="image/png"
 	href="/resources/images/ring map logo.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -100,8 +100,17 @@
 <link href="<c:url value="/resources/css/venuePage.css" />"
 	rel="stylesheet">
 
+
 <!-- Modernizr JS -->
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
+
+<script
+	src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"></script>
+
+<link rel="stylesheet"
+	href="<c:url value="/resources/css/reservationsRequests.css" />">
+
+
 </head>
 <body>
 	<div class="fh5co-loader"></div>
@@ -121,12 +130,22 @@
 							<li><a href="/index">الصفحة الرئيسية</a></li>
 							<c:set var="userRole" scope="session" value="${userRole}" />
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li class="has-dropdown"><a href="#">صاحب القاعة</a>
+									<ul class="dropdown">
+										<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
+										<li class="active"><a
+											href="/adminVenuePage/${venueId}/requests">طلبات الحجز</a></li>
+										<li><a href="/adminVenuePage/${venueId}/venueReservation">حجوزات
+												القاعة </a></li>
+									</ul></li>
+							</c:if>
+							<%-- 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li class="active"><a
 									href="/adminVenuePage/${venueId}/requests">طلبات الحجز</a></li>
-							</c:if>
+							</c:if> --%>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown"><a href="#">الخدمات</a>
@@ -167,7 +186,6 @@
 				style="margin-top: 3%; margin-bottom: 3%;">
 				<tr>
 					<th></th>
-					<th>تفاصيل الحجز</th>
 					<th>نهاية الحجز</th>
 					<th>بداية الحجز</th>
 					<th>تاريخ الحجز</th>
@@ -175,12 +193,71 @@
 					<th>رقم الحجز</th>
 
 				</tr>
-				<c:forEach items="${reservationResult}" var="reservationResult"
+				<c:forEach items="${reservationResult}" var="reservationResultItem"
 					varStatus="loop">
 					<tr>
-						<td><button class="x">&#10006;</button> &emsp;
-							<button class="checkmark">&#10004;</button></td>
-						<td><button id="myBtn${loop.index}">عرض التفاصيل</button> <!-- The Modal -->
+						<td>
+							<form id="delete-form"
+								action="/adminVenuePage/${venueId}/requests/${reservationResultItem.id}/delete">
+							</form> <a id="delete-reservation" onclick="deleteReservation()"
+							href="#" class="x">&#10006;</a> <script type="text/javascript">
+								function deleteReservation() {
+									Swal.fire({
+										  title: 'هل تريد حذف الحجز ${reservationResultItem.id} ؟',
+										  text: "لا تستطيع إرجاع ما يتم حذفه",
+										  icon: 'warning',
+										  showCancelButton: true,
+										  confirmButtonColor: '#3085d6',
+										  cancelButtonColor: '#d33',
+										  confirmButtonText: 'حذف'
+										}).then((result) => {
+										  if (result.isConfirmed) {
+										    Swal.fire(
+										      'تم الحذف',
+										      'هذا الحجز تم حذفه بنجاح',
+										      'success'
+										    ).then((result) => {
+										    	  if (result.isConfirmed) {
+														document.getElementById("delete-form").submit();
+										    		  }
+										    		});
+										  }
+										});
+								}
+							</script>
+
+							<form id="approve-form"
+								action="/adminVenuePage/${venueId}/requests/${reservationResultItem.id}/approve">
+							</form> <a id="delete-reservation" onclick="approveReservation()"
+							href="#" class="checkmark">&#10004;</a> <script
+								type="text/javascript">
+								function approveReservation() {
+									Swal.fire({
+										  title: 'هل تريد تأكيد الحجز ${reservationResultItem.id} ؟',
+										  text: "بعد التثبيت لا يمكن حذف الحجز",
+										  icon: 'warning',
+										  showCancelButton: true,
+										  confirmButtonColor: '#3085d6',
+										  cancelButtonColor: '#d33',
+										  confirmButtonText: 'قم بالتثبيت'
+										}).then((result) => {
+										  if (result.isConfirmed) {
+										    Swal.fire(
+										      'تم التثبيت بنجاح',
+										      'هذا الحجز تم ثبيته',
+										      'success'
+										    ).then((result) => {
+										    	  if (result.isConfirmed) {
+														document.getElementById("approve-form").submit();
+										    		  }
+										    		});
+										  }
+										});
+								}
+							</script>
+						</td>
+
+						<%-- <td><button id="myBtn${loop.index}">عرض التفاصيل</button> <!-- The Modal -->
 							<div id="myModal" class="detail-modal">
 
 								<!-- Modal content -->
@@ -190,7 +267,7 @@
 
 										<div>
 											<h2>الخدمات المطلوبة</h2>
-											<c:forEach items="${reservationResult.services}"
+											<c:forEach items="${reservationResultItem.services}"
 												var="service">
 												<i class='fas fa-shekel-sign' style='font-size: 10px'></i>
 												<c:out value="${service.price}"></c:out>
@@ -201,31 +278,18 @@
 
 										<div>
 											<h2>قائمة الأغاني</h2>
-											
-                                              song 1
-                                              <br>
-                                              song 2
-                                              <br>
-                                              song 3
-                                              <br>
-                                              song 4
-                                              <br>
-                                              song 5
-                                              <br>
-                                              song 6
-                                              <br>
-                                               song 1
-                                              <br>
-                                              song 2
-                                              <br>
-                                              song 3
-                                              <br>
-                                              song 4
-                                              <br>
-                                              song 5
-                                              <br>
-                                              song 6
-                                              <br>
+											<p id="songs_display"></p>
+											<p id="songs-string-item">
+												<c:out value="${reservationResultItem.userSongs.songs}"></c:out>
+											</p>
+											<script type="text/javascript">
+												var songsString = document
+														.getElementById("songs-string-item");
+												songsString.innerHTML = songsString.innerHTML
+														.replace(',', '<br>');
+												;
+											</script>
+
 										</div>
 
 									</div>
@@ -237,8 +301,12 @@
 								var modal = document.getElementById("myModal");
 
 								// Get the button that opens the modal
-								var index = ${loop.index};
-								var btn = document.getElementById("myBtn"+index);
+								var index = $
+								{
+									loop.index
+								};
+								var btn = document.getElementById("myBtn"
+										+ index);
 
 								// Get the <span> element that closes the modal
 								var span = document
@@ -260,12 +328,12 @@
 										modal.style.display = "none";
 									}
 								}
-							</script></td>
-						<td>${reservationResult.fromTime}</td>
-						<td>${reservationResult.toTime}</td>
-						<td>${reservationResult.reservationDate}</td>
-						<td>${reservationResult.user.username}</td>
-						<td>${reservationResult.id}</td>
+							</script></td> --%>
+						<td>${reservationResultItem.fromTime}</td>
+						<td>${reservationResultItem.toTime}</td>
+						<td>${reservationResultItem.reservationDate}</td>
+						<td>${reservationResultItem.user.username}</td>
+						<td>${reservationResultItem.id}</td>
 					</tr>
 
 				</c:forEach>
@@ -380,6 +448,8 @@
 
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>
+
+
 
 
 </body>

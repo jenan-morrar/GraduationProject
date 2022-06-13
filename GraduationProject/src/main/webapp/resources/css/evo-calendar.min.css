@@ -227,8 +227,8 @@ tr.calendar-body .calendar-day {
 tr.calendar-body .calendar-day .day {
 	position: relative;
 	padding: 15px;
-	height: 60px;
-	width: 60px;
+	height: 65px;
+	width: 65px;
 	margin: 0 auto;
 	border-radius: 50%;
 	text-align: center;
@@ -290,21 +290,25 @@ tr.calendar-body .calendar-day .day[disabled] {
 	z-index: 0
 }
 
-.calendar-events::-webkit-scrollbar {
+.calendar-events::-webkit-scrollbar,
+.event-list::-webkit-scrollbar {
 	width: 5px;
 	height: 5px
 }
 
-.calendar-events::-webkit-scrollbar-track {
+.calendar-events::-webkit-scrollbar-track,
+.event-list::-webkit-scrollbar {
 	background: transparent
 }
 
-.calendar-events::-webkit-scrollbar-thumb {
+.calendar-events::-webkit-scrollbar-thumb,
+.event-list::-webkit-scrollbar {
 	background: #8e899c;
 	border-radius: 5px
 }
 
-.calendar-events::-webkit-scrollbar-thumb:hover {
+.calendar-events::-webkit-scrollbar-thumb:hover,
+.event-list::-webkit-scrollbar{
 	background: #6c6875
 }
 
@@ -425,7 +429,8 @@ tr.calendar-body .calendar-day .day[disabled] {
 .event-container>.event-info>p.event-title {
 	position: relative;
 	font-size: 22px;
-	font-weight: 600
+	font-weight: 600;
+	width: fit-content;
 }
 
 .event-container>.event-info>p.event-title>span {
@@ -444,7 +449,8 @@ tr.calendar-body .calendar-day .day[disabled] {
 
 .event-container>.event-info>p.event-desc {
 	font-size: 14px;
-	margin-top: 5px
+	margin-top: 5px;
+	width: fit-content
 }
 
 .event-indicator {

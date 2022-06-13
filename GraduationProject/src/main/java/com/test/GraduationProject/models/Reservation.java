@@ -48,6 +48,7 @@ public class Reservation {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private Date expirationDate;
 	private String status;
+	private double retainer;
 	@Column(updatable = false)
 	private Date createdAt;
 	private Date updatedAt;
@@ -76,8 +77,7 @@ public class Reservation {
     	
     }
     
-
-	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime,Date expirationDate,String status, List<ServiceOfVenue> services,Venue venue, User user, UserSongs userSongs) {
+	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime,Date expirationDate,String status,double retainer, List<ServiceOfVenue> services,Venue venue, User user, UserSongs userSongs) {
 		super();
 		this.id = id;
 		this.reservationDate = reservationDate;
@@ -85,6 +85,7 @@ public class Reservation {
 		this.toTime = toTime;
 		this.expirationDate = expirationDate;
 		this.status = status;
+		this.retainer = retainer;
 		this.services=services;
 		this.venue = venue;
 		this.user = user;
@@ -165,6 +166,13 @@ public class Reservation {
 		this.status = status;
 	}
 
+	public double getRetainer() {
+		return retainer;
+	}
+
+	public void setRetainer(double retainer) {
+		this.retainer = retainer;
+	}
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -209,7 +217,6 @@ public class Reservation {
 	public void setUserSongs(UserSongs userSongs) {
 		this.userSongs = userSongs;
 	}
-
 
 	@PrePersist
 	protected void onCreate() {

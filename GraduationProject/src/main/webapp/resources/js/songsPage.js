@@ -62,23 +62,29 @@ const UIController = (function() {
 
             const divSongsList = document.querySelector(DOMElements.divSonglist);
             // any time user clicks a new song, we need to clear out the song detail div
-    
-             const html = `<div class="song-card" style="background-image:url(${img});">
-                                <div style="display: flex; flex-direction: row-reverse;background-color:rgb(0,0,0,0.5);">
-                                    <input type="checkbox" name="${title}-${artist}" class="song-checkbox">
-                                </div>           
-                                <div class="song-card-data">
-                                    <div class="song-info">
-                                        <div class="song-labels" >
-                                            <label class="song-info-label">${title}</label>
-                                            <label class="song-info-label">${artist}</label>
-                                        </div> 
-                                    </div>
-                                    <audio controls>
-                                        <source src="${previewUrl}" type="audio/ogg">
-                                    </audio>
-                                </div>
-                            </div> `;
+    		
+              let html = `<div class="song-card" style="background-image:url(${img});">`;
+              if(!document.getElementById("no-user")){
+				html += ` <div style="display: flex; flex-direction: row-reverse;background-color:rgb(0,0,0,0.5);">
+                          	<input type="checkbox" name="${title}-${artist}" class="song-checkbox">
+                          </div> `;
+			  }else{
+				html += ` <div style="display: flex; flex-direction: row-reverse;background-color:rgb(0,0,0,0.5);">
+                          	<input type="checkbox" name="${title}-${artist}" class="song-checkbox" style="visibility:hidden;">
+                          </div> `;
+			}                          
+              html += `	<div class="song-card-data">
+                            <div class="song-info">
+                                <div class="song-labels" >
+                                     <label class="song-info-label">${title}</label>
+                                     <label class="song-info-label">${artist}</label>
+                            	</div> 
+	                            </div>
+	                            <audio controls>
+	                                  <source src="${previewUrl}" type="audio/ogg">
+	                            </audio>
+                            </div>
+                        </div> `;
             divSongsList.insertAdjacentHTML('beforeend', html)
         },
         storeToken(value) {

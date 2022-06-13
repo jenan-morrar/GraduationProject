@@ -19,7 +19,8 @@
     box-shadow: none
 }
 
-.orange-coral .calendar-sidebar>.month-list::-webkit-scrollbar-thumb:hover {
+.orange-coral .calendar-sidebar>.month-list::-webkit-scrollbar-thumb:hover,
+.orange-coral .event-list::-webkit-scrollbar-thumb:hover  {
     background: #ffd3bd
 }
 
@@ -78,12 +79,14 @@
     background-color: #fff
 }
 
-.orange-coral .calendar-events::-webkit-scrollbar-thumb {
+.orange-coral .calendar-events::-webkit-scrollbar-thumb,
+.orange-coral .event-list::-webkit-scrollbar-thumb {
     background: #fc9567;
     border-radius: 5px
 }
 
-.orange-coral .calendar-events::-webkit-scrollbar-thumb:hover {
+.orange-coral .calendar-events::-webkit-scrollbar-thumb:hover,
+.orange-coral .event-list::-webkit-scrollbar-thumb:hover {
     background: #dc855e
 }
 

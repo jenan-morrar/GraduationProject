@@ -701,7 +701,38 @@ public class Users {
 		return "adminVenuePage.jsp";
 	}
 
-	@RequestMapping("/adminVenuePage/{id}/requests")
+	@RequestMapping(value="/adminVenuePage/{id}/venueReservation", method = RequestMethod.GET)
+	public String adminVenuePageReservations(@PathVariable("id") long id, Principal principal, Model model) {
+
+		List<Reservation> reservations = reservationService.allReservation();
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id && reservations.get(i).getStatus().equals("reserved")) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+		model.addAttribute("reservationResult", reservationsForVenue);
+
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+		return "venueReservationPage.jsp";
+	}
+	
+	@RequestMapping(value="/adminVenuePage/{id}/requests", method = RequestMethod.GET)
 	public String adminVenuePageRequests(@PathVariable("id") long id, Principal principal, Model model) {
 
 		List<Reservation> reservations = reservationService.allReservation();
@@ -730,6 +761,19 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "reservationsRequests.jsp";
+	}
+	
+	@RequestMapping("/adminVenuePage/{id}/requests/{requestId}/delete")
+	public String deleteRequests(@PathVariable("id") long id,@PathVariable("requestId") long requestId, Principal principal, Model model) {
+        //System.out.println(requestId);
+		reservationService.deleteReservation(requestId);
+		return "redirect:/adminVenuePage/{id}/requests";
+	}
+	
+	@RequestMapping("/adminVenuePage/{id}/requests/{requestId}/approve")
+	public String approveRequests(@PathVariable("id") long id,@PathVariable("requestId") long requestId, Principal principal, Model model) {
+		reservationService.updateReservationStatus(requestId, "reserved");
+		return "redirect:/adminVenuePage/{id}/requests";
 	}
 	
 }

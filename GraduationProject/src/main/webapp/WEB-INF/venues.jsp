@@ -109,12 +109,22 @@
 							<li><a href="/index">الصفحة الرئيسية</a></li>
 							<c:set var="userRole" scope="session" value="${userRole}" />
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li class="has-dropdown"><a href="#">صاحب القاعة</a>
+									<ul class="dropdown">
+										<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
+										<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+												الحجز</a></li>
+										<li><a href="/adminVenuePage/${venueId}/venueReservation">حجوزات
+												القاعة </a></li>
+									</ul></li>
+							</c:if>
+							<%-- 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
 										الحجز</a></li>
-							</c:if>
+							</c:if> --%>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown active"><a href="#">الخدمات</a>

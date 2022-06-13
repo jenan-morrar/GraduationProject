@@ -1,15 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page isErrorPage="true"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>قائمة الأغاني</title>
+<title>حجزوات القاعة</title>
 <link rel="icon" type="image/png"
 	href="/resources/images/ring map logo.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,20 +24,55 @@
 <meta name="twitter:url" content="" />
 <meta name="twitter:card" content="" />
 
+<!-- For calendar -->
+<!-- CSS -->
+<link rel="stylesheet" type="text/css"
+	href="<c:url value="/resources/css/evo-calendar.min.css" />">
+<link rel="stylesheet" type="text/css"
+	href="<c:url value="/resources/css/evo-calendar.orange.coral.min.css" />">
+
+<!-- Fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Cormorant+Garamond:ital,wght@1,300&family=Montserrat:wght@100&family=Poiret+One&family=Rakkas&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Cormorant+Garamond:ital,wght@1,300&family=Lateef&family=Montserrat:wght@100&family=Poiret+One&display=swap"
+	rel="stylesheet">
 <link
 	href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700'
 	rel='stylesheet' type='text/css'>
 <link href="https://fonts.googleapis.com/css?family=Sacramento"
 	rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-	href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Dancing+Script:wght@700&display=swap"
-	rel="stylesheet">
-
 
 <link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></script>
+
+<link
+	href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
 <!-- Animate.css -->
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/animate.css" />">
@@ -68,15 +100,8 @@
 <link href="<c:url value="/resources/css/venuePage.css" />"
 	rel="stylesheet">
 
-<!-- For Songs -->
-<link rel="stylesheet"
-	href="<c:url value="/resources/css/songsPage.css" />">
-<script src="/resources/js/songsPage.js"></script>
-
 <!-- Modernizr JS -->
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
-
-
 </head>
 <body>
 	<div class="fh5co-loader"></div>
@@ -101,7 +126,7 @@
 										<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 										<li><a href="/adminVenuePage/${venueId}/requests">طلبات
 												الحجز</a></li>
-										<li><a href="/adminVenuePage/${venueId}/venueReservation">حجوزات
+										<li class="active"><a href="/adminVenuePage/${venueId}/venueReservation">حجوزات
 												القاعة </a></li>
 									</ul></li>
 							</c:if>
@@ -109,15 +134,15 @@
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
-								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
-										الحجز</a></li>
+								<li class="active"><a
+									href="/adminVenuePage/${venueId}/requests">طلبات الحجز</a></li>
 							</c:if> --%>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
-							<li class="has-dropdown active"><a href="#">الخدمات</a>
+							<li class="has-dropdown"><a href="#">الخدمات</a>
 								<ul class="dropdown">
 									<li><a href="/venues">القاعات</a></li>
-									<li class="active"><a href="/songsPage">الأغاني</a></li>
+									<li><a href="/songsPage">الأغاني</a></li>
 								</ul></li>
 							<c:set var="userName" scope="session" value="${currentUser}" />
 							<c:if test="${userName ==\"user\"}">
@@ -126,7 +151,6 @@
 
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login">تسجيل دخول</a></li>
-								<input type="text" id="no-user" style="display:none;">
 							</c:if>
 							<c:if test="${userName ==\"user\"}">
 								<form id="logoutForm" method="POST" action="/logout"
@@ -148,95 +172,97 @@
 			<div class="overlay"></div>
 		</header>
 
-		<div>
-			<c:if test="${userName == \"user\"}">
-				<h2 class="songs-title">اختر الحجز الذي تريد إنشاء قائمة أغاني
-					مميزة خاصة به</h2>
-
-				<form:form modelAttribute="userSongs" action="/songsPage"
-					method="post">
-					<div class="search_categories">
-						<c:if test="${ empty userReservations }">
-							<div class="select">
-								<select name="search_categories" id="search_categories">
-									<option value="noReserv" selected="selected">لا يوجد
-										لديك أي حجوزات</option>
-								</select>
-							</div>
-						</c:if>
-						<c:if test="${ not empty userReservations }">
-							<div class="select">
-								<form:select name="search_categories" id="search_categories"
-									path="reservation">
-									<c:forEach items="${userReservations }" var="userReservation">
-										<form:option value="${userReservation }">
-											<fmt:formatDate value="${userReservation.reservationDate}"
-												pattern="dd MMM yyyy" />
-											<c:out value="حجز ${userReservation.venue.name } في تاريخ"></c:out>
-										</form:option>
-
-									</c:forEach>
-								</form:select>
-							</div>
-						</c:if>
-					</div>
-					<hr>
-					<input type="text" value="" id="hidden_token"
-						style="display: none;">
-					<div class="music-player-container">
-						<div class="songs-list-container"></div>
-					</div>
-					<form:input type="text" id="selected-tracks" value="" path="songs"
-						style="display: none;" />
-					<c:if test="${ not empty userReservations }">
-						<input type="submit" value="إنشاء القائمة" class="round-black-btn"
-							id="playlist-submit">
-					</c:if>
-
-					<script>
-					document.getElementById("playlist-submit").addEventListener("click",function(){
-						var selectedTracks = [];
-						document.querySelectorAll('input[class=song-checkbox]:checked')
-							    .forEach(el => selectedTracks.push(el.name));
-						document.getElementById("selected-tracks").setAttribute("value",selectedTracks);
-					});
-				</script>
-				</form:form>
-			</c:if>
-
-			<c:if test="${userName == \"noUser\"}">
-				<h2 style="text-align:center;">
-					لإنشاء قائمة أغاني مميزة لحجزك يجب <a href="/login">تسجيل الدخول</a>
-				</h2>
-
-				<form:form modelAttribute="userSongs" action="/songsPage"
-					method="post">
-
-					<input type="text" value="" id="hidden_token"
-						style="display: none;">
-					<div class="music-player-container">
-						<div class="songs-list-container"></div>
-					</div>
-					<form:input type="text" id="selected-tracks" value="" path="songs"
-						style="display: none;" />
-					<c:if test="${ not empty userReservations }">
-						<input type="submit" value="إنشاء القائمة" class="round-black-btn"
-							id="playlist-submit">
-					</c:if>
-
-					<script>
-					document.getElementById("playlist-submit").addEventListener("click",function(){
-						var selectedTracks = [];
-						document.querySelectorAll('input[class=song-checkbox]:checked')
-							    .forEach(el => selectedTracks.push(el.name));
-						document.getElementById("selected-tracks").setAttribute("value",selectedTracks);
-					});
+<div style="overflow-x: auto;">
+			<table class="service-table"
+				style="margin-top: 3%; margin-bottom: 3%;">
+				<tr>
+					<th>تفاصيل الحجز</th>
+					<th>نهاية الحجز</th>
+					<th>بداية الحجز</th>
+					<th>تاريخ الحجز</th>
+					<th>اسم الشحص</th>
+					<th>رقم الحجز</th>
+				</tr>
+				<c:forEach items="${reservationResult}" var="reservationResult"
+					varStatus="loop">
+					<tr>
 					
-				</script>
-				</form:form>
-			</c:if>
-		</div>
+						<td><button id="myBtn${loop.index}">عرض التفاصيل</button> <!-- The Modal -->
+							<div id="myModal" class="detail-modal">
 
+								<!-- Modal content -->
+								<div class="modal-content">
+									<span class="close">&times;</span>
+									<div class="grid-container">
+
+										<div>
+											<h2>الخدمات المطلوبة</h2>
+											<c:forEach items="${reservationResult.services}"
+												var="service">
+												<i class='fas fa-shekel-sign' style='font-size: 10px'></i>
+												<c:out value="${service.price}"></c:out>
+												<c:out value="${service.name}"></c:out>
+												<br>
+											</c:forEach>
+										</div>
+
+										<div>
+											<h2>قائمة الأغاني</h2>
+											<p id="songs-string-item">
+												<c:out value="${reservationResult.userSongs.songs}"></c:out>
+											</p>
+											<script type="text/javascript">
+												var songsString = document
+														.getElementById("songs-string-item");
+												songsString.innerHTML = songsString.innerHTML
+														.replace(',', '<br>');
+											</script>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div> <script type="text/javascript">
+								// Get the modal
+								var modal = document.getElementById("myModal");
+
+								// Get the button that opens the modal
+								var index = ${loop.index};
+								var btn = document.getElementById("myBtn"+ index);
+
+								// Get the <span> element that closes the modal
+								var span = document
+										.getElementsByClassName("close")[0];
+
+								// When the user clicks on the button, open the modal
+								btn.onclick = function() {
+									modal.style.display = "block";
+								}
+
+								// When the user clicks on <span> (x), close the modal
+								span.onclick = function() {
+									modal.style.display = "none";
+								}
+
+								// When the user clicks anywhere outside of the modal, close it
+								window.onclick = function(event) {
+									if (event.target == modal) {
+										modal.style.display = "none";
+									}
+								}
+							</script></td>
+						<td>${reservationResult.fromTime}</td>
+						<td>${reservationResult.toTime}</td>
+						<td>${reservationResult.reservationDate}</td>
+						<td>${reservationResult.user.username}</td>
+						<td>${reservationResult.id}</td>
+					</tr>
+				</c:forEach>
+			</table>
+		</div>
+		
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">
 			<div class="container">
@@ -260,10 +286,10 @@
 			</div>
 		</footer>
 	</div>
-
 	<div class="gototop js-top">
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
 	</div>
+
 
 	<!-- jQuery -->
 	<script src="/resources/js/jquery.min.js"></script>
@@ -289,5 +315,6 @@
 
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>
+
 </body>
 </html>
