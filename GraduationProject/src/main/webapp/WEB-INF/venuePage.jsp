@@ -120,6 +120,12 @@
 
 <!-- Modernizr JS -->
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"></script>
+
+<link rel="stylesheet"
+	href="<c:url value="/resources/css/reservationsRequests.css" />">
+
 </head>
 <body>
 	<div class="fh5co-loader"></div>
@@ -387,101 +393,43 @@
 								value="${reservationResult}" />
 
 							<c:set var="conflictTime" scope="session" value="${conflictTime}" />
-							<c:if test="${conflictTime == \"conflictTime\" }">
-								<div id="myModal" class="error-modal">
-
-									<!-- Modal content -->
-									<div class="error-modal-content">
-										<span class="close">&times;</span> <strong> لا يمكن
-											اتمام عملية الحجز</strong>
-										<div>يوجد حجز في هذا الموعد اختر موعد آخر</div>
-									</div>
-
-								</div>
-								<script type="text/javascript">
-									// Get the modal
-									var modal = document
-											.getElementById("myModal");
-
-									// Get the <span> element that closes the modal
-									var span = document
-											.getElementsByClassName("close")[0];
-
-									// When the user clicks on the button, open the modal
-
-									modal.style.display = "block";
-
-									// When the user clicks on <span> (x), close the modal
-									span.onclick = function() {
-										modal.style.display = "none";
-									}
-
-									// When the user clicks anywhere outside of the modal, close it
-									/*window.onclick = function(event) {
-									  if (event.target == modal) {
-									    modal.style.display = "none";
-									  }
-									}*/
-								</script>
-								<!--<div class="alert">
-											<span class="closebtn"
-												onclick="this.parentElement.style.display='none';">&times;</span>
-											<strong>يوجد خطأ!</strong>&emsp;يوجد حجز في هذا الموعد اختر
-											موعد آخر
-										</div>-->
-							</c:if>
-
 							<c:set var="toTimeAfterFromTime" scope="session"
 								value="${toTimeAfterFromTime}" />
-							<c:if test="${toTimeAfterFromTime == \"noToTimeAfterFromTime\" }">
-								<div id="myModal" class="error-modal">
+							<c:set var="wayOfPayment" scope="session" value="${wayOfPayment}" />
 
-									<!-- Modal content -->
-									<div class="error-modal-content">
-										<span class="close">&times;</span> <strong>لا يمكن
-											اتمام عملية الحجز</strong>
-										<div>يجب أن يكون تاريخ انتهاء الحجز بعد تاريح بدء الحجز
-										</div>
-									</div>
-
-								</div>
-								<script type="text/javascript">
-									// Get the modal
-									var modal = document
-											.getElementById("myModal");
-
-									// Get the <span> element that closes the modal
-									var span = document
-											.getElementsByClassName("close")[0];
-
-									// When the user clicks on the button, open the modal
-
-									modal.style.display = "block";
-
-									// When the user clicks on <span> (x), close the modal
-									span.onclick = function() {
-										modal.style.display = "none";
-									}
-
-									// When the user clicks anywhere outside of the modal, close it
-									/*window.onclick = function(event) {
-									  if (event.target == modal) {
-									    modal.style.display = "none";
-									  }
-									}*/
-								</script>
-								<!--<div class="alert">
-									<span class="closebtn"
-										onclick="this.parentElement.style.display='none';">&times;</span>
-									<strong>يوجد خطأ!</strong>&emsp;يجب أن يكون تاريخ انتهاء الحجز
-									بعد تاريح بدء الحجز
-								</div>-->
-							</c:if>
+							<script type="text/javascript">
+								<c:if test="${conflictTime == \"conflictTime\" }">
+								Swal
+										.fire({
+											icon : 'error',
+											title : 'لا يمكن اتمام عملية الحجز',
+											text : 'يوجد حجز في هذا الموعد اختر موعد آخر'
+										});
+								</c:if>
+								<c:if test="${toTimeAfterFromTime == \"noToTimeAfterFromTime\" }">
+								Swal
+										.fire({
+											icon : 'error',
+											title : 'لا يمكن اتمام عملية الحجز',
+											text : 'يجب أن يكون تاريخ انتهاء الحجز بعد تاريح بدء الحجز'
+										});
+								</c:if>
+								<c:if test="${wayOfPayment == \"cach\" }">
+								Swal
+										.fire({
+											icon : 'success',
+											title : 'لقد قمت بعمل حجز اولي, لإتمام هذا الحجز يجب دفع العربون لصاحب القاعة',
+											text : 'إذا لم يتم الدفع خلال يوم واحد كحد أقصى سيتم حذف هذا الحجز'
+										});
+								</c:if>
+								
+							</script>
 
 							<div class="user" id="add-event-form"
 								style="margin-top: 3%; display: none;">
 								<form:form method="post" action="/venuePage/${venuePage.id}"
-									modelAttribute="reservation" class="reservationForm">
+									modelAttribute="reservation" class="reservationForm"
+									id="reservation-form-submit">
 									<label>اختر ما يلي لحجز القاعة</label>
 									<br>
 									<form:input type="time" id="from" name="from" path="startTime"
@@ -492,6 +440,13 @@
 										value="21:00" required="required" />
 									<label for="to">إلى الساعة</label>
 									<br>
+								    <label id="payment-way">طريقة الدفع</label>
+									<div id="payment-way-radio">
+									كاش <form:radiobutton path="wayOfPayment" value="cach" required="required"/> 
+									&nbsp; &nbsp; &nbsp;
+                                    PayPAl <form:radiobutton path="wayOfPayment" value="paypal" required="required"/>
+                                    </div>
+                                    
 									<div class="dropdown">
 										<button class="btn btn-default dropdown-toggle" type="button"
 											id="dropdownMenu1" data-toggle="dropdown"
@@ -532,43 +487,14 @@
 												});
 									</script>
 
+									<%-- <form:radiobutton name="gender" value="chash" path="wayOfPayment" />دفع كاش
+			                        <form:radiobutton type="radio" name="gender" value="paypal" path="wayOfPayment" />دفع بواسطة PayPal --%>
+									
 									<form:input type="date" value="" id="event-date"
 										style="display: none;" path="reservationDate" />
 
-									<!--<c:set var="toTimeAfterFromTime" scope="session"
-										value="${toTimeAfterFromTime}" />
-									<c:set var="conflictTime" scope="session"
-										value="${conflictTime}" />
-									<c:choose>
-										<c:when
-											test="${toTimeAfterFromTime == \"notToTimeAfterFromTime\"}">
-											<input type="submit" id="reserveButt" class="round-black-btn"
-												formaction="#" value="إحجز الآن" />
-											<div class="alert">
-												<span class="closebtn"
-													onclick="this.parentElement.style.display='none';">&times;</span>
-												<strong>يوجد خطأ!</strong>&emsp;يجب أن يكون تاريخ انتهاء
-												الحجز بعد تاريح بدء الحجز
-											</div>
-										</c:when>
-										<c:when test="${conflictTime == \"conflictTime\"}">
-											<input type="submit" id="reserveButt" class="round-black-btn"
-												formaction="#" value="إحجز الآن" />
-											<div class="alert">
-												<span class="closebtn"
-													onclick="this.parentElement.style.display='none';">&times;</span>
-												<strong>يوجد خطأ!</strong>&emsp;يوجد حجز في هذا الموعد اختر
-												موعد آخر
-											</div>
-										</c:when>
-										<c:otherwise>
-											<input type="submit" id="reserveButt" class="round-black-btn"
-												value="إحجز الآن" />
-										</c:otherwise>
-									</c:choose>-->
-
 									<input type="submit" id="reserveButt" class="round-black-btn"
-										value="إحجز الآن" />
+										value="إحجز الآن" onclick="conflictReservatiosn()" />
 
 								</form:form>
 								<!--<h4>أختر التاريح الذي يناسبك</h4>
@@ -592,6 +518,7 @@
 								$("#reservations").val(
 										JSON.stringify(reservationsjs));
 							</script>
+
 							<div class="--noshadow" id="demoEvoCalendar"></div>
 						</c:if>
 					</div>
@@ -796,49 +723,52 @@
 			</div>
 		</div>
 		<!-- Recommendation results -->
-		
-			<div class="col-md-8" id="venues-card-item"  style="float: right; padding: 15px; margin:11.534px; ">
-				<div id="venueCardStyle">
-					<h1 style="text-align: right; color:#cd7e53; padding: 30px; border-bottom: 2px solid #cd7e53;">قاعات مشابهة قد تعجبك</h1>
-					<!-- <div>
+
+		<div class="col-md-8" id="venues-card-item"
+			style="float: right; padding: 15px; margin: 11.534px;">
+			<div id="venueCardStyle">
+				<h1
+					style="text-align: right; color: #cd7e53; padding: 30px; border-bottom: 2px solid #cd7e53;">قاعات
+					مشابهة قد تعجبك</h1>
+				<!-- <div>
 						<hr style="color:#cd7e53;">
 					</div> -->
-					<c:forEach items="${recommendedVenues}" var="venueCard">
-						<div class="col-md-4" id="venueCardStyle" style="float: right;">
-							<div class="product-grid">
-								<span class="product-image"> <c:if
-										test="${venueCard.images.size()==0}">
+				<c:forEach items="${recommendedVenues}" var="venueCard">
+					<div class="col-md-4" id="venueCardStyle" style="float: right;">
+						<div class="product-grid">
+							<span class="product-image"> <c:if
+									test="${venueCard.images.size()==0}">
+									<a href="/venuePage/${venueCard.id}" class="image"> <img
+										class="pic-1" style="height: 200px;"
+										src="/resources/images/noImage.jpg">
+									</a>
+								</c:if> <c:forEach var="images" items="${venueCard.images}"
+									varStatus="loop">
+									<c:if test="${loop.first}">
 										<a href="/venuePage/${venueCard.id}" class="image"> <img
-											class="pic-1" style="height: 200px;"
-											src="/resources/images/noImage.jpg">
+											class="pic-1"
+											src="<c:out value="/user-photos/${venueCard.id}/${images.image}"/>">
 										</a>
-									</c:if> <c:forEach var="images" items="${venueCard.images}"
-										varStatus="loop">
-										<c:if test="${loop.first}">
-											<a href="/venuePage/${venueCard.id}" class="image"> <img
-												class="pic-1"
-												src="<c:out value="/user-photos/${venueCard.id}/${images.image}"/>">
-											</a>
-										</c:if>
-									</c:forEach>
-								</span>
-								<div class="product-content">
+									</c:if>
+								</c:forEach>
+							</span>
+							<div class="product-content">
 
-									<h3 class="title">
-										<a href="/venuePage/${venueCard.id}"><c:out
-												value="${venueCard.name}" /></a>
-										<h4>${venueCard.location }</h4>
+								<h3 class="title">
+									<a href="/venuePage/${venueCard.id}"><c:out
+											value="${venueCard.name}" /></a>
+									<h4>${venueCard.location }</h4>
 
-									</h3>
-									<a class="add-to-cart" href="/venuePage/${venueCard.id}">اذهب
-										إلى القاعة</a>
-								</div>
+								</h3>
+								<a class="add-to-cart" href="/venuePage/${venueCard.id}">اذهب
+									إلى القاعة</a>
 							</div>
 						</div>
-					</c:forEach>
-				</div>
-
+					</div>
+				</c:forEach>
 			</div>
+
+		</div>
 
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">

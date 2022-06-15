@@ -49,6 +49,8 @@ public class Reservation {
 	private Date expirationDate;
 	private String status;
 	private double retainer;
+	private String wayOfPayment;
+
 	@Column(updatable = false)
 	private Date createdAt;
 	private Date updatedAt;
@@ -77,7 +79,7 @@ public class Reservation {
     	
     }
     
-	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime,Date expirationDate,String status,double retainer, List<ServiceOfVenue> services,Venue venue, User user, UserSongs userSongs) {
+	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime,Date expirationDate,String status,double retainer,String wayOfPayment, List<ServiceOfVenue> services,Venue venue, User user, UserSongs userSongs) {
 		super();
 		this.id = id;
 		this.reservationDate = reservationDate;
@@ -86,6 +88,7 @@ public class Reservation {
 		this.expirationDate = expirationDate;
 		this.status = status;
 		this.retainer = retainer;
+		this.wayOfPayment = wayOfPayment;
 		this.services=services;
 		this.venue = venue;
 		this.user = user;
@@ -172,6 +175,14 @@ public class Reservation {
 
 	public void setRetainer(double retainer) {
 		this.retainer = retainer;
+	}
+	
+	public String getWayOfPayment() {
+		return wayOfPayment;
+	}
+
+	public void setWayOfPayment(String wayOfPayment) {
+		this.wayOfPayment = wayOfPayment;
 	}
 
 	public Date getCreatedAt() {

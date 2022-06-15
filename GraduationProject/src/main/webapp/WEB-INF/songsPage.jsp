@@ -174,7 +174,6 @@
 												pattern="dd MMM yyyy" />
 											<c:out value="حجز ${userReservation.venue.name } في تاريخ"></c:out>
 										</form:option>
-
 									</c:forEach>
 								</form:select>
 							</div>

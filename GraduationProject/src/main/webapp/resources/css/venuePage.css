@@ -532,7 +532,13 @@
 	font-size: 20px;
 	padding-left: 10px;
 	color: #cd7e53;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
+}
+#payment-way{
+    margin-bottom: 10px;
+}
+#payment-way-radio{
+    margin-bottom: 10px;
 }
 
 .services-item {
