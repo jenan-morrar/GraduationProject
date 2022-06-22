@@ -145,8 +145,7 @@ float :right;
 
 </head>
 <body>
-	</a>
-	</div>
+	
 	<div class="row">
 		<div class="col-75">
 			<div class="container">
@@ -162,13 +161,13 @@ float :right;
 									class="fa fa-cc-discover" style="color: orange;"></i>
 							</div>
 							<label for="price">السعر</label> <input type="text" id="price"
-								name="price"> 
+								name="price" value="1500" readonly> 
 								<label for="currency">العملة</label> 
 								<input type="text" id="currency" name="currency" placeholder="العملة">
 							<label for="method">طريقة الدفع</label> <input type="text"
 								id="method" name="method" placeholder="الدفع بواسطة...">
 							<label for="intent">وصف</label> <input type="text" id="intent"
-								name="intent" value="sale"> <label for="description">اسم
+								name="intent" value="sale"readonly> <label for="description">اسم
 								الدفع</label> 
 								<input type="text" id="description" name="description"
 								placeholder="اسم الدفع">
@@ -178,30 +177,6 @@ float :right;
 						<input type="submit" value="استكمال الدفع" class="btn">
 				</form>
 			</div>
-		</div>
-	</div>
-	<div class="col-25">
-		<div class="container">
-			<h4>
-				سلتي <span class="price" style="color: black"><i
-					class="fa fa-shopping-cart"></i> <b>0.5</b></span>
-			</h4>
-			<p>
-				<a href="#">منتج 1</a> <span class="price">$0</span>
-			</p>
-			<p>
-				<a href="#">منتج 2</a> <span class="price">$0</span>
-			</p>
-			<p>
-				<a href="#">منتج 3</a> <span class="price">$1</span>
-			</p>
-			<p>
-				<a href="#">منتج 4</a> <span class="price">$0</span>
-			</p>
-			<hr>
-			<p>
-				المجموع <span class="price" style="color: black"><b>$0.5</b></span>
-			</p>
 		</div>
 	</div>
 	</div>
