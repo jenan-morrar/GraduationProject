@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>طلبات الحجز</title>
+<title>حجزوات القاعة</title>
 <link rel="icon" type="image/png"
 	href="/resources/images/ring map logo.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -100,17 +100,8 @@
 <link href="<c:url value="/resources/css/venuePage.css" />"
 	rel="stylesheet">
 
-
 <!-- Modernizr JS -->
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
-
-<script
-	src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"></script>
-
-<link rel="stylesheet"
-	href="<c:url value="/resources/css/reservationsRequests.css" />">
-
-
 </head>
 <body>
 	<div class="fh5co-loader"></div>
@@ -133,9 +124,9 @@
 								<li class="has-dropdown"><a href="#">صاحب القاعة</a>
 									<ul class="dropdown">
 										<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
-										<li class="active"><a
-											href="/adminVenuePage/${venueId}/requests">طلبات الحجز</a></li>
-										<li><a href="/adminVenuePage/${venueId}/venueReservation">حجوزات
+										<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+												الحجز</a></li>
+										<li class="active"><a href="/adminVenuePage/${venueId}/venueReservation">حجوزات
 												القاعة </a></li>
 									</ul></li>
 							</c:if>
@@ -181,83 +172,22 @@
 			<div class="overlay"></div>
 		</header>
 
-		<div style="overflow-x: auto;">
+<div style="overflow-x: auto;">
 			<table class="service-table"
 				style="margin-top: 3%; margin-bottom: 3%;">
 				<tr>
-					<th></th>
+					<th>تفاصيل الحجز</th>
 					<th>نهاية الحجز</th>
 					<th>بداية الحجز</th>
 					<th>تاريخ الحجز</th>
 					<th>اسم الشحص</th>
 					<th>رقم الحجز</th>
-
 				</tr>
-				<c:forEach items="${reservationResult}" var="reservationResultItem"
+				<c:forEach items="${reservationResult}" var="reservationResult"
 					varStatus="loop">
 					<tr>
-						<td>
-							<form id="delete-form"
-								action="/adminVenuePage/${venueId}/requests/${reservationResultItem.id}/delete">
-							</form> <a id="delete-reservation" onclick="deleteReservation()"
-							href="#" class="x">&#10006;</a> <script type="text/javascript">
-								function deleteReservation() {
-									Swal.fire({
-										  title: 'هل تريد حذف الحجز ${reservationResultItem.id} ؟',
-										  text: "لا تستطيع إرجاع ما يتم حذفه",
-										  icon: 'warning',
-										  showCancelButton: true,
-										  confirmButtonColor: '#3085d6',
-										  cancelButtonColor: '#d33',
-										  confirmButtonText: 'حذف'
-										}).then((result) => {
-										  if (result.isConfirmed) {
-										    Swal.fire(
-										      'تم الحذف',
-										      'هذا الحجز تم حذفه بنجاح',
-										      'success'
-										    ).then((result) => {
-										    	  if (result.isConfirmed) {
-														document.getElementById("delete-form").submit();
-										    		  }
-										    		});
-										  }
-										});
-								}
-							</script>
-
-							<form id="approve-form"
-								action="/adminVenuePage/${venueId}/requests/${reservationResultItem.id}/approve">
-							</form> <a id="delete-reservation" onclick="approveReservation()"
-							href="#" class="checkmark">&#10004;</a> <script
-								type="text/javascript">
-								function approveReservation() {
-									Swal.fire({
-										  title: 'هل تريد تأكيد الحجز ${reservationResultItem.id} ؟',
-										  text: "بعد التثبيت لا يمكن حذف الحجز",
-										  icon: 'warning',
-										  showCancelButton: true,
-										  confirmButtonColor: '#3085d6',
-										  cancelButtonColor: '#d33',
-										  confirmButtonText: 'قم بالتثبيت'
-										}).then((result) => {
-										  if (result.isConfirmed) {
-										    Swal.fire(
-										      'تم التثبيت بنجاح',
-										      'هذا الحجز تم ثبيته',
-										      'success'
-										    ).then((result) => {
-										    	  if (result.isConfirmed) {
-														document.getElementById("approve-form").submit();
-										    		  }
-										    		});
-										  }
-										});
-								}
-							</script>
-						</td>
-
-						<%-- <td><button id="myBtn${loop.index}">عرض التفاصيل</button> <!-- The Modal -->
+					
+						<td><button id="myBtn${loop.index}">عرض التفاصيل</button> <!-- The Modal -->
 							<div id="myModal" class="detail-modal">
 
 								<!-- Modal content -->
@@ -267,7 +197,7 @@
 
 										<div>
 											<h2>الخدمات المطلوبة</h2>
-											<c:forEach items="${reservationResultItem.services}"
+											<c:forEach items="${reservationResult.services}"
 												var="service">
 												<i class='fas fa-shekel-sign' style='font-size: 10px'></i>
 												<c:out value="${service.price}"></c:out>
@@ -278,16 +208,14 @@
 
 										<div>
 											<h2>قائمة الأغاني</h2>
-											<p id="songs_display"></p>
 											<p id="songs-string-item">
-												<c:out value="${reservationResultItem.userSongs.songs}"></c:out>
+												<c:out value="${reservationResult.userSongs.songs}"></c:out>
 											</p>
 											<script type="text/javascript">
 												var songsString = document
 														.getElementById("songs-string-item");
 												songsString.innerHTML = songsString.innerHTML
 														.replace(',', '<br>');
-												;
 											</script>
 
 										</div>
@@ -301,12 +229,8 @@
 								var modal = document.getElementById("myModal");
 
 								// Get the button that opens the modal
-								var index = $
-								{
-									loop.index
-								};
-								var btn = document.getElementById("myBtn"
-										+ index);
+								var index = ${loop.index};
+								var btn = document.getElementById("myBtn"+ index);
 
 								// Get the <span> element that closes the modal
 								var span = document
@@ -328,18 +252,17 @@
 										modal.style.display = "none";
 									}
 								}
-							</script></td> --%>
-						<td>${reservationResultItem.fromTime}</td>
-						<td>${reservationResultItem.toTime}</td>
-						<td>${reservationResultItem.reservationDate}</td>
-						<td>${reservationResultItem.user.username}</td>
-						<td>${reservationResultItem.id}</td>
+							</script></td>
+						<td>${reservationResult.fromTime}</td>
+						<td>${reservationResult.toTime}</td>
+						<td>${reservationResult.reservationDate}</td>
+						<td>${reservationResult.user.username}</td>
+						<td>${reservationResult.id}</td>
 					</tr>
-
 				</c:forEach>
 			</table>
 		</div>
-
+		
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">
 			<div class="container">
@@ -367,62 +290,6 @@
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
 	</div>
 
-	<!-- 	<script>
-		var responsiveSlider = function() {
-
-			var slider = document.getElementById("slider");
-			var sliderWidth = slider.offsetWidth;
-			var slideList = document.getElementById("slideWrap");
-			var count = 1;
-			var items = slideList.querySelectorAll("li").length;
-			var prev = document.getElementById("prev");
-			var next = document.getElementById("next");
-
-			window.addEventListener('resize', function() {
-				sliderWidth = slider.offsetWidth;
-			});
-
-			var prevSlide = function() {
-				if (count > 1) {
-					count = count - 2;
-					slideList.style.left = "-" + count * sliderWidth + "px";
-					count++;
-				} else if (count = 1) {
-					count = items - 1;
-					slideList.style.left = "-" + count * sliderWidth + "px";
-					count++;
-				}
-			};
-
-			var nextSlide = function() {
-				if (count < items) {
-					slideList.style.left = "-" + count * sliderWidth + "px";
-					count++;
-				} else if (count = items) {
-					slideList.style.left = "0px";
-					count = 1;
-				}
-			};
-
-			next.addEventListener("click", function() {
-				nextSlide();
-			});
-
-			prev.addEventListener("click", function() {
-				prevSlide();
-			});
-
-			setInterval(function() {
-				nextSlide()
-			}, 5000);
-
-		};
-
-		window.onload = function() {
-			responsiveSlider();
-		}
-	</script>
- -->
 
 	<!-- jQuery -->
 	<script src="/resources/js/jquery.min.js"></script>
@@ -448,9 +315,6 @@
 
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>
-
-
-
 
 </body>
 </html>

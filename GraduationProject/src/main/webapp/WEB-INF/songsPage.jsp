@@ -96,12 +96,22 @@
 							<li><a href="/index">الصفحة الرئيسية</a></li>
 							<c:set var="userRole" scope="session" value="${userRole}" />
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
+								<li class="has-dropdown"><a href="#">صاحب القاعة</a>
+									<ul class="dropdown">
+										<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
+										<li><a href="/adminVenuePage/${venueId}/requests">طلبات
+												الحجز</a></li>
+										<li><a href="/adminVenuePage/${venueId}/venueReservation">حجوزات
+												القاعة </a></li>
+									</ul></li>
+							</c:if>
+							<%-- 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}">قاعتي</a></li>
 							</c:if>
 							<c:if test="${userRole == \"ROLE_ADMIN\"}">
 								<li><a href="/adminVenuePage/${venueId}/requests">طلبات
 										الحجز</a></li>
-							</c:if>
+							</c:if> --%>
 							<li><a href="/aboutPage">من نحن</a></li>
 							<li><a href="/contactPage">تواصل معنا</a></li>
 							<li class="has-dropdown active"><a href="#">الخدمات</a>
@@ -116,6 +126,7 @@
 
 							<c:if test="${userName == \"noUser\"}">
 								<li><a href="/login">تسجيل دخول</a></li>
+								<input type="text" id="no-user" style="display:none;">
 							</c:if>
 							<c:if test="${userName ==\"user\"}">
 								<form id="logoutForm" method="POST" action="/logout"
@@ -138,49 +149,50 @@
 		</header>
 
 		<div>
-			<h2 class="songs-title">اختر الحجز الذي تريد إنشاء قائمة أغاني
-				مميزة خاصة به</h2>
+			<c:if test="${userName == \"user\"}">
+				<h2 class="songs-title">اختر الحجز الذي تريد إنشاء قائمة أغاني
+					مميزة خاصة به</h2>
 
-			<form:form modelAttribute="userSongs" action="/songsPage"
-				method="post">
-				<div class="search_categories">
-					<c:if test="${ empty userReservations }">
-						<div class="select">
-							<select name="search_categories" id="search_categories">
-								<option value="noReserv" selected="selected">لا يوجد
-									لديك أي حجوزات</option>
-							</select>
-						</div>
-					</c:if>
+				<form:form modelAttribute="userSongs" action="/songsPage"
+					method="post">
+					<div class="search_categories">
+						<c:if test="${ empty userReservations }">
+							<div class="select">
+								<select name="search_categories" id="search_categories">
+									<option value="noReserv" selected="selected">لا يوجد
+										لديك أي حجوزات</option>
+								</select>
+							</div>
+						</c:if>
+						<c:if test="${ not empty userReservations }">
+							<div class="select">
+								<form:select name="search_categories" id="search_categories"
+									path="reservation">
+									<c:forEach items="${userReservations }" var="userReservation">
+										<form:option value="${userReservation }">
+											<fmt:formatDate value="${userReservation.reservationDate}"
+												pattern="dd MMM yyyy" />
+											<c:out value="حجز ${userReservation.venue.name } في تاريخ"></c:out>
+										</form:option>
+									</c:forEach>
+								</form:select>
+							</div>
+						</c:if>
+					</div>
+					<hr>
+					<input type="text" value="" id="hidden_token"
+						style="display: none;">
+					<div class="music-player-container">
+						<div class="songs-list-container"></div>
+					</div>
+					<form:input type="text" id="selected-tracks" value="" path="songs"
+						style="display: none;" />
 					<c:if test="${ not empty userReservations }">
-						<div class="select">
-							<form:select name="search_categories" id="search_categories"
-								path="reservation">
-								<c:forEach items="${userReservations }" var="userReservation">
-									<form:option value="${userReservation }">
-										<fmt:formatDate value="${userReservation.reservationDate}"
-											pattern="dd MMM yyyy" />
-										<c:out value="حجز ${userReservation.venue.name } في تاريخ"></c:out>
-									</form:option>
-
-								</c:forEach>
-							</form:select>
-						</div>
+						<input type="submit" value="إنشاء القائمة" class="round-black-btn"
+							id="playlist-submit">
 					</c:if>
-				</div>
-				<hr>
-				<input type="text" value="" id="hidden_token" style="display: none;">
-				<div class="music-player-container">
-					<div class="songs-list-container"></div>
-				</div>
-				<form:input type="text" id="selected-tracks" value="" path="songs"
-					style="display: none;" />
-				<c:if test="${ not empty userReservations }">
-					<input type="submit" value="إنشاء القائمة" class="round-black-btn"
-						id="playlist-submit">
-				</c:if>
 
-				<script>
+					<script>
 					document.getElementById("playlist-submit").addEventListener("click",function(){
 						var selectedTracks = [];
 						document.querySelectorAll('input[class=song-checkbox]:checked')
@@ -188,7 +200,40 @@
 						document.getElementById("selected-tracks").setAttribute("value",selectedTracks);
 					});
 				</script>
-			</form:form>
+				</form:form>
+			</c:if>
+
+			<c:if test="${userName == \"noUser\"}">
+				<h2 style="text-align:center;">
+					لإنشاء قائمة أغاني مميزة لحجزك يجب <a href="/login">تسجيل الدخول</a>
+				</h2>
+
+				<form:form modelAttribute="userSongs" action="/songsPage"
+					method="post">
+
+					<input type="text" value="" id="hidden_token"
+						style="display: none;">
+					<div class="music-player-container">
+						<div class="songs-list-container"></div>
+					</div>
+					<form:input type="text" id="selected-tracks" value="" path="songs"
+						style="display: none;" />
+					<c:if test="${ not empty userReservations }">
+						<input type="submit" value="إنشاء القائمة" class="round-black-btn"
+							id="playlist-submit">
+					</c:if>
+
+					<script>
+					document.getElementById("playlist-submit").addEventListener("click",function(){
+						var selectedTracks = [];
+						document.querySelectorAll('input[class=song-checkbox]:checked')
+							    .forEach(el => selectedTracks.push(el.name));
+						document.getElementById("selected-tracks").setAttribute("value",selectedTracks);
+					});
+					
+				</script>
+				</form:form>
+			</c:if>
 		</div>
 
 		<footer id="fh5co-footer" role="contentinfo"

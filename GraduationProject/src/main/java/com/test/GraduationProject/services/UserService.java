@@ -39,7 +39,7 @@ public class UserService {
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			user.setRoles(roleRepository.findByName("ROLE_USER"));
 
-			String from = "palvenues@gmail.com";
+			String from = "palvenues@outlook.com";
 			String to = user.getEmail();
 
 			MimeMessage message = emailSender.createMimeMessage();

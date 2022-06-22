@@ -1,3 +1,6 @@
+const PENDING_STATUS = '#F9B902';
+const RESERVED_STATUS = '#70DC03';
+
 ;(function(factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
@@ -246,7 +249,7 @@
     }
 
     // v1.0.0 - Limit title (...)
-    EvoCalendar.prototype.limitTitle = function(title, limit) {
+    EvoCalendar.prototype.limitTitle = function(status,title, limit) {
         var newTitle = [];
         limit = limit === undefined ? 18 : limit;
         if ((title).split(' ').join('').length > limit) {
@@ -258,7 +261,11 @@
             }
             return newTitle.join(' ') + '...'
         }
-        return title;
+    	status = status.charAt(0).toUpperCase()+status.slice(1);        
+    	title = title.charAt(0).toUpperCase()+title.slice(1);
+
+        
+        return status+ ' - ' +title;
     }
 
     // v1.1.2 - Check and filter strings
@@ -640,10 +647,15 @@
         _.$active.events.push(event_data);
         markup = '<div class="event-container" role="button" data-event-index="'+(event_data.id)+'">';
         markup += '<div class="event-icon"><div class="event-bullet-'+event_data.type+'"';
-        if (event_data.color) {
+        /*if (event_data.color) {
             markup += 'style="background-color:'+event_data.color+'"'
-        }
-        markup += '></div></div><div class="event-info"><p class="event-title">'+_.limitTitle(event_data.name);
+        }*/
+        if(event_data.status == 'pending'){
+			markup += 'style="background-color:'+PENDING_STATUS+'"'
+		}else if(event_data.status == 'reserved'){
+			markup += 'style="background-color:'+RESERVED_STATUS+'"'
+		}
+        markup += '></div></div><div class="event-info"><p class="event-title">'+_.limitTitle(event_data.status, event_data.name);
         if (event_data.badge) markup += '<span>'+event_data.badge+'</span>';
         markup += '</p>'
         if (event_data.description) markup += '<p class="event-desc">'+event_data.description+'</p>';
@@ -787,7 +799,13 @@
                 htmlToAppend = '<div class="type-bullet"><div ';
                 
                 htmlToAppend += 'class="type-'+event.type+'"'
-                if (event.color) { htmlToAppend += 'style="background-color:'+event.color+'"' }
+                /*if (event.color) { htmlToAppend += 'style="background-color:'+event.color+'"' }*/
+                if(event.status == 'pending'){
+					htmlToAppend += 'style="background-color:'+PENDING_STATUS+'"'
+				}else if(event.status == 'reserved'){
+					htmlToAppend += 'style="background-color:'+RESERVED_STATUS+'"'
+				}
+				
                 htmlToAppend += '></div></div>';
                 thisDate.find('.event-indicator').append(htmlToAppend);
             }
