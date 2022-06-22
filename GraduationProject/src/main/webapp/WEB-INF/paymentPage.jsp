@@ -161,7 +161,7 @@ float :right;
 									class="fa fa-cc-discover" style="color: orange;"></i>
 							</div>
 							<label for="price">السعر</label> <input type="text" id="price"
-								name="price" value="1500" readonly> 
+								name="price" value="0.5" readonly> 
 								<label for="currency">العملة</label> 
 								<input type="text" id="currency" name="currency" placeholder="العملة">
 							<label for="method">طريقة الدفع</label> <input type="text"

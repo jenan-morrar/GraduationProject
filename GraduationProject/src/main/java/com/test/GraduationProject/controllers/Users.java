@@ -273,10 +273,10 @@ public class Users {
 			return "contactPage.jsp";
 		} else {
 
-			contact.setEmailReciver("palvenues@outlook.com");
+			contact.setEmailReciver("palvenuesWeb@outlook.com");
 			SimpleMailMessage message = new SimpleMailMessage();
 //			message.setFrom(contact.getEmailSender());
-			message.setFrom("palvenues@outlook.com");
+			message.setFrom("palvenuesWeb@outlook.com");
 			message.setTo(contact.getEmailReciver());
 			message.setSubject(contact.getSubject());
 			message.setText(contact.getMessage());
