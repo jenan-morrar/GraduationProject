@@ -76,14 +76,11 @@ public class Reservation {
 
 	}
 
-	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime, Date expirationDate, String status,
-			String deleteCode, List<ServiceOfVenue> services, Venue venue, User user, UserSongs userSongs) {
-	
-    public Reservation() {
-    	
-    }
-    
-	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime,Date expirationDate,String status,double retainer,String wayOfPayment, List<ServiceOfVenue> services,Venue venue, User user, UserSongs userSongs) {
+//	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime, Date expirationDate, String status,
+//			String deleteCode, List<ServiceOfVenue> services, Venue venue, User user, UserSongs userSongs) {
+//}
+ 
+	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime,Date expirationDate,String status,double retainer,String wayOfPayment, String deleteCode, List<ServiceOfVenue> services,Venue venue, User user, UserSongs userSongs) {
 		super();
 		this.id = id;
 		this.reservationDate = reservationDate;
@@ -94,6 +91,7 @@ public class Reservation {
 		this.services = services;
 		this.retainer = retainer;
 		this.wayOfPayment = wayOfPayment;
+		this.deleteCode = deleteCode;
 		this.services=services;
 		this.venue = venue;
 		this.user = user;
