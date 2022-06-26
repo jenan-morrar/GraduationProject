@@ -39,7 +39,7 @@ public class UserService {
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			user.setRoles(roleRepository.findByName("ROLE_USER"));
 
-			String from = "palvenues@gmail.com";
+			String from = "palvenues@outlook.com";
 			String to = user.getEmail();
 
 			MimeMessage message = emailSender.createMimeMessage();
@@ -51,7 +51,7 @@ public class UserService {
 
 			String content = "        <h1>\r\n" + "            PalVenues\r\n" + "        </h1>\r\n"
 					+ "        <h1>Welcome to PalVenues!.</h1>\r\n" + "        <h3>\r\n"
-					+ "            Now that you’re here, it’s time to search and reserv your suitable Venues in Ramallah</h3>\r\n"
+					+ "            Now that you’re here, it’s time to search and reserve your suitable Venues in Ramallah</h3>\r\n"
 					+ "        <img src='cid:welcomImage'>";
 			helper.setText(content, true);
 
@@ -141,4 +141,5 @@ public class UserService {
 //    public void deleteVenue(Long id) {
 //    	venueRepository.deleteById(id);
 //    }
+	
 }
