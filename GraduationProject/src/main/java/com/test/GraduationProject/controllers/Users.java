@@ -1,5 +1,7 @@
 package com.test.GraduationProject.controllers;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -10,10 +12,14 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -234,14 +240,228 @@ public class Users {
 		return "/cart/cartPage.jsp";
 	}
 
-	// edit reservation on cart Page
-	@RequestMapping(value = "/reservation/{id}", method = RequestMethod.PUT)
-	public String update(@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result) {
-		if (result.hasErrors()) {
-			return "/cartPage.jsp";
+	// edit reservation on edit page
+	@RequestMapping(value = "/reservation/{id}/{venueId}", method = RequestMethod.PUT)
+	public String update(@PathVariable("id") Long id,@PathVariable("venueId") Long venueId, @Valid @ModelAttribute("reservation") Reservation reservation,
+			BindingResult result, Principal principal, RedirectAttributes rattrs) {
+		/*
+		 * if (result.hasErrors()) { return "editReservationPage.jsp"; } else {
+		 * reservationService.update(reservation); return
+		 * "redirect:/reservation/{id}/edit"; }
+		 */
+
+		// reservation.setServices(servicesList);
+		Reservation currentReservation = reservationService.findReservation(id);
+
+		reservation.setFromTime(java.sql.Time.valueOf(reservation.getStartTime() + ":00"));
+		reservation.setToTime(java.sql.Time.valueOf(reservation.getEndTime() + ":00"));
+
+		// Check Conflicts
+		List<Reservation> allReseravtions = reservationService.allReservation();
+		List<Reservation> reservationForVenue = new ArrayList<>();
+
+		if (allReseravtions.size() != 0) {
+			for (int i = 0; i < allReseravtions.size(); i++) {
+				if (allReseravtions.get(i).getVenue().getId() == currentReservation.getVenue().getId()) {
+					reservationForVenue.add(allReseravtions.get(i));
+				}
+			}
+		}
+
+		if (reservationForVenue.size() != 0) {
+
+			boolean hasTheSameDate = false;
+			boolean hasTheSameTime = false;
+
+			for (int i = 0; i < reservationForVenue.size(); i++) {
+				int resultOfConflictDay = reservation.getReservationDate()
+						.compareTo(reservationForVenue.get(i).getReservationDate());
+				if (resultOfConflictDay == 0) {
+					hasTheSameDate = true;
+					break;
+				} else {
+					hasTheSameDate = false;
+				}
+			}
+
+			if (hasTheSameDate) {
+				System.out.println("same Date");
+				for (int i = 0; i < reservationForVenue.size(); i++) {
+					int resultOfConflictDay = reservation.getReservationDate()
+							.compareTo(reservationForVenue.get(i).getReservationDate());
+					if (resultOfConflictDay == 0) {
+						System.out.println(reservation.getToTime());
+						System.out.println(reservationForVenue.get(i).getFromTime());
+						System.out.println(reservation.getFromTime());
+						System.out.println(reservationForVenue.get(i).getToTime());
+						if (reservation.getToTime().after(reservationForVenue.get(i).getFromTime())
+								&& reservation.getFromTime().before(reservationForVenue.get(i).getToTime())) {
+							System.out.println("same time, Try again!");
+							rattrs.addAttribute("conflictTime", "conflictTime");
+							hasTheSameTime = true;
+							break;
+						} else {
+						}
+					}
+				}
+				if (!hasTheSameTime) {
+					hasTheSameTime = false;
+					System.out.println("you can reserve!");
+
+					if (!reservation.getToTime().before(reservation.getFromTime())
+							&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
+
+						rattrs.addAttribute("conflictTime", "noConflictTime");
+						rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
+						// reservationService.update(currentReservation);
+
+						reservationService.editReservation(currentReservation.getId(), reservation.getReservationDate(),
+								reservation.getFromTime(), reservation.getToTime(), currentReservation.getStatus(),
+								currentReservation.getExpirationDate(), currentReservation.getVenue(),
+								currentReservation.getUser(), reservation.getServices());
+					} else {
+						System.out.println("to time should be after from time");
+						rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+					}
+				}
+
+			} else {
+				if (!reservation.getToTime().before(reservation.getFromTime())
+						&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
+
+					System.out.println("created correctly not same date!");
+					rattrs.addAttribute("conflictTime", "noConflictTime");
+					rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
+					// reservationService.update(currentReservation);
+					reservationService.editReservation(currentReservation.getId(), reservation.getReservationDate(),
+							reservation.getFromTime(), reservation.getToTime(), currentReservation.getStatus(),
+							currentReservation.getExpirationDate(), currentReservation.getVenue(),
+							currentReservation.getUser(), reservation.getServices());
+				} else {
+					System.out.println("to time should be after from time");
+					rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+				}
+			}
 		} else {
-			reservationService.update(reservation);
-			return "redirect:/cart";
+			if (!reservation.getToTime().before(reservation.getFromTime())
+					&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
+
+				System.out.println("created correctly there is no reservation!");
+				rattrs.addAttribute("conflictTime", "noConflictTime");
+				rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+				currentReservation.setToTime(reservation.getToTime());
+				currentReservation.setFromTime(reservation.getFromTime());
+				currentReservation.setServices(reservation.getServices());
+
+				// reservationService.update(currentReservation);
+
+				reservationService.editReservation(currentReservation.getId(), reservation.getReservationDate(),
+						reservation.getFromTime(), reservation.getToTime(), currentReservation.getStatus(),
+						currentReservation.getExpirationDate(), currentReservation.getVenue(),
+						currentReservation.getUser(), reservation.getServices());
+
+			} else {
+				System.out.println("to time should be after from time");
+				rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+			}
+		}
+		
+
+		return "redirect:/venuePage/{venueId}/#VenueReservatio";
+	}
+
+	// get edit page
+	@RequestMapping("/reservation/{id}/edit/{venueId}")
+	public String editReservation(@PathVariable("id") Long id,@PathVariable("venueId") Long venueId, Principal principal, Model model,
+			RedirectAttributes redirectAttrs, @ModelAttribute("toTimeAfterFromTime") String toTimeAfterFromTime,
+			@ModelAttribute("conflictTime") String conflictTime) {
+		Reservation reservation = reservationService.findReservation(id);
+		model.addAttribute("reservation", reservation);
+		model.addAttribute("toTimeAfterFromTime", toTimeAfterFromTime);
+		model.addAttribute("conflictTime", conflictTime);
+
+		Venue venuePage = reservation.getVenue(); 
+		model.addAttribute("reservation", new Reservation());
+		model.addAttribute("venuePage", venuePage);
+		model.addAttribute("venueRate", new VenueRate());
+		redirectAttrs.addAttribute("venuePage", venuePage);
+		
+	
+		
+		// Venue Services
+		List<Reservation> reservations = reservationService.allReservation();
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == venuePage.getId()) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+		model.addAttribute("reservationResult", reservationsForVenue);
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+		model.addAttribute("reservationId", id);
+
+		return "editReservationPage.jsp";
+	}
+
+	// send cancel email
+	@RequestMapping("/sendEmail/{id}")
+	public void sendEmail(@PathVariable("id") Long id, Principal principal,
+			@ModelAttribute("reservation") Reservation reservation, HttpServletResponse response)
+			throws MessagingException {
+		try {
+			if (principal != null) {
+				String username = principal.getName();
+				long userId = userService.findByEmail(username).getId();
+				User user = userService.finduserById(userId);
+				Reservation reservationRequestedDelete = reservationService.findReservation(id);
+				String sentCode = reservationRequestedDelete.getDeleteCode();
+				reservationService.sendCode(user, sentCode);
+			}
+
+			response.setContentType("text/plain");
+			// String json = "{\"Name\": 50}";
+			PrintWriter out = response.getWriter();
+			out.print("Hello");
+		} catch (IOException e) {
+
+		}
+
+		// return "redirect:/cartPage";
+	}
+
+	// compare between the sent code and input code
+	@PostMapping("/reservation/delete")
+	public ResponseEntity deleteReservation(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/plain;charset=UTF-8");
+		String code = request.getParameter("code_input");
+
+		if (code.isEmpty()) {
+			return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body("الكود اجباري");
+		} else {
+			long reservationId = Long.parseLong(request.getParameter("reservation_id"));
+			Reservation reservation = reservationService.findReservation(reservationId);
+			if (reservation.getDeleteCode().equals(code)) {
+				reservationService.deleteReservation(reservationId);
+				return ResponseEntity.status(HttpServletResponse.SC_ACCEPTED).body("تم حذف الحجز بنجاح");
+			} else {
+				return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body("الكود خاطىء");
+			}
+
 		}
 	}
 
@@ -273,7 +493,7 @@ public class Users {
 			return "contactPage.jsp";
 		} else {
 
-			contact.setEmailReciver("palvenuesWeb@outlook.com");
+			contact.setEmailReciver("palvenues@outlook.com");
 			SimpleMailMessage message = new SimpleMailMessage();
 //			message.setFrom(contact.getEmailSender());
 			message.setFrom("palvenuesWeb@outlook.com");
@@ -549,6 +769,13 @@ public class Users {
 						rattrs.addAttribute("conflictTime", "noConflictTime");
 						rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
 
+						// set code
+						String code = reservationService.getAlphaNumericString(6);
+						if (code == null) {
+							code = "wK99ke";
+						}
+						reservation.setDeleteCode(code);
+
 						reservationService.createReservation(reservation);
 						// Create the Expiration Date
 						Calendar calExpirationDate = Calendar.getInstance();
@@ -577,6 +804,13 @@ public class Users {
 					rattrs.addAttribute("conflictTime", "noConflictTime");
 					rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
 
+					// set code
+					String code = reservationService.getAlphaNumericString(6);
+					if (code == null) {
+						code = "wK99ke";
+					}
+					reservation.setDeleteCode(code);
+
 					reservationService.createReservation(reservation);
 					// Create the Expiration Date
 					Calendar calExpirationDate = Calendar.getInstance();
@@ -593,6 +827,34 @@ public class Users {
 				}
 			}
 		} else {
+			if (!reservation.getToTime().before(reservation.getFromTime())
+					&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
+
+				System.out.println("created correctly there is no reservation!");
+				rattrs.addAttribute("conflictTime", "noConflictTime");
+				rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
+				// set code
+				String code = reservationService.getAlphaNumericString(6);
+				if (code == null) {
+					code = "wK99ke";
+				}
+				reservation.setDeleteCode(code);
+
+				reservationService.createReservation(reservation);
+				// Create the Expiration Date
+				Calendar calExpirationDate = Calendar.getInstance();
+				calExpirationDate.setTime(reservation.getCreatedAt());
+				calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+				reservation.setExpirationDate(calExpirationDate.getTime());
+
+				reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+						reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+						reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+			} else {
+				System.out.println("to time should be after from time");
+				rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+			}
 			rattrs.addAttribute("wayOfPayment", "payPal");
 			rattrs.addAttribute("reservationObject", reservation);
 			return "redirect:/pay";

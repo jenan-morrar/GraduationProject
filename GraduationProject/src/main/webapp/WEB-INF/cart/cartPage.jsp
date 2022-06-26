@@ -97,13 +97,24 @@
 <script src="/resources/js/modernizr-2.6.2.min.js"></script>
 
 <!-- Style -->
+<!-- new -->
+<!-- new -->
+
+<link rel="stylesheet" href="/Modal/css/ionicons.min.css">
+
+
+
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/imageSlider.css" />">
+<link rel="stylesheet" href="/Modal/css/style.css">
 <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
 <link href="<c:url value="/resources/css/venuePage.css" />"
 	rel="stylesheet">
+
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/cartStyle.css">
+
+
 
 
 <!-- script -->
@@ -195,7 +206,7 @@
 
 										<tbody>
 											<c:forEach items="${reservations}" var="reservation">
-												<tr>
+												<tr id="reservation_${reservation.id}">
 													<td class="desc">
 														<h3>
 															<a href="#" class="text-navy"> <c:out
@@ -232,21 +243,25 @@
 																	<br>
 																</c:forEach>
 															</dd>
-														</dl> <!-- <div class="m-t-sm">
-														<a href="#" class="text-muted" data-toggle="modal"
-															data-target="#exampleModalCenter"><i
-															class='far fa-edit'></i> تعديل الحجز</a> | <a href="#"
-															class="text-muted"><i class="fa fa-trash"></i> الغاء
-															الحجز</a>
-													</div> -->
+														</dl>
 														<div class="m-t-sm">
-															<button type="button" class="btn btn-outline-warning"
-																data-toggle="modal" data-target="#exampleModalCenter"
-																id="${reservation.id}" onClick="reply_click(this.id)">
-
-																تعديل الحجز <i class='far fa-edit'></i>
-															</button>
+															<a href="/reservation/${reservation.id}/edit/${reservation.venue.id}"> تعديل
+																الحجز</a>
 														</div>
+														<div>
+															<div class="wrap w-100">
+																<button type="button"
+																	class="btn btn-primary py-3 px-4 js-cancelReserve"
+																	data-toggle="modal" data-target="#exampleModalCenter2"
+																	data-id="${reservation.id}"
+																	data-url="/sendEmail/${reservation.id}">الغاء
+																	الحجز</button>
+																<input type="hidden" value="${reservation.deleteCode}"
+																	id="datbase_code">
+
+															</div>
+														</div>
+
 													</td>
 													<td><c:out value="${reservation.venue.price}₪"></c:out></td>
 													<td width="65"><input type="hidden"
@@ -348,75 +363,107 @@
 			</div>
 		</div>
 		<!-- Modal -->
-		<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+		<%-- 	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
 			role="dialog" aria-labelledby="exampleModalCenterTitle"
 			aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content rounded-0">
-					<div class="modal-body bg-image overlay"
-						style="background-image: url('/resources/images/simpleBackground.png');">
+				<!-- <div class="modal-content rounded-0"> -->
+				<div class="modal-body bg-image overlay"
+					style="background-image: url('/resources/images/simpleBackground.png');">
 
-						<div class="line px-3 to-front">
-							<div class="row align-items-center">
-								<div class="col logo">
-									<a href="#"><img src="/resources/images/ring map logo.png"
-										alt="Image" class="img-fluid"></a>
-								</div>
-								<div class="col-md-8 text-center">
-									<h2
-										style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">تعديل
-										على الحجز</h2>
-								</div>
-								<div class="col text-right">
-									<a href="#" class="close-btn" data-dismiss="modal"
-										aria-label="Close"> <span aria-hidden="true"><span
-											class="icon-close2"></span></span>
-									</a>
-								</div>
+					<div class="line px-3 to-front">
+						<div class="row align-items-center">
+							<div class="col logo">
+								<a href="#"><img src="/resources/images/ring map logo.png"
+									alt="Image" class="img-fluid"></a>
+							</div>
+							<div class="col-md-8 text-center">
+								<h2
+									style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">تعديل
+									على الحجز</h2>
+							</div>
+							<div class="col text-right">
+								<a href="#" class="close-btn" data-dismiss="modal"
+									aria-label="Close"> <span aria-hidden="true"><span
+										class="icon-close2"></span></span>
+								</a>
 							</div>
 						</div>
-						<div class="p-4 to-front">
-							<div class="text-center">
-								<h3
-									style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">
-									تفاصيل الحجز</h3>
-								<p class="mb-4">يمكن تعديل التواريخ والأوقات المختارة في حال
-									وجود حجوزات متوفرة .</p>
-								<%--  <form:form action="/reservation/${reservation.id}" method="post"
+					</div>
+					<div class="p-4 to-front">
+						<div class="text-center">
+							<h3
+								style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">
+								تفاصيل الحجز</h3>
+							<p class="mb-4">يمكن تعديل التواريخ والأوقات المختارة في حال
+								وجود حجوزات متوفرة .</p>
+							<form:form action="/reservation/edit" method="post"
 								modelAttribute="reservation" class="form-outline">
 								<div class="form-outline" style="padding: 5px;">
-									<form:errors path="name" />
-									<form:input class="form-control mr-3" path="name"
+									<form:errors path="reservationDate" />
+									<form:input class="form-control mr-3" path="reservationDate"
 										placeholder="أدخل اسم القاعة" />
 								</div>
-								<div class="form-outline" style="padding: 5px;">
-									<form:errors path="mapOne" />
-									<form:input class="form-control mr-3" path="mapOne"
-										placeholder="أدخل الرابط الاول لموقع القاعة" />
-								</div>
-								<div class="form-outline" style="padding: 5px;">
-									<form:errors path="mapTwo" />
-									<form:input class="form-control mr-3" path="mapTwo"
-										placeholder="أدخل الرابط الثاني لموقع القاعة" />
-								</div>
-								<div>
-									<form:errors path="user" />
-									<form:input type="hidden" path="user" name="user_id_modal" />
-								</div>
-
-								<div class="form-outline">
-									<input type="submit" class="btn btn-primary" value="إنشاء">
-								</div>
-							</form:form>  --%>
-								<p class="mb-0 cancel">
-									<a href="#" data-dismiss="modal">الغاء</a>
-								</p>
-							</div>
+								
+							</form:form>
+							<p class="mb-0 cancel">
+								<a href="#" data-dismiss="modal">الغاء</a>
+							</p>
 						</div>
 					</div>
 				</div>
 			</div>
+
+		</div> --%>
+
+
+		<!-- new modal -->
+		<div class="modal fade" id="exampleModalCenter2" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalCenterTitle"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header ftco-degree-bg">
+						<button type="button"
+							class="close d-flex align-items-center justify-content-center"
+							data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="ion-ios-close"></span>
+						</button>
+					</div>
+					<div class="modal-body pt-md-0 pb-md-5 text-center">
+						<h2>لقد وصلك بريد الكتروني !</h2>
+						<div class="icon d-flex align-items-center justify-content-center">
+							<img src="images/email.svg" alt="" class="img-fluid">
+						</div>
+						<h4 class="mb-2">يرجى كتابة رمز التأكيد الخاص بك</h4>
+						<form class="js-form" data-action="/reservation/delete">
+							<input type="hidden" name="reservation_id"> <input
+								type="text" id="code_input" name="code_input">
+							<button type="submit" id="cancel_button">الغاء الحجز</button>
+						</form>
+					</div>
+				</div>
+			</div>
 		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">
 			<div class="container">
@@ -443,12 +490,117 @@
 	<div class="gototop js-top">
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
 	</div>
+
+	<!-- this script is to check the code the user has entered  -->
+	<script>
+		function toggleLoader(action) {
+
+			if (action === 'show') {
+				$('.fh5co-loader').show();
+			} else if (action === 'hide') {
+				$('.fh5co-loader').hide();
+			}
+		}
+
+		var _ajaxIsSending = false;
+		$('.js-cancelReserve').click(
+				function(e) {
+					e.preventDefault();
+					if (_ajaxIsSending) {
+						return;
+					}
+
+					var _clickedBtn = $(this);
+					var _url = _clickedBtn.attr('data-url');
+					$("#exampleModalCenter2").find("[name='reservation_id']")
+							.val(_clickedBtn.attr('data-id'));
+
+					$("#exampleModalCenter2").modal("show").addClass('show');
+					$('.modal-backdrop').addClass('show').removeClass('hide');
+
+					$.ajax({
+						url : _url,
+						method : "GET",
+						//dataType:"JSON",
+						//contentType:"JSON",
+						data : {
+						// id: _clickedBtn.attr('data-id')
+						},
+						beforeSend : function() {
+							// Show the loader
+							_ajaxIsSending = true;
+							toggleLoader('show');
+						},
+						success : function(response) {
+							console.log("response", response);
+							$("#exampleModalCenter2").modal("show");
+						},
+						error : function(xhr) {
+							console.log("xhr", xhr);
+							alert("Error");
+							//$("#exampleModalCenter2").modal("show");
+						},
+						complete : function() {
+							// Hide the loader
+							_ajaxIsSending = false;
+							toggleLoader('hide');
+						},
+					});
+					console.log('_clickedBtn', _url);
+				});
+
+		$('.js-form').submit(
+				function(e) {
+					e.preventDefault();
+					if (_ajaxIsSending) {
+						return;
+					}
+					var _submittedForm = $(this);
+					var _url = _submittedForm.attr('data-action');
+
+					var reservation_id = _submittedForm.find(
+							"[name='reservation_id']").val();
+
+					$.ajax({
+						url : _url,
+						method : "POST",
+						// dataType : "JSON",
+						// contentType : "JSON", 
+						data : _submittedForm.serialize(),
+						beforeSend : function() {
+							// Show the loader
+							_ajaxIsSending = true;
+							toggleLoader('show');
+						},
+						success : function(response) {
+							alert(response);
+							$("#reservation_" + reservation_id).remove();
+
+							$("#exampleModalCenter2").modal("hide").addClass(
+									'hide').removeClass('show');
+							$('.modal-backdrop').addClass('hide').removeClass(
+									'show');
+						},
+						error : function(xhr) {
+							alert(xhr.responseText);
+						},
+						complete : function() {
+							// Hide the loader
+							_ajaxIsSending = false;
+							toggleLoader('hide');
+						},
+					});
+				});
+	</script>
+
+
 	<script src="/js/jquery-3.3.1.min.js"></script>
 	<script src="/js/popper.js"></script>
 	<script src="/js/popper.min.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
 	<script src="/js/main.js"></script>
 	<script src="/js/jquery.min.js"></script>
+
 	<!-- jQuery -->
 	<script src="/resources/js/jquery.min.js"></script>
 	<!-- jQuery Easing -->
@@ -470,6 +622,7 @@
 	<!-- Google Map -->
 	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>
+
 
 	<!-- Main -->
 	<script src="/resources/js/main.js"></script>

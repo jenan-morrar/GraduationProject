@@ -122,7 +122,7 @@ strong {
   font-weight: bolder; }
 
 small {
-  font-size: 80%; }
+  font-size: 100%; }
 
 sub,
 sup {
@@ -365,8 +365,9 @@ hr {
 
 small,
 .small {
-  font-size: 80%;
-  font-weight: 400; }
+  font-size: 100%;
+  font-weight: 400; 
+  font-family: "Sacramento", 'Aref Ruqaa', serif, Arial, serif; }
 
 mark,
 .mark {

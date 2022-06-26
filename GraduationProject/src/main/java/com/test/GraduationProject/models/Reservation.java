@@ -28,8 +28,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-@ Entity
-@ Table(name ="reservations")
+@Entity
+@Table(name = "reservations")
 public class Reservation {
 	@Id
 	@GeneratedValue
@@ -54,26 +54,30 @@ public class Reservation {
 	@Column(updatable = false)
 	private Date createdAt;
 	private Date updatedAt;
-	
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "reservation_services", 
-        joinColumns = @JoinColumn(name = "reservation_id"), 
-        inverseJoinColumns = @JoinColumn(name = "service_id")
-    )
-    private List<ServiceOfVenue> services;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="venue_id")
-    private Venue venue;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User user;
-    
+	private String deleteCode;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "reservation_services", joinColumns = @JoinColumn(name = "reservation_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
+	private List<ServiceOfVenue> services;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "venue_id")
+	private Venue venue;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
+
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "userSongs_id")
 	private UserSongs userSongs;
+
+	public Reservation() {
+
+	}
+
+	public Reservation(Long id, Date reservationDate, Time fromTime, Time toTime, Date expirationDate, String status,
+			String deleteCode, List<ServiceOfVenue> services, Venue venue, User user, UserSongs userSongs) {
 	
     public Reservation() {
     	
@@ -87,18 +91,20 @@ public class Reservation {
 		this.toTime = toTime;
 		this.expirationDate = expirationDate;
 		this.status = status;
+		this.services = services;
 		this.retainer = retainer;
 		this.wayOfPayment = wayOfPayment;
 		this.services=services;
 		this.venue = venue;
 		this.user = user;
 		this.userSongs = userSongs;
+		this.deleteCode = deleteCode;
 	}
-
 
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -106,7 +112,6 @@ public class Reservation {
 	public Date getReservationDate() {
 		return reservationDate;
 	}
-
 
 	public void setReservationDate(Date reservationDate) {
 		this.reservationDate = reservationDate;
@@ -116,41 +121,34 @@ public class Reservation {
 		return startTime;
 	}
 
-
 	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
-
 
 	public String getEndTime() {
 		return endTime;
 	}
 
-
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
-
 
 	public Time getFromTime() {
 		return fromTime;
 	}
 
-
 	public void setFromTime(Time fromTime) {
 		this.fromTime = fromTime;
 	}
-
 
 	public Time getToTime() {
 		return toTime;
 	}
 
-
 	public void setToTime(Time toTime) {
 		this.toTime = toTime;
 	}
-    
+
 	public Date getExpirationDate() {
 		return expirationDate;
 	}
@@ -159,11 +157,9 @@ public class Reservation {
 		this.expirationDate = expirationDate;
 	}
 
-
 	public String getStatus() {
 		return status;
 	}
-
 
 	public void setStatus(String status) {
 		this.status = status;
@@ -185,19 +181,22 @@ public class Reservation {
 		this.wayOfPayment = wayOfPayment;
 	}
 
-	public Date getCreatedAt() {
+  public Date getCreatedAt() {
 		return createdAt;
 	}
+
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
+
 	public Date getUpdatedAt() {
 		return updatedAt;
 	}
+
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	
+
 	public List<ServiceOfVenue> getServices() {
 		return services;
 	}
@@ -206,24 +205,25 @@ public class Reservation {
 		this.services = services;
 	}
 
-
 	public Venue getVenue() {
 		return venue;
 	}
+
 	public void setVenue(Venue venue) {
 		this.venue = venue;
 	}
+
 	public User getUser() {
 		return user;
 	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public UserSongs getUserSongs() {
 		return userSongs;
 	}
-
 
 	public void setUserSongs(UserSongs userSongs) {
 		this.userSongs = userSongs;
@@ -237,6 +237,14 @@ public class Reservation {
 	@PreUpdate
 	protected void onUpdate() {
 		this.updatedAt = new Date();
+	}
+
+	public String getDeleteCode() {
+		return deleteCode;
+	}
+
+	public void setDeleteCode(String deleteCode) {
+		this.deleteCode = deleteCode;
 	}
 
 }
