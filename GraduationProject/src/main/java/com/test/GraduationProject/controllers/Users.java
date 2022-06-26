@@ -3,6 +3,10 @@ package com.test.GraduationProject.controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.Principal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -21,6 +25,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.paypal.api.payments.Payment;
+import com.paypal.base.rest.PayPalRESTException;
 import com.test.GraduationProject.models.Contact;
 import com.test.GraduationProject.models.FilterSearch;
 import com.test.GraduationProject.models.Reservation;
@@ -39,6 +46,8 @@ import com.test.GraduationProject.models.UserSongs;
 import com.test.GraduationProject.models.Venue;
 import com.test.GraduationProject.models.VenueRate;
 import com.test.GraduationProject.models.WebsiteRate;
+import com.test.GraduationProject.recommendation_system.KnnClassifier;
+import com.test.GraduationProject.services.PaypalService;
 import com.test.GraduationProject.services.ReservationService;
 import com.test.GraduationProject.services.ServicesOfVenueService;
 import com.test.GraduationProject.services.SongsService;
@@ -57,9 +66,11 @@ public class Users {
 	private VenueRateService venueRateService;
 	private ReservationService reservationService;
 	private ServicesOfVenueService ServicesOfVenueService;
+	private PaypalService service;
 	private SongsService songsService;
 	public List<WebsiteRate> websiteRateResult = new ArrayList<>();
 	public List<Venue> filterSearchResult = new ArrayList<>();
+	public Reservation reservationObject = new Reservation();
 
 	@Autowired
 	private JavaMailSender emailSender;
@@ -67,7 +78,7 @@ public class Users {
 	public Users(UserService userService, UserValidator userValidator, VenueService venueService,
 			WebsiteRateService websiteRateService, ReservationService reservationService,
 			ServicesOfVenueService servicesOfVenueService, VenueRateService venueRateService,
-			SongsService songsService) {
+			PaypalService service,SongsService songsService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
@@ -75,6 +86,7 @@ public class Users {
 		this.reservationService = reservationService;
 		this.ServicesOfVenueService = servicesOfVenueService;
 		this.venueRateService = venueRateService;
+		this.service = service;
 		this.songsService = songsService;
 	}
 
@@ -483,7 +495,8 @@ public class Users {
 
 			contact.setEmailReciver("palvenues@outlook.com");
 			SimpleMailMessage message = new SimpleMailMessage();
-			message.setFrom(contact.getEmailSender());
+//			message.setFrom(contact.getEmailSender());
+			message.setFrom("palvenuesWeb@outlook.com");
 			message.setTo(contact.getEmailReciver());
 			message.setSubject(contact.getSubject());
 			message.setText(contact.getMessage());
@@ -539,10 +552,11 @@ public class Users {
 	@RequestMapping("/venuePage/{id}")
 	public String venuePage(@PathVariable("id") long id, Principal principal, Model model,
 			RedirectAttributes redirectAttrs, @ModelAttribute("toTimeAfterFromTime") String toTimeAfterFromTime,
-			@ModelAttribute("conflictTime") String conflictTime) {
+			@ModelAttribute("conflictTime") String conflictTime, @ModelAttribute("wayOfPayment") String wayOfPayment) {
 
 		model.addAttribute("toTimeAfterFromTime", toTimeAfterFromTime);
 		model.addAttribute("conflictTime", conflictTime);
+		model.addAttribute("wayOfPayment", wayOfPayment);
 
 		Venue venuePage = venueService.findVenue(id);
 		model.addAttribute("reservation", new Reservation());
@@ -558,6 +572,19 @@ public class Users {
 		// Venue Services
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		if (reservations.size() != 0) {
+			for (int i = 0; i < reservations.size(); i++) {
+				Instant currentDate = ZonedDateTime.now().toInstant();
+				Instant reservationExpirationDate = reservations.get(i).getExpirationDate().toInstant();
+				boolean expiredReservation = currentDate.isAfter(reservationExpirationDate)
+						&& reservations.get(i).getStatus().equals("pending");
+				if (expiredReservation) {
+					System.out.println(reservations.get(i).getId() + "expired");
+					reservationService.deleteReservation(reservations.get(i).getId());
+				}
+			}
+		}
 
 		for (int i = 0; i < reservations.size(); i++) {
 			if (reservations.get(i).getVenue().getId() == id) {
@@ -633,6 +660,22 @@ public class Users {
 		List<Reservation> allReseravtions = reservationService.allReservation();
 		List<Reservation> reservationForVenue = new ArrayList<>();
 
+		// Check if there is any reservation with pending status should be removed
+		if (allReseravtions.size() != 0) {
+			for (int i = 0; i < allReseravtions.size(); i++) {
+				Instant currentDate = ZonedDateTime.now().toInstant();
+				Instant reservationExpirationDate = allReseravtions.get(i).getExpirationDate().toInstant();
+				boolean expiredReservation = currentDate.isAfter(reservationExpirationDate)
+						&& allReseravtions.get(i).getStatus().equals("pending");
+				if (expiredReservation) {
+					System.out.println(allReseravtions.get(i).getId() + "expired");
+					reservationService.deleteReservation(allReseravtions.get(i).getId());
+				}
+			}
+		}
+
+		reservationObject = reservation;
+		
 		if (allReseravtions.size() != 0) {
 			for (int i = 0; i < allReseravtions.size(); i++) {
 				if (allReseravtions.get(i).getVenue().getId() == id) {
@@ -641,49 +684,88 @@ public class Users {
 			}
 		}
 
-		if (reservationForVenue.size() != 0) {
+		if (reservation.getWayOfPayment().equals("cach")) {
+			
+			rattrs.addAttribute("wayOfPayment", "cach");
 
-			boolean hasTheSameDate = false;
-			boolean hasTheSameTime = false;
+			if (reservationForVenue.size() != 0) {
 
-			for (int i = 0; i < reservationForVenue.size(); i++) {
-				int resultOfConflictDay = reservation.getReservationDate()
-						.compareTo(reservationForVenue.get(i).getReservationDate());
-				if (resultOfConflictDay == 0) {
-					hasTheSameDate = true;
-					break;
-				} else {
-					hasTheSameDate = false;
-				}
-			}
+				boolean hasTheSameDate = false;
+				boolean hasTheSameTime = false;
 
-			if (hasTheSameDate) {
-				System.out.println("same Date");
 				for (int i = 0; i < reservationForVenue.size(); i++) {
 					int resultOfConflictDay = reservation.getReservationDate()
 							.compareTo(reservationForVenue.get(i).getReservationDate());
 					if (resultOfConflictDay == 0) {
-						System.out.println(reservation.getToTime());
-						System.out.println(reservationForVenue.get(i).getFromTime());
-						System.out.println(reservation.getFromTime());
-						System.out.println(reservationForVenue.get(i).getToTime());
-						if (reservation.getToTime().after(reservationForVenue.get(i).getFromTime())
-								&& reservation.getFromTime().before(reservationForVenue.get(i).getToTime())) {
-							System.out.println("same time, Try again!");
-							rattrs.addAttribute("conflictTime", "conflictTime");
-							hasTheSameTime = true;
-							break;
-						} else {
-						}
+						hasTheSameDate = true;
+						break;
+					} else {
+						hasTheSameDate = false;
 					}
 				}
-				if (!hasTheSameTime) {
-					hasTheSameTime = false;
-					System.out.println("you can reserve!");
 
+				if (hasTheSameDate) {
+					System.out.println("same Date");
+					for (int i = 0; i < reservationForVenue.size(); i++) {
+						int resultOfConflictDay = reservation.getReservationDate()
+								.compareTo(reservationForVenue.get(i).getReservationDate());
+						if (resultOfConflictDay == 0) {
+							System.out.println(reservation.getToTime());
+							System.out.println(reservationForVenue.get(i).getFromTime());
+							System.out.println(reservation.getFromTime());
+							System.out.println(reservationForVenue.get(i).getToTime());
+							if (reservation.getToTime().after(reservationForVenue.get(i).getFromTime())
+									&& reservation.getFromTime().before(reservationForVenue.get(i).getToTime())) {
+								System.out.println("same time, Try again!");
+								rattrs.addAttribute("conflictTime", "conflictTime");
+								hasTheSameTime = true;
+								break;
+							} else {
+							}
+						}
+					}
+					if (!hasTheSameTime) {
+						hasTheSameTime = false;
+						System.out.println("you can reserve!");
+
+						if (!reservation.getToTime().before(reservation.getFromTime())
+								&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
+
+							/*
+							 * if (reservation.getWayOfPayment().equals("cach")) {
+							 * rattrs.addAttribute("wayOfPayment", "cach"); } else {
+							 * rattrs.addAttribute("wayOfPayment", "payPal"); }
+							 */
+							rattrs.addAttribute("conflictTime", "noConflictTime");
+							rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+
+							reservationService.createReservation(reservation);
+							// Create the Expiration Date
+							Calendar calExpirationDate = Calendar.getInstance();
+							calExpirationDate.setTime(reservation.getCreatedAt());
+							calExpirationDate.add(Calendar.DAY_OF_MONTH, 1);
+							reservation.setExpirationDate(calExpirationDate.getTime());
+
+							reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
+									reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
+									reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
+
+						} else {
+							System.out.println("to time should be after from time");
+							rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
+						}
+					}
+
+				} else {
 					if (!reservation.getToTime().before(reservation.getFromTime())
 							&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
 
+						System.out.println("created correctly not same date!");
+						/*
+						 * if (reservation.getWayOfPayment().equals("cach")) {
+						 * rattrs.addAttribute("wayOfPayment", "cach"); } else {
+						 * rattrs.addAttribute("wayOfPayment", "payPal"); }
+						 */
 						rattrs.addAttribute("conflictTime", "noConflictTime");
 						rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
 
@@ -698,7 +780,7 @@ public class Users {
 						// Create the Expiration Date
 						Calendar calExpirationDate = Calendar.getInstance();
 						calExpirationDate.setTime(reservation.getCreatedAt());
-						calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+						calExpirationDate.add(Calendar.DAY_OF_MONTH, 1);
 						reservation.setExpirationDate(calExpirationDate.getTime());
 
 						reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
@@ -709,12 +791,16 @@ public class Users {
 						rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 					}
 				}
-
 			} else {
 				if (!reservation.getToTime().before(reservation.getFromTime())
 						&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
 
-					System.out.println("created correctly not same date!");
+					System.out.println("created correctly there is no reservation!");
+					/*
+					 * if (reservation.getWayOfPayment().equals("cach")) {
+					 * rattrs.addAttribute("wayOfPayment", "cach"); } else {
+					 * rattrs.addAttribute("wayOfPayment", "payPal"); }
+					 */
 					rattrs.addAttribute("conflictTime", "noConflictTime");
 					rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
 
@@ -729,7 +815,7 @@ public class Users {
 					// Create the Expiration Date
 					Calendar calExpirationDate = Calendar.getInstance();
 					calExpirationDate.setTime(reservation.getCreatedAt());
-					calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+					calExpirationDate.add(Calendar.DAY_OF_MONTH, 1);
 					reservation.setExpirationDate(calExpirationDate.getTime());
 
 					reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
@@ -769,11 +855,49 @@ public class Users {
 				System.out.println("to time should be after from time");
 				rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 			}
+			rattrs.addAttribute("wayOfPayment", "payPal");
+			rattrs.addAttribute("reservationObject", reservation);
+			return "redirect:/pay";
 		}
 
 		return "redirect:/venuePage/{id}/#VenueReservatio";
 	}
 
+	// this controller taken from the payment 
+	@GetMapping(value = "/success")
+	public String successPay(@RequestParam(value = "paymentId", required = false) String paymentId,
+			@RequestParam(value = "PayerID", required = false) String payerId) {
+		try {
+			Payment payment = service.executePayment(paymentId, payerId);
+			//System.out.println(payment.toJSON());
+			if (payment.getState().equals("approved")) {
+				createReservation();
+				return "success.jsp";
+			}
+		} catch (PayPalRESTException e) {
+			System.out.println(e.getMessage());
+		}
+		return "success.jsp";
+	}
+	
+	public void createReservation() {
+		
+		System.out.println("Hi Friend");
+		reservationService.createReservation(reservationObject);
+		// Create the Expiration Date
+		Calendar calExpirationDate = Calendar.getInstance();
+		calExpirationDate.setTime(reservationObject.getCreatedAt());
+		calExpirationDate.add(Calendar.DAY_OF_MONTH, 1);
+		reservationObject.setExpirationDate(calExpirationDate.getTime());
+
+		reservationObject.setStatus("reserved");
+		reservationService.updatereservation(reservationObject.getId(), reservationObject.getReservationDate(),
+				reservationObject.getFromTime(), reservationObject.getToTime(), reservationObject.getStatus(),
+				reservationObject.getExpirationDate(), reservationObject.getVenue(), reservationObject.getUser());
+		System.out.println("Done");
+		
+	}
+	
 	@RequestMapping(value = "/venuePage/{id}/rating", method = RequestMethod.POST)
 	public String venueRating(@PathVariable("id") long id, @ModelAttribute("venueRate") VenueRate venueRate,
 			Model model) {
@@ -892,6 +1016,19 @@ public class Users {
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
 
+		if (reservations.size() != 0) {
+			for (int i = 0; i < reservations.size(); i++) {
+				Instant currentDate = ZonedDateTime.now().toInstant();
+				Instant reservationExpirationDate = reservations.get(i).getExpirationDate().toInstant();
+				boolean expiredReservation = currentDate.isAfter(reservationExpirationDate)
+						&& reservations.get(i).getStatus().equals("pending");
+				if (expiredReservation) {
+					System.out.println(reservations.get(i).getId() + "expired");
+					reservationService.deleteReservation(reservations.get(i).getId());
+				}
+			}
+		}
+
 		for (int i = 0; i < reservations.size(); i++) {
 			if (reservations.get(i).getVenue().getId() == id) {
 				reservationsForVenue.add(reservations.get(i));
@@ -940,11 +1077,68 @@ public class Users {
 		return "adminVenuePage.jsp";
 	}
 
-	@RequestMapping("/adminVenuePage/{id}/requests")
+	@RequestMapping(value = "/adminVenuePage/{id}/venueReservation", method = RequestMethod.GET)
+	public String adminVenuePageReservations(@PathVariable("id") long id, Principal principal, Model model) {
+
+		List<Reservation> reservations = reservationService.allReservation();
+		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		if (reservations.size() != 0) {
+			for (int i = 0; i < reservations.size(); i++) {
+				Instant currentDate = ZonedDateTime.now().toInstant();
+				Instant reservationExpirationDate = reservations.get(i).getExpirationDate().toInstant();
+				boolean expiredReservation = currentDate.isAfter(reservationExpirationDate)
+						&& reservations.get(i).getStatus().equals("pending");
+				if (expiredReservation) {
+					System.out.println(reservations.get(i).getId() + "expired");
+					reservationService.deleteReservation(reservations.get(i).getId());
+				}
+			}
+		}
+
+		for (int i = 0; i < reservations.size(); i++) {
+			if (reservations.get(i).getVenue().getId() == id && reservations.get(i).getStatus().equals("reserved")) {
+				reservationsForVenue.add(reservations.get(i));
+			}
+		}
+		model.addAttribute("reservationResult", reservationsForVenue);
+
+		if (principal != null) {
+			String username = principal.getName();
+			String userRole = userService.findByEmail(username).getRoles().get(0).getName();
+			model.addAttribute("currentUser", "user").addAttribute("userRole", userRole);
+
+			if (userRole.equals("ROLE_ADMIN")) {
+				Venue venue = userService.findByEmail(username).getVenue();
+				model.addAttribute("venue", venue);
+				model.addAttribute("venueId", venue.getId());
+				model.addAttribute("serviceExist", "no");
+			}
+
+		} else {
+			model.addAttribute("currentUser", "noUser");
+		}
+		return "venueReservationPage.jsp";
+	}
+
+	@RequestMapping(value = "/adminVenuePage/{id}/requests", method = RequestMethod.GET)
 	public String adminVenuePageRequests(@PathVariable("id") long id, Principal principal, Model model) {
 
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
+
+		if (reservations.size() != 0) {
+			for (int i = 0; i < reservations.size(); i++) {
+				Instant currentDate = ZonedDateTime.now().toInstant();
+				Instant reservationExpirationDate = reservations.get(i).getExpirationDate().toInstant();
+				boolean expiredReservation = currentDate.isAfter(reservationExpirationDate)
+						&& reservations.get(i).getStatus().equals("pending");
+				if (expiredReservation) {
+					System.out.println(reservations.get(i).getId() + "expired");
+					reservationService.deleteReservation(reservations.get(i).getId());
+				}
+			}
+		}
 
 		for (int i = 0; i < reservations.size(); i++) {
 			if (reservations.get(i).getVenue().getId() == id && reservations.get(i).getStatus().equals("pending")) {
@@ -969,6 +1163,21 @@ public class Users {
 			model.addAttribute("currentUser", "noUser");
 		}
 		return "reservationsRequests.jsp";
+	}
+
+	@RequestMapping("/adminVenuePage/{id}/requests/{requestId}/delete")
+	public String deleteRequests(@PathVariable("id") long id, @PathVariable("requestId") long requestId,
+			Principal principal, Model model) {
+		// System.out.println(requestId);
+		reservationService.deleteReservation(requestId);
+		return "redirect:/adminVenuePage/{id}/requests";
+	}
+
+	@RequestMapping("/adminVenuePage/{id}/requests/{requestId}/approve")
+	public String approveRequests(@PathVariable("id") long id, @PathVariable("requestId") long requestId,
+			Principal principal, Model model) {
+		reservationService.updateReservationStatus(requestId, "reserved");
+		return "redirect:/adminVenuePage/{id}/requests";
 	}
 
 }

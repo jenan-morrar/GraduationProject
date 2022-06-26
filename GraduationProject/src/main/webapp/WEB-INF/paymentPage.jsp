@@ -6,6 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>صفحة الدفع</title>
+
+<link rel="icon" type="image/png"
+	href="/resources/images/ring map logo.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -14,6 +17,7 @@ body {
 	font-family: Arial;
 	font-size: 17px;
 	padding: 8px;
+	font-family: "Work Sans", 'Aref Ruqaa', serif, Arial, sans-serif;
 }
 
 * {
@@ -66,7 +70,6 @@ label {
 	margin-bottom: 10px;
 	display: block;
 }
-
 .icon-container {
 	margin-bottom: 20px;
 	padding: 7px 0;
@@ -101,7 +104,14 @@ span.price {
 	float: right;
 	color: grey;
 }
+label{
+float :right;
+}
+h1 {text-align: center;}
 
+.currency{
+float :right;
+}
 /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
 @media ( max-width : 800px) {
 	.row {
@@ -112,61 +122,63 @@ span.price {
 	}
 }
 </style>
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Cormorant+Garamond:ital,wght@1,300&family=Montserrat:wght@100&family=Poiret+One&family=Rakkas&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&family=Cormorant+Garamond:ital,wght@1,300&family=Lateef&family=Montserrat:wght@100&family=Poiret+One&display=swap"
+	rel="stylesheet">
+<link
+	href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700'
+	rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Sacramento"
+	rel="stylesheet">
+
 </head>
 <body>
+	
 	<div class="row">
 		<div class="col-75">
 			<div class="container">
 				<form method="post" action="/pay">
 					<div class="col-50">
-						<h2>الدفع</h2>
-						<label>البطاقات االبنكية المتاحة</label>
-						<div class="icon-container">
-							<i class="fa fa-cc-visa" style="color: navy;"></i> <i
-								class="fa fa-cc-amex" style="color: blue;"></i> <i
-								class="fa fa-cc-mastercard" style="color: red;"></i> <i
-								class="fa fa-cc-discover" style="color: orange;"></i>
+						<div class="float">
+							<h1>صفحة الدفع</h1>
+							<label>البطاقات االبنكية المتاحة</label>
+							<div class="icon-container">
+								<i class="fa fa-cc-visa" style="color: navy;"></i> <i
+									class="fa fa-cc-amex" style="color: blue;"></i> <i
+									class="fa fa-cc-mastercard" style="color: red;"></i> <i
+									class="fa fa-cc-discover" style="color: orange;"></i>
+							</div>
+							<label for="price">السعر</label> <input type="text" id="price"
+								name="price" value="0.5" readonly> 
+								<label for="currency">العملة</label> 
+								<input type="text" id="currency" name="currency" placeholder="العملة">
+							<label for="method">طريقة الدفع</label> <input type="text"
+								id="method" name="method" placeholder="الدفع بواسطة...">
+							<label for="intent">وصف</label> <input type="text" id="intent"
+								name="intent" value="sale"readonly> <label for="description">اسم
+								الدفع</label> 
+								<input type="text" id="description" name="description"
+								placeholder="اسم الدفع">
+
 						</div>
-						<label for="price">السعر</label> <input type="text"
-							id="price" name="price"> <label for="currency">العملة</label>
-						<input type="text" id="currency" name="currency"
-							placeholder="العملة"> <label for="method">طريقة الدفع</label> 
-							<input type="text" id="method" name="method"
-							placeholder="الدفع بواسطة...">
-							<label for="intent">وصف</label>
-							 <input type="text" id="intent" name="intent" value="sale">
-													<label for="description">اسم الدفع</label> <input
-							type="text" id="description" name="description"
-							placeholder="اسم الدفع">
 
-					</div>
-
-					<input type="submit" value="استكمال الدفع" class="btn">
+						<input type="submit" value="استكمال الدفع" class="btn">
 				</form>
 			</div>
 		</div>
-		<div class="col-25">
-			<div class="container">
-				<h4>سلتي <span class="price" style="color: black"><i
-						class="fa fa-shopping-cart"></i> <b>0.5</b></span>
-				</h4>
-				<p>
-					<a href="#">منتج 1</a> <span class="price">$0</span>
-				</p>
-				<p>
-					<a href="#">منتج 2</a> <span class="price">$0</span>
-				</p>
-				<p>
-					<a href="#">منتج 3</a> <span class="price">$1</span>
-				</p>
-				<p>
-					<a href="#">منتج 4</a> <span class="price">$0</span>
-				</p>
-				<hr>
-				<p>المجموع <span class="price" style="color: black"><b>$0.5</b></span>
-				</p>
-			</div>
-		</div>
+	</div>
 	</div>
 
 </body>

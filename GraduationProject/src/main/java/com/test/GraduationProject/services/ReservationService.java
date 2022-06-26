@@ -77,6 +77,16 @@ public class ReservationService {
 		return reservationRepository.save(reservation);
 	}
 
+	public Reservation updateReservationStatus(Long id, String status) {
+		Reservation reservation = findReservation(id);
+		double retainerPrice = reservation.getVenue().getPrice() * 0.33;
+		System.out.println( reservation.getVenue().getPrice());
+		System.out.println(retainerPrice);
+		reservation.setStatus(status);
+		reservation.setRetainer(retainerPrice);
+		return reservationRepository.save(reservation);
+	}
+
 	// return reservations for specific user
 	public List<Reservation> getUserReservation(Long id) {
 		return reservationRepository.getUserReservation(id);
@@ -86,6 +96,11 @@ public class ReservationService {
 	public Reservation update(Reservation reservation) {
 		return reservationRepository.save(reservation);
 	}
+	
+    // delete the reservation
+    public void deleteReservation(Long id) {
+    	reservationRepository.deleteById(id);
+    }
 
 	// find user by email to send confirmation
 	public User findByEmail(String email) {

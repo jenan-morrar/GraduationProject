@@ -2,6 +2,7 @@ package com.test.GraduationProject.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +29,8 @@ public class PaypalController {
 	}
 
 	@GetMapping("/pay")
-	public String home() {
+	public String home(@ModelAttribute("reservationObject") String reservationObject) {
+		//System.out.println("Hi Reservation"+reservationObject);
 		return "paymentPage.jsp";
 	}
 
@@ -56,19 +58,19 @@ public class PaypalController {
 		return "cancel.jsp";
 	}
 
-	@GetMapping(value = SUCCESS_URL)
-	public String successPay(@RequestParam(value = "paymentId", required = false) String paymentId,
-			@RequestParam(value = "PayerID", required = false) String payerId) {
-		try {
-			Payment payment = service.executePayment(paymentId, payerId);
-			System.out.println(payment.toJSON());
-			if (payment.getState().equals("approved")) {
-				return "success.jsp";
-			}
-		} catch (PayPalRESTException e) {
-			System.out.println(e.getMessage());
-		}
-		return "success.jsp";
-	}
+//	@GetMapping(value = SUCCESS_URL)
+//	public String successPay(@RequestParam(value = "paymentId", required = false) String paymentId,
+//			@RequestParam(value = "PayerID", required = false) String payerId) {
+//		try {
+//			Payment payment = service.executePayment(paymentId, payerId);
+//			//System.out.println(payment.toJSON());
+//			if (payment.getState().equals("approved")) {
+//				return "success.jsp";
+//			}
+//		} catch (PayPalRESTException e) {
+//			System.out.println(e.getMessage());
+//		}
+//		return "success.jsp";
+//	}
 
 }
