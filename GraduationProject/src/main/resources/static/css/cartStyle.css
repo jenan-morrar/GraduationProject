@@ -2,18 +2,24 @@
 
 body {
 	margin-top: 20px;
-	background: #eee;
+	background: #ffff;
 	margin: 0;
 	font-weight: 400;
 	line-height: 1.5;
 	color: #cd7e53;
 	text-align: right;
+	margin: 0;
 }
 
 h3 {
 	font-size: 25px;
 	font-size: 3rem;
 	font-family: "Sacramento", 'Aref Ruqaa', serif, Arial, serif;
+}
+
+h5 {
+	font-family: 'Aref Ruqaa', serif, Arial, serif;
+	font-size: 20px;
 }
 
 .text-navy {
@@ -102,13 +108,14 @@ table.shoping-cart-table tr td:last-child {
 	padding: 14px 15px 7px;
 	min-height: 48px;
 	font-size: 3rem;
-	
+	padding-top: 14px;
+	margin-top: 15px;
+	border-radius: 8px;
 }
-.ibox-title h2 {
 
-	font-family:'Aref Ruqaa', serif, Arial, serif;
+.ibox-title h2 {
+	font-family: 'Aref Ruqaa', serif, Arial, serif;
 	font-size: 3.5rem;
-	
 }
 
 .ibox-content {
@@ -127,4 +134,28 @@ table.shoping-cart-table tr td:last-child {
 	font-size: 90%;
 	background: #ffffff;
 	padding: 10px 15px;
+}
+
+.numbers {
+	font-family: 'Bitter', serif;
+	font-size: large;
+}
+
+.shadow class {
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px
+		15px 12px;
+}
+
+.link_style_btn {
+	text-decoration: none;
+	background-color: #cd7e53;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 400;
+	padding: 1em 1.5em;
+	margin-bottom: 4px;
+	font-family: 'Aref Ruqaa', serif, Arial, sans-serif;
+	border-radius: 3px;
+	width: 130px;
+	height: 50px;
 }
