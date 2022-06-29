@@ -187,7 +187,7 @@
 					varStatus="loop">
 					<tr>
 					
-						<td><button id="myBtn${loop.index}">عرض التفاصيل</button> <!-- The Modal -->
+						<td><button id="${reservationResult.id}">عرض التفاصيل</button> <!-- The Modal -->
 							<div id="myModal" class="detail-modal">
 
 								<!-- Modal content -->
@@ -229,8 +229,8 @@
 								var modal = document.getElementById("myModal");
 
 								// Get the button that opens the modal
-								var index = ${loop.index};
-								var btn = document.getElementById("myBtn"+ index);
+								//var index = ${loop.index};
+								var btn = document.getElementById(${reservationResult.id});
 
 								// Get the <span> element that closes the modal
 								var span = document
