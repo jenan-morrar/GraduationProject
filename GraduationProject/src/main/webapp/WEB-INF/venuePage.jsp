@@ -408,6 +408,8 @@
 							<c:set var="wayOfPayment" scope="session" value="${wayOfPayment}" />
 
 							<script type="text/javascript">
+								<c:if test="${wayOfPayment == \"cach\" }">
+								
 								<c:if test="${conflictTime == \"conflictTime\" }">
 								Swal
 										.fire({
@@ -424,13 +426,17 @@
 											text : 'يجب أن يكون تاريخ انتهاء الحجز بعد تاريح بدء الحجز'
 										});
 								</c:if>
-								<c:if test="${wayOfPayment == \"cach\" }">
+								
+								<c:if test="${conflictTime != \"conflictTime\" }">
+								<c:if test="${toTimeAfterFromTime != \"noToTimeAfterFromTime\" }">
 								Swal
 										.fire({
 											icon : 'success',
 											title : 'لقد قمت بعمل حجز اولي, لإتمام هذا الحجز يجب دفع العربون لصاحب القاعة',
 											text : 'إذا لم يتم الدفع خلال يوم واحد كحد أقصى سيتم حذف هذا الحجز'
 										});
+								</c:if>
+								</c:if>
 								</c:if>
 							</script>
 
