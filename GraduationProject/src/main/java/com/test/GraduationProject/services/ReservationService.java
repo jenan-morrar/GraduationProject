@@ -112,7 +112,7 @@ public class ReservationService {
 		User userByEmail = findByEmail(user.getEmail());
 		if (userByEmail != null) {
 
-			String from = "palvenues@outlook.com";
+			String from = "palvenuesWeb@outlook.com";
 			String to = user.getEmail();
 
 			MimeMessage message = emailSender.createMimeMessage();

@@ -77,8 +77,8 @@ public class Users {
 
 	public Users(UserService userService, UserValidator userValidator, VenueService venueService,
 			WebsiteRateService websiteRateService, ReservationService reservationService,
-			ServicesOfVenueService servicesOfVenueService, VenueRateService venueRateService,
-			PaypalService service,SongsService songsService) {
+			ServicesOfVenueService servicesOfVenueService, VenueRateService venueRateService, PaypalService service,
+			SongsService songsService) {
 		this.userService = userService;
 		this.userValidator = userValidator;
 		this.venueService = venueService;
@@ -242,8 +242,9 @@ public class Users {
 
 	// edit reservation on edit page
 	@RequestMapping(value = "/reservation/{id}/{venueId}", method = RequestMethod.PUT)
-	public String update(@PathVariable("id") Long id,@PathVariable("venueId") Long venueId, @Valid @ModelAttribute("reservation") Reservation reservation,
-			BindingResult result, Principal principal, RedirectAttributes rattrs) {
+	public String update(@PathVariable("id") Long id, @PathVariable("venueId") Long venueId,
+			@Valid @ModelAttribute("reservation") Reservation reservation, BindingResult result, Principal principal,
+			RedirectAttributes rattrs) {
 		/*
 		 * if (result.hasErrors()) { return "editReservationPage.jsp"; } else {
 		 * reservationService.update(reservation); return
@@ -367,29 +368,27 @@ public class Users {
 				rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 			}
 		}
-		
 
 		return "redirect:/venuePage/{venueId}/#VenueReservatio";
 	}
 
 	// get edit page
 	@RequestMapping("/reservation/{id}/edit/{venueId}")
-	public String editReservation(@PathVariable("id") Long id,@PathVariable("venueId") Long venueId, Principal principal, Model model,
-			RedirectAttributes redirectAttrs, @ModelAttribute("toTimeAfterFromTime") String toTimeAfterFromTime,
+	public String editReservation(@PathVariable("id") Long id, @PathVariable("venueId") Long venueId,
+			Principal principal, Model model, RedirectAttributes redirectAttrs,
+			@ModelAttribute("toTimeAfterFromTime") String toTimeAfterFromTime,
 			@ModelAttribute("conflictTime") String conflictTime) {
 		Reservation reservation = reservationService.findReservation(id);
 		model.addAttribute("reservation", reservation);
 		model.addAttribute("toTimeAfterFromTime", toTimeAfterFromTime);
 		model.addAttribute("conflictTime", conflictTime);
 
-		Venue venuePage = reservation.getVenue(); 
+		Venue venuePage = reservation.getVenue();
 		model.addAttribute("reservation", new Reservation());
 		model.addAttribute("venuePage", venuePage);
 		model.addAttribute("venueRate", new VenueRate());
 		redirectAttrs.addAttribute("venuePage", venuePage);
-		
-	
-		
+
 		// Venue Services
 		List<Reservation> reservations = reservationService.allReservation();
 		List<Reservation> reservationsForVenue = new ArrayList<>();
@@ -493,10 +492,10 @@ public class Users {
 			return "contactPage.jsp";
 		} else {
 
-			contact.setEmailReciver("palvenues@outlook.com");
+			contact.setEmailReciver("palvenuesWep@outlook.com");
 			SimpleMailMessage message = new SimpleMailMessage();
 //			message.setFrom(contact.getEmailSender());
-			message.setFrom("palvenuesWeb@outlook.com");
+			message.setFrom("palvenuesWep@outlook.com");
 			message.setTo(contact.getEmailReciver());
 			message.setSubject(contact.getSubject());
 			message.setText(contact.getMessage());
@@ -675,7 +674,7 @@ public class Users {
 		}
 
 		reservationObject = reservation;
-		
+
 		if (allReseravtions.size() != 0) {
 			for (int i = 0; i < allReseravtions.size(); i++) {
 				if (allReseravtions.get(i).getVenue().getId() == id) {
@@ -685,7 +684,7 @@ public class Users {
 		}
 
 		if (reservation.getWayOfPayment().equals("cach")) {
-			
+
 			rattrs.addAttribute("wayOfPayment", "cach");
 
 			if (reservationForVenue.size() != 0) {
@@ -830,46 +829,68 @@ public class Users {
 			if (!reservation.getToTime().before(reservation.getFromTime())
 					&& !(reservation.getToTime().compareTo(reservation.getFromTime()) == 0)) {
 
-				System.out.println("created correctly there is no reservation!");
-				rattrs.addAttribute("conflictTime", "noConflictTime");
-				rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+				if (reservationForVenue.size() != 0) {
 
-				// set code
-				String code = reservationService.getAlphaNumericString(6);
-				if (code == null) {
-					code = "wK99ke";
+					boolean hasTheSameDate = false;
+					boolean hasTheSameTime = false;
+
+					for (int i = 0; i < reservationForVenue.size(); i++) {
+						int resultOfConflictDay = reservation.getReservationDate()
+								.compareTo(reservationForVenue.get(i).getReservationDate());
+						if (resultOfConflictDay == 0) {
+							hasTheSameDate = true;
+							break;
+						} else {
+							hasTheSameDate = false;
+						}
+					}
+
+					if (hasTheSameDate) {
+						System.out.println("same Date");
+						for (int i = 0; i < reservationForVenue.size(); i++) {
+							int resultOfConflictDay = reservation.getReservationDate()
+									.compareTo(reservationForVenue.get(i).getReservationDate());
+							if (resultOfConflictDay == 0) {
+								System.out.println(reservation.getToTime());
+								System.out.println(reservationForVenue.get(i).getFromTime());
+								System.out.println(reservation.getFromTime());
+								System.out.println(reservationForVenue.get(i).getToTime());
+								if (reservation.getToTime().after(reservationForVenue.get(i).getFromTime())
+										&& reservation.getFromTime().before(reservationForVenue.get(i).getToTime())) {
+									System.out.println("same time, Try again!");
+									rattrs.addAttribute("conflictTime", "conflictTime");
+									hasTheSameTime = true;
+									break;
+								} else {
+								}
+							}
+						}
+					} else {
+						System.out.println("created correctly there is no reservation!");
+						rattrs.addAttribute("conflictTime", "noConflictTime");
+						rattrs.addAttribute("toTimeAfterFromTime", "toTimeAfterFromTime");
+						rattrs.addAttribute("wayOfPayment", "payPal");
+						rattrs.addAttribute("reservationObject", reservation);
+						return "redirect:/pay";
+					}
+
+				} else {
+					System.out.println("to time should be after from time");
+					rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 				}
-				reservation.setDeleteCode(code);
-
-				reservationService.createReservation(reservation);
-				// Create the Expiration Date
-				Calendar calExpirationDate = Calendar.getInstance();
-				calExpirationDate.setTime(reservation.getCreatedAt());
-				calExpirationDate.add(Calendar.DAY_OF_MONTH, 1);
-				reservation.setExpirationDate(calExpirationDate.getTime());
-
-				reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
-						reservation.getFromTime(), reservation.getToTime(), reservation.getStatus(),
-						reservation.getExpirationDate(), reservation.getVenue(), reservation.getUser());
-			} else {
-				System.out.println("to time should be after from time");
-				rattrs.addAttribute("toTimeAfterFromTime", "noToTimeAfterFromTime");
 			}
-			rattrs.addAttribute("wayOfPayment", "payPal");
-			rattrs.addAttribute("reservationObject", reservation);
-			return "redirect:/pay";
 		}
 
 		return "redirect:/venuePage/{id}/#VenueReservatio";
 	}
 
-	// this controller taken from the payment 
+	// this controller taken from the payment
 	@GetMapping(value = "/success")
 	public String successPay(@RequestParam(value = "paymentId", required = false) String paymentId,
 			@RequestParam(value = "PayerID", required = false) String payerId) {
 		try {
 			Payment payment = service.executePayment(paymentId, payerId);
-			//System.out.println(payment.toJSON());
+			// System.out.println(payment.toJSON());
 			if (payment.getState().equals("approved")) {
 				createReservation();
 				return "success.jsp";
@@ -879,10 +900,16 @@ public class Users {
 		}
 		return "success.jsp";
 	}
-	
+
 	public void createReservation() {
-		
+
 		System.out.println("Hi Friend");
+		// set code
+		String code = reservationService.getAlphaNumericString(6);
+		if (code == null) {
+			code = "wK99ke";
+		}
+		reservationObject.setDeleteCode(code);
 		reservationService.createReservation(reservationObject);
 		// Create the Expiration Date
 		Calendar calExpirationDate = Calendar.getInstance();
@@ -896,9 +923,9 @@ public class Users {
 				reservationObject.getFromTime(), reservationObject.getToTime(), reservationObject.getStatus(),
 				reservationObject.getExpirationDate(), reservationObject.getVenue(), reservationObject.getUser());
 		System.out.println("Done");
-		
+
 	}
-	
+
 	@RequestMapping(value = "/venuePage/{id}/rating", method = RequestMethod.POST)
 	public String venueRating(@PathVariable("id") long id, @ModelAttribute("venueRate") VenueRate venueRate,
 			Model model) {
