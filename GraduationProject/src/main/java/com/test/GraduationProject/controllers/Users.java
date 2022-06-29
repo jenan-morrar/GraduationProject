@@ -845,7 +845,7 @@ public class Users {
 				// Create the Expiration Date
 				Calendar calExpirationDate = Calendar.getInstance();
 				calExpirationDate.setTime(reservation.getCreatedAt());
-				calExpirationDate.add(Calendar.DAY_OF_MONTH, 2);
+				calExpirationDate.add(Calendar.DAY_OF_MONTH, 1);
 				reservation.setExpirationDate(calExpirationDate.getTime());
 
 				reservationService.updatereservation(reservation.getId(), reservation.getReservationDate(),
@@ -890,6 +890,7 @@ public class Users {
 		calExpirationDate.add(Calendar.DAY_OF_MONTH, 1);
 		reservationObject.setExpirationDate(calExpirationDate.getTime());
 
+		reservationObject.setRetainer(reservationObject.getVenue().getPrice() * 0.33);
 		reservationObject.setStatus("reserved");
 		reservationService.updatereservation(reservationObject.getId(), reservationObject.getReservationDate(),
 				reservationObject.getFromTime(), reservationObject.getToTime(), reservationObject.getStatus(),
