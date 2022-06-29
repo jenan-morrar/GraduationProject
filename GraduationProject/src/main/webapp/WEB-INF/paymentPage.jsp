@@ -122,7 +122,7 @@ h1 {
 }
 
 .text-center {
-  text-align: center;
+	text-align: center;
 }
 
 /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
@@ -197,9 +197,9 @@ h1 {
 					</div>
 
 					<div class="text-center">
-					<input type="submit" value="استكمال الدفع" class="btn"> <br>
+						<input type="submit" value="استكمال الدفع" class="btn"> <br>
 					</div>
-					
+
 					<br> <a href="/index" style="color: #cd7e53">الصفحة
 						الرئيسية</a> <br>
 				</form>
