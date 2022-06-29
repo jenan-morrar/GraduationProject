@@ -29,6 +29,9 @@
 <meta name="twitter:card" content="" />
 <!-- Fonts -->
 <link
+	href="https://fonts.googleapis.com/css2?family=Bitter:wght@300&display=swap"
+	rel="stylesheet">
+<link
 	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap"
 	rel="stylesheet">
 <link
@@ -195,227 +198,185 @@
 			<div class="wrapper wrapper-content animated fadeInRight">
 				<div class="row">
 					<div class="col-md-9">
-						<div class="ibox">
-							<div class="ibox-title">
-								<h2 style="text-align: right; padding-right: 10px;">حجوزاتي
-									للقاعات</h2>
-							</div>
-							<div class="ibox-content">
-								<div class="table-responsive">
-									<table class="table shoping-cart-table">
-
-										<tbody>
-											<c:forEach items="${reservations}" var="reservation">
-												<tr id="reservation_${reservation.id}">
-													<td class="desc">
-														<h3>
-															<a href="#" class="text-navy"> <c:out
-																	value="${reservation.venue.name}" />
-															</a>
-														</h3>
-														<dl class="small m-b-none">
-															<dt>تفاصيل الحجز</dt>
-															<dd>
-																تاريخ الحجز:
-																<c:out value="${reservation.reservationDate}" />
-															</dd>
-															<dd>
-																وقت البدأ :
-																<c:out value="${reservation.fromTime}" />
-															</dd>
-															<dd>
-																وقت الانتهاء :
-																<c:out value="${reservation.toTime}" />
-															</dd>
-															<dd>
-																حالة الحجز:
-																<c:out value="${reservation.status}" />
-															</dd>
-															<dd>
-																تم انشاء هذا الحجز:
-																<c:out value="${reservation.createdAt}" />
-															</dd>
-															<dd>
-																الخدمات المختارة :
-																<c:forEach items="${reservation.services}" var="s">
-																	<c:out value="${s.name}" />
-																	<c:out value="${s.price}₪" />
-																	<br>
-																</c:forEach>
-															</dd>
-														</dl>
-														<div class="m-t-sm">
-															<a href="/reservation/${reservation.id}/edit/${reservation.venue.id}"> تعديل
-																الحجز</a>
-														</div>
-														<div>
-															<div class="wrap w-100">
-																<button type="button"
-																	class="btn btn-primary py-3 px-4 js-cancelReserve"
-																	data-toggle="modal" data-target="#exampleModalCenter2"
-																	data-id="${reservation.id}"
-																	data-url="/sendEmail/${reservation.id}">الغاء
-																	الحجز</button>
-																<input type="hidden" value="${reservation.deleteCode}"
-																	id="datbase_code">
-
-															</div>
-														</div>
-
-													</td>
-													<td><c:out value="${reservation.venue.price}₪"></c:out></td>
-													<td width="65"><input type="hidden"
-														class="form-control" placeholder="1"></td>
-												</tr>
-											</c:forEach>
-										</tbody>
-									</table>
+						<div class="shadow class">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h2 style="text-align: right; padding-right: 10px;">حجوزاتي
+										للقاعات</h2>
 								</div>
+								<div class="ibox-content">
+									<div class="table-responsive">
+										<table class="table shoping-cart-table">
 
-							</div>
-							<div class="ibox-content">
-								<!-- <button class="btn btn-primary pull-right">
+											<tbody>
+												<c:forEach items="${reservations}" var="reservation">
+													<tr id="reservation_${reservation.id}">
+														<td class="desc">
+															<h3>
+																<a href="/venuePage/${reservation.venue.id}"
+																	class="text-navy"> <c:out
+																		value="${reservation.venue.name}" />
+																</a>
+															</h3>
+															<dl class="small m-b-none">
+																<dt>تفاصيل الحجز</dt>
+																<dd>
+																	تاريخ الحجز:
+																	<div class="numbers">
+																		<c:out value="${reservation.reservationDate}" />
+																	</div>
+																</dd>
+																<dd>
+																	وقت البدأ :
+																	<div class="numbers">
+																		<c:out value="${reservation.fromTime}" />
+																	</div>
+																</dd>
+																<dd>
+																	وقت الانتهاء :
+																	<div class="numbers">
+																		<c:out value="${reservation.toTime}" />
+																	</div>
+																</dd>
+																<dd>
+																	حالة الحجز:
+																	<div class="numbers">
+																		<c:out value="${reservation.status}" />
+																	</div>
+																</dd>
+																<dd>
+																	تم انشاء هذا الحجز:
+																	<div class="numbers">
+																		<c:out value="${reservation.createdAt}" />
+																	</div>
+																</dd>
+																<dd>
+																	الخدمات المختارة :<br>
+																	<c:forEach items="${reservation.services}" var="s">
+																		<div class="numbers">
+																			<c:out value="${s.name}" />
+																			<c:out value="${s.price}₪" />
+																			<br>
+																		</div>
+																	</c:forEach>
+																</dd>
+															</dl>
+															<div class="m-t-sm">
+																<div class="link_style_btn">
+																	<a style="color: white; font-size: 18px;"
+																		href="/reservation/${reservation.id}/edit/${reservation.venue.id}">
+																		<i class='fas fa-edit'></i> تعديل الحجز
+																	</a>
+																</div>
+															</div>
+															<div>
+																<div class="wrap w-100">
+																	<button type="button"
+																		class="link_style_btn py-3 px-4 js-cancelReserve"
+																		style="font-size: 18px; background: #bf1f2e;"
+																		data-toggle="modal" data-target="#exampleModalCenter2"
+																		data-id="${reservation.id}"
+																		data-url="/sendEmail/${reservation.id}">
+																		<i class='far fa-trash-alt'></i> الغاء الحجز
+																	</button>
+																	<input type="hidden" value="${reservation.deleteCode}"
+																		id="datbase_code">
+
+																</div>
+															</div>
+
+														</td>
+
+														<td class="desc" style="padding-top: 11px;">
+															<dl class="small m-b-none">
+																<dd>
+																	سعر القاعة <span class="numbers"> <c:out
+																			value="${reservation.venue.price}"></c:out>
+																	</span>
+																</dd>
+																<dd>
+																	المبلغ المدفوع <span class="numbers"> <c:out
+																			value="${reservation.retainer}"></c:out>
+																	</span>
+																</dd>
+																<dd>
+																	المبلغ المتبقي للدفع <span class="numbers"> <c:out
+																			value="${reservation.venue.price - reservation.retainer}"></c:out>
+																	</span>
+																</dd>
+
+															</dl>
+														</td>
+														<td width="30"><input type="hidden"
+															class="form-control" placeholder="1"></td>
+													</tr>
+												</c:forEach>
+											</tbody>
+										</table>
+									</div>
+
+								</div>
+								<div class="ibox-content">
+									<!-- <button class="btn btn-primary pull-right">
 								<i class="fa fa fa-shopping-cart"></i> Checkout
 							</button> -->
-								<button class="btn btn-white">
-									<i class="fa fa-arrow-left"></i> العودة الى صفحة القاعات
-								</button>
+									<a href="/venues" class="btn btn-white"
+										style="font-size: 15px;"> <i class="fa fa-arrow-left"></i>
+										العودة الى صفحة القاعات
+									</a>
 
+								</div>
 							</div>
 						</div>
-
 					</div>
 					<div class="col-md-3">
 						<div class="ibox">
-							<div class="ibox-title">
-								<h5>ملخص الكارت</h5>
-							</div>
-							<div class="ibox-content">
-								<span> المبلغ الكامل للدفع </span>
-								<h2 class="font-bold">
-									<c:set var="total" value="${0}" />
-									<c:forEach items="${reservations}" var="reservation">
-										<c:forEach items="${reservation.services}" var="s">
-											<c:set var="total"
-												value="${s.price + reservation.venue.price}₪" />
-										</c:forEach>
-									</c:forEach>
-									<c:out value="${total}"></c:out>
-								</h2>
-
-								<hr>
-								<!-- <span class="text-muted small"> *For United States, France
-								and Germany applicable sales tax will be applied </span> -->
-								<div class="m-t-sm">
-									<!-- <div class="btn-group">
-									<a href="#" class="btn btn-primary btn-sm"><i
-										class="fa fa-shopping-cart"></i> Checkout</a> <a href="#"
-										class="btn btn-white btn-sm"> Cancel</a>
-								</div> -->
+							<div class="shadow class">
+								<div class="ibox-title">
+									<h5>ملخص الكارت</h5>
+								</div>
+								<div class="ibox-content">
+									<span
+										style="font-family: 'Aref Ruqaa', serif, Arial, serif; font-size: 15px;">
+										المبلغ الكامل للدفع </span>
+									<h2 class="font-bold">
+										<span class="numbers" style="font-size: 23px;"> <c:set
+												var="serviceTotal" value="${0}" /> <c:set var="venueTotal"
+												value="${0}" /> <c:forEach items="${reservations}"
+												var="reservation">
+												<c:set var="venueTotal"
+													value="${venueTotal+reservation.venue.price }" />
+												<c:forEach items="${reservation.services}" var="s">
+													<c:set var="serviceTotal" value="${s.price + serviceTotal}" />
+												</c:forEach>
+											</c:forEach> <c:out value="${serviceTotal+venueTotal}₪"></c:out>
+										</span>
+									</h2>
 								</div>
 							</div>
 						</div>
 
 						<div class="ibox">
-							<div class="ibox-title">
-								<h5>للدعم</h5>
-							</div>
-							<div class="ibox-content text-center">
-								<h4>
-									<i class="fa fa-phone"></i> +059-735-93-92
-								</h4>
-								<span class="small"> لأي استفسار تواصلوا معنا </span>
-							</div>
-						</div>
-
-						<!-- <div class="ibox">
-						<div class="ibox-content">
-
-							<p class="font-bold">Other products you may be interested</p>
-							<hr>
-							<div>
-								<a href="#" class="product-name"> Product 1</a>
-								<div class="small m-t-xs">Many desktop publishing packages
-									and web page editors now.</div>
-								<div class="m-t text-righ">
-
-									<a href="#" class="btn btn-xs btn-outline btn-primary">Info
-										<i class="fa fa-long-arrow-right"></i>
-									</a>
+							<div class="shadow class">
+								<div class="ibox-title">
+									<h5>للدعم</h5>
 								</div>
-							</div>
-							<hr>
-							<div>
-								<a href="#" class="product-name"> Product 2</a>
-								<div class="small m-t-xs">Many desktop publishing packages
-									and web page editors now.</div>
-								<div class="m-t text-righ">
+								<div class="ibox-content text-center">
 
-									<a href="#" class="btn btn-xs btn-outline btn-primary">Info
-										<i class="fa fa-long-arrow-right"></i>
-									</a>
+									<h4>
+										<span class="numbers"> <i class="fa fa-phone"></i>
+											+059-735-93-92
+										</span>
+									</h4>
+
+									<span class="small"> لأي استفسار تواصلوا معنا </span>
 								</div>
 							</div>
 						</div>
-					</div> -->
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- Modal -->
-		<%-- 	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
-			role="dialog" aria-labelledby="exampleModalCenterTitle"
-			aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<!-- <div class="modal-content rounded-0"> -->
-				<div class="modal-body bg-image overlay"
-					style="background-image: url('/resources/images/simpleBackground.png');">
-
-					<div class="line px-3 to-front">
-						<div class="row align-items-center">
-							<div class="col logo">
-								<a href="#"><img src="/resources/images/ring map logo.png"
-									alt="Image" class="img-fluid"></a>
-							</div>
-							<div class="col-md-8 text-center">
-								<h2
-									style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">تعديل
-									على الحجز</h2>
-							</div>
-							<div class="col text-right">
-								<a href="#" class="close-btn" data-dismiss="modal"
-									aria-label="Close"> <span aria-hidden="true"><span
-										class="icon-close2"></span></span>
-								</a>
-							</div>
-						</div>
-					</div>
-					<div class="p-4 to-front">
-						<div class="text-center">
-							<h3
-								style="font-family: Sacramento, 'Aref Ruqaa', serif, Arial, serif;">
-								تفاصيل الحجز</h3>
-							<p class="mb-4">يمكن تعديل التواريخ والأوقات المختارة في حال
-								وجود حجوزات متوفرة .</p>
-							<form:form action="/reservation/edit" method="post"
-								modelAttribute="reservation" class="form-outline">
-								<div class="form-outline" style="padding: 5px;">
-									<form:errors path="reservationDate" />
-									<form:input class="form-control mr-3" path="reservationDate"
-										placeholder="أدخل اسم القاعة" />
-								</div>
-								
-							</form:form>
-							<p class="mb-0 cancel">
-								<a href="#" data-dismiss="modal">الغاء</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div> --%>
-
 
 		<!-- new modal -->
 		<div class="modal fade" id="exampleModalCenter2" tabindex="-1"
@@ -431,38 +392,25 @@
 						</button>
 					</div>
 					<div class="modal-body pt-md-0 pb-md-5 text-center">
-						<h2>لقد وصلك بريد الكتروني !</h2>
+						<h2 style="font-family: 'Aref Ruqaa', serif, Arial, sans-serif;">لقد
+							وصلك بريد الكتروني</h2>
 						<div class="icon d-flex align-items-center justify-content-center">
 							<img src="images/email.svg" alt="" class="img-fluid">
 						</div>
-						<h4 class="mb-2">يرجى كتابة رمز التأكيد الخاص بك</h4>
+						<h4 class="mb-2"
+							style="font-family: 'Aref Ruqaa', serif, Arial, sans-serif;">يرجى
+							كتابة رمز التأكيد الخاص بك</h4>
 						<form class="js-form" data-action="/reservation/delete">
 							<input type="hidden" name="reservation_id"> <input
 								type="text" id="code_input" name="code_input">
-							<button type="submit" id="cancel_button">الغاء الحجز</button>
+							<button type="submit" id="cancel_button"
+								style="font-family: 'Aref Ruqaa', serif, Arial, sans-serif;">الغاء
+								الحجز</button>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		<footer id="fh5co-footer" role="contentinfo"
 			class="fh5co-section-gray">
